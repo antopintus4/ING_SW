@@ -8,19 +8,19 @@ NC='\033[0m' # No Color
 echo -e "${GREEN}Verifica delle dipendenze in corso...${NC}"
 
 # Check Java
-if ! command -v java &> /dev/null; then
+if ! java -version &> /dev/null; then
     echo -e "${RED}Errore: Java non è installato o non è nel PATH.${NC}"
     exit 1
 fi
 
 # Check Node.js
-if ! command -v node &> /dev/null; then
+if ! node -v &> /dev/null; then
     echo -e "${RED}Errore: Node.js non è installato o non è nel PATH.${NC}"
     exit 1
 fi
 
 # Check npm
-if ! command -v npm &> /dev/null; then
+if ! npm -v &> /dev/null; then
     echo -e "${RED}Errore: npm non è installato o non è nel PATH.${NC}"
     exit 1
 fi

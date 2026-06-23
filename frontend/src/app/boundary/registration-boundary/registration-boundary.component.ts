@@ -69,9 +69,10 @@ export class RegistrationBoundaryComponent {
         day: date.getDate(),
         month: date.getMonth() + 1,
         year: date.getFullYear(),
-        birthplace: vals.cittaNascita
+        birthplace: vals.cittaNascita,
+        birthplaceProvincia: 'RM'
       });
-      this.registerForm.patchValue({ codiceFiscale: cf.code });
+      this.registerForm.patchValue({ codiceFiscale: (cf as any).code });
       this.errorMessage = '';
     } catch (e: any) {
       this.errorMessage = 'Errore nella generazione del CF: ' + e.message;
