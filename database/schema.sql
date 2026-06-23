@@ -29,9 +29,7 @@ CREATE TABLE profilo (
     id UUID PRIMARY KEY,
     utente_uuid UUID NOT NULL UNIQUE,
     descrizione TEXT,
-    policy_visibilita VARCHAR(50),
-    foto_profilo VARCHAR(255),
-    
+    policy_visibilita VARCHAR(50),   
     -- Dati Anagrafici (Integrati per evitare JOIN inutili)
     nome VARCHAR(50) NOT NULL,
     cognome VARCHAR(50) NOT NULL,

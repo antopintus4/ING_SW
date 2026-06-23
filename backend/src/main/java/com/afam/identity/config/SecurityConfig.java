@@ -51,7 +51,7 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 // Rotte pubbliche
-                .requestMatchers("/api/auth/**", "/api/registration/**", "/api/recovery/**").permitAll()
+                .requestMatchers("/api/auth/**", "/api/registration/**", "/api/recovery/**", "/error").permitAll()
                 .requestMatchers("/api/links/shared/**").permitAll() // Rende i link di condivisione accessibili al pubblico
                 
                 // Rotte permesse sia ad AFAM che GUEST (Ricerca e visualizzazione)
