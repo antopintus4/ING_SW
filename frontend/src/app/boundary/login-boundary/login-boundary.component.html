@@ -1,0 +1,45 @@
+<div class="row justify-content-center mt-5">
+  <div class="col-md-6 col-lg-4">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h3 class="card-title text-center mb-4">Login</h3>
+        
+        <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          
+          <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" formControlName="username"
+                   [ngClass]="{'is-invalid': loginForm.get('username')?.invalid && loginForm.get('username')?.touched}">
+            <div class="invalid-feedback">Campo obbligatorio.</div>
+          </div>
+
+          <div class="mb-4">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" formControlName="password"
+                   [ngClass]="{'is-invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}">
+            <div class="invalid-feedback">Campo obbligatorio.</div>
+          </div>
+
+            <div class="mb-4 d-flex justify-content-between align-items-center">
+              <div>
+                <a routerLink="/recovery" class="text-decoration-none small">Password o Username dimenticati?</a>
+              </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary w-100 mb-3" [disabled]="loginForm.invalid">
+              Accedi
+            </button>
+            
+            <hr class="my-4">
+            
+            <button type="button" class="btn btn-outline-secondary w-100" (click)="onGuestLogin()">
+              Vai alla home senza accesso
+            </button>
+        </form>
+        
+      </div>
+    </div>
+  </div>
+</div>

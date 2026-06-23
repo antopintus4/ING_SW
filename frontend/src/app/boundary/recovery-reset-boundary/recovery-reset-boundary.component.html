@@ -1,0 +1,41 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow">
+        <div class="card-header bg-success text-white text-center">
+          <h4 class="mb-0">Reimposta Password</h4>
+        </div>
+        <div class="card-body p-4">
+          
+          <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+          <div *ngIf="successMessage" class="alert alert-success">
+            <h5 class="alert-heading">Fatto!</h5>
+            <p>{{ successMessage }}</p>
+            <hr>
+            <a routerLink="/login" class="btn btn-success w-100">Vai al Login</a>
+          </div>
+
+          <div *ngIf="!successMessage">
+            <p class="text-muted" *ngIf="token">Inserisci la tua nuova password e confermala per ripristinare l'accesso.</p>
+            
+            <form (ngSubmit)="resetPassword()">
+              <div class="mb-3">
+                <label class="form-label">Nuova Password</label>
+                <input type="password" class="form-control" name="newPassword" [(ngModel)]="newPassword" required [disabled]="!token">
+              </div>
+              <div class="mb-4">
+                <label class="form-label">Conferma Nuova Password</label>
+                <input type="password" class="form-control" name="confirmPassword" [(ngModel)]="confirmPassword" required [disabled]="!token">
+              </div>
+              
+              <button type="submit" class="btn btn-success w-100" [disabled]="!token || !newPassword || !confirmPassword">
+                Reimposta Password
+              </button>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

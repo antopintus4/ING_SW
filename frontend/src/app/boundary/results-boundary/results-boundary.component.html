@@ -1,0 +1,85 @@
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Risultati della Ricerca per: <span class="text-primary">"{{ query }}"</span></h2>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+  
+  <div *ngIf="isSearching" class="text-center my-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Ricerca in corso...</span>
+    </div>
+  </div>
+
+  <div *ngIf="!isSearching && query.length >= 2" class="row">
+    
+    <!-- Colonna Profili -->
+    <div class="col-md-4 mb-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+          <h5 class="mb-0"><i class="bi bi-people-fill me-2"></i> Profili</h5>
+          <span class="badge bg-light text-dark">{{ utenti.length }}</span>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li *ngIf="utenti.length === 0" class="list-group-item text-muted">Nessun utente trovato.</li>
+          <li *ngFor="let u of utenti" class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <strong>{{ u.nome }} {{ u.cognome }}</strong><br>
+              <small class="text-muted">{{ u.utenteAfam?.email }}</small>
+            </div>
+            <!-- Placeholder: Link al profilo o azione -->
+            <a [routerLink]="['/public/profile', u.id]" class="btn btn-sm btn-outline-primary" title="Visualizza Profilo">
+              <i class="bi bi-person"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Colonna Contenuti -->
+    <div class="col-md-4 mb-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+          <h5 class="mb-0"><i class="bi bi-file-earmark-text-fill me-2"></i> Contenuti Pubblici</h5>
+          <span class="badge bg-light text-dark">{{ contenuti.length }}</span>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li *ngIf="contenuti.length === 0" class="list-group-item text-muted">Nessun contenuto pubblico trovato.</li>
+          <li *ngFor="let c of contenuti" class="list-group-item">
+            <div class="d-flex w-100 justify-content-between">
+              <h6 class="mb-1 text-truncate" style="max-width: 150px;" [title]="c.titolo">{{ c.titolo }}</h6>
+              <small class="text-muted">{{ c.tipo }}</small>
+            </div>
+            <p class="mb-1 small text-muted text-truncate">{{ c.descrizione }}</p>
+            <a [routerLink]="['/public/content', c.id]" class="btn btn-sm btn-outline-success mt-2">Visualizza</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Colonna Gruppi -->
+    <div class="col-md-4 mb-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+          <h5 class="mb-0"><i class="bi bi-collection-fill me-2"></i> Gruppi</h5>
+          <span class="badge bg-light text-dark">{{ gruppi.length }}</span>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li *ngIf="gruppi.length === 0" class="list-group-item text-muted">Nessun gruppo trovato.</li>
+          <li *ngFor="let g of gruppi" class="list-group-item d-flex justify-content-between align-items-center">
+            <strong>{{ g.nome }}</strong>
+            <!-- Placeholder: Link al gruppo o azione Join -->
+            <button class="btn btn-sm btn-outline-info" title="Vedi Gruppo">
+              Vedi
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <div *ngIf="!isSearching && query.length < 2" class="alert alert-warning text-center">
+    Inserisci almeno 2 caratteri per avviare la ricerca.
+  </div>
+</div>

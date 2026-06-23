@@ -1,0 +1,40 @@
+<div class="container mt-5" *ngIf="group">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>
+      <i class="bi bi-folder-fill text-info me-2"></i> {{ group.nome }}
+    </h2>
+    <a routerLink="/groups" class="btn btn-outline-secondary">Torna ai Gruppi</a>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+  <div *ngIf="group.contenuti?.length === 0" class="alert alert-info">
+    Questo gruppo non contiene alcun elemento. Vai in <strong>Contenuti</strong> e usa la funzione "Aggrega" per aggiungere file!
+  </div>
+
+  <div class="table-responsive" *ngIf="group.contenuti?.length > 0">
+    <table class="table table-striped table-hover align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>Titolo Contenuto</th>
+          <th>Tipo</th>
+          <th class="text-end">Azione</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of group.contenuti">
+          <td>{{ c.titolo }}</td>
+          <td><span class="badge bg-secondary">{{ c.tipo }}</span></td>
+          <td class="text-end">
+            <a [routerLink]="['/content/view', c.id]" class="btn btn-sm btn-outline-primary">Apri Contenuto</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="container mt-5" *ngIf="!group && errorMessage">
+  <div class="alert alert-danger">{{ errorMessage }}</div>
+  <a routerLink="/groups" class="btn btn-primary">Torna ai Gruppi</a>
+</div>

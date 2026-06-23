@@ -1,0 +1,32 @@
+<div class="container mt-5">
+  
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+  <div *ngIf="contenuto" class="card shadow-sm">
+    <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+      <h3 class="mb-0">{{ contenuto.titolo }}</h3>
+      <span class="badge bg-secondary fs-6">{{ contenuto.policyVisibilita }}</span>
+    </div>
+    
+    <div class="card-body">
+      <h5 class="card-title text-muted mb-4">Informazioni Dettagliate</h5>
+      
+      <p class="card-text">
+        <strong>Descrizione:</strong><br>
+        {{ contenuto.descrizione }}
+      </p>
+
+      <div class="row mt-4">
+        <div class="col-md-6">
+          <p><strong>Tipo File:</strong> {{ contenuto.tipo }}</p>
+        </div>
+        <div class="col-md-6 text-end">
+          <button class="btn btn-success me-2" (click)="download()">
+            <i class="bi bi-download"></i> Scarica Allegato
+          </button>
+          <a routerLink="/content" class="btn btn-outline-secondary">Torna alla Lista</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

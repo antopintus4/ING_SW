@@ -1,0 +1,82 @@
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>I Tuoi Contenuti</h2>
+    <a routerLink="/content/upload" class="btn btn-primary">Carica Nuovo</a>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+  <div *ngIf="contents.length === 0" class="alert alert-info">
+    Nessun contenuto trovato. Inizia caricando un nuovo file!
+  </div>
+
+  <div class="table-responsive" *ngIf="contents.length > 0">
+    <table class="table table-striped table-hover align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Titolo</th>
+          <th>Tipo File</th>
+          <th>Visibilità</th>
+          <th class="text-end">Azioni</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of contents">
+          <td>{{ c.id }}</td>
+          <td>{{ c.titolo }}</td>
+          <td>{{ c.tipo }}</td>
+          <td>
+            <span class="badge bg-secondary">{{ c.policyVisibilita }}</span>
+          </td>
+          <td class="text-end">
+            <a [routerLink]="['/content/view', c.id]" class="btn btn-sm btn-outline-info me-2">Visualizza</a>
+            
+            <button class="btn btn-sm btn-outline-success me-2" 
+                    *ngIf="c.allegati && c.allegati.length > 0" 
+                    (click)="download(c.allegati[0].id, c.titolo)">
+              Scarica
+            </button>
+            
+            <!-- Placeholder Modifica -->
+            <button class="btn btn-sm btn-outline-secondary me-2" title="Modifica (non implementato)">Modifica</button>
+            
+            <button class="btn btn-sm btn-outline-info me-2" (click)="openGroupModal(c.id)">Aggrega</button>
+            
+            <button class="btn btn-sm btn-outline-warning me-2" (click)="share(c.id)">Condividi</button>
+            
+            <button class="btn btn-sm btn-outline-danger" (click)="delete(c.id)">Elimina</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal Aggrega a Gruppo -->
+<div class="modal fade" id="groupModal" tabindex="-1" aria-labelledby="groupModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="groupModalLabel">Aggrega al Gruppo</h5>
+        <button type="button" class="btn-close" (click)="closeGroupModal()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div *ngIf="groups.length === 0" class="alert alert-warning">
+          Non hai ancora creato nessun gruppo. Vai alla sezione "Gruppi" per crearne uno.
+        </div>
+        <div class="mb-3" *ngIf="groups.length > 0">
+          <label for="groupSelect" class="form-label">Scegli il gruppo di destinazione:</label>
+          <select id="groupSelect" class="form-select" [(ngModel)]="selectedGroupId">
+            <option [ngValue]="null" disabled>Seleziona un gruppo...</option>
+            <option *ngFor="let g of groups" [ngValue]="g.id">{{ g.nome }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeGroupModal()">Annulla</button>
+        <button type="button" class="btn btn-info" [disabled]="!selectedGroupId" (click)="confirmGroupAggregation()">Conferma</button>
+      </div>
+    </div>
+  </div>
+</div>

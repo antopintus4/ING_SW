@@ -1,0 +1,54 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white text-center">
+          <h4 class="mb-0">Recupero Credenziali</h4>
+        </div>
+        <div class="card-body p-4">
+          
+          <ul class="nav nav-tabs mb-4">
+            <li class="nav-item">
+              <a class="nav-link" [class.active]="mode === 'password'" href="javascript:void(0)" (click)="switchMode('password')">Password dimenticata</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" [class.active]="mode === 'email'" href="javascript:void(0)" (click)="switchMode('email')">Email dimenticata</a>
+            </li>
+          </ul>
+
+          <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+          <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+
+          <!-- Modulo Recupero Password -->
+          <div *ngIf="mode === 'password'">
+            <p class="text-muted">Inserisci l'indirizzo email associato al tuo account per ricevere un link di ripristino della password.</p>
+            <form (ngSubmit)="requestPasswordRecovery()">
+              <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" name="email" [(ngModel)]="email" required placeholder="tuonome@example.com">
+              </div>
+              <button type="submit" class="btn btn-primary w-100" [disabled]="!email">Recupera Password</button>
+            </form>
+          </div>
+
+          <!-- Modulo Recupero Email / Username -->
+          <div *ngIf="mode === 'email'">
+            <p class="text-muted">Inserisci il tuo Username per farti inviare una notifica all'indirizzo email associato, così potrai ricordarlo.</p>
+            <form (ngSubmit)="requestEmailRecovery()">
+              <div class="mb-3">
+                <label class="form-label">Username</label>
+                <input type="text" class="form-control" name="username" [(ngModel)]="username" required placeholder="Il tuo username AFAM">
+              </div>
+              <button type="submit" class="btn btn-primary w-100" [disabled]="!username">Invia Notifica Email</button>
+            </form>
+          </div>
+
+          <div class="text-center mt-3">
+            <a routerLink="/login" class="text-decoration-none">Torna al Login</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

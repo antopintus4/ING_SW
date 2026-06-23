@@ -1,0 +1,49 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow-sm">
+        <div class="card-body p-4">
+          <h3 class="card-title text-center mb-4">Carica un Nuovo Contenuto</h3>
+
+          <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+          <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+
+          <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+            
+            <div class="mb-3">
+              <label for="titolo" class="form-label">Titolo</label>
+              <input type="text" class="form-control" id="titolo" formControlName="titolo" 
+                     [ngClass]="{'is-invalid': uploadForm.get('titolo')?.invalid && uploadForm.get('titolo')?.touched}">
+            </div>
+
+            <div class="mb-3">
+              <label for="descrizione" class="form-label">Descrizione</label>
+              <textarea class="form-control" id="descrizione" rows="3" formControlName="descrizione"
+                        [ngClass]="{'is-invalid': uploadForm.get('descrizione')?.invalid && uploadForm.get('descrizione')?.touched}"></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label for="policyVisibilita" class="form-label">Visibilità</label>
+              <select class="form-select" id="policyVisibilita" formControlName="policyVisibilita">
+                <option value="Pubblico">Pubblico</option>
+                <option value="Privato">Privato</option>
+                <option value="Solo Studenti">Solo Studenti</option>
+              </select>
+            </div>
+
+            <div class="mb-4">
+              <label for="fileUpload" class="form-label">File (Max 10MB)</label>
+              <input type="file" class="form-control" id="fileUpload" (change)="onFileSelected($event)">
+              <div class="form-text">Puoi caricare file immagine, PDF, video o archivi.</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100" [disabled]="uploadForm.invalid || !selectedFile">
+              Carica Contenuto
+            </button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
