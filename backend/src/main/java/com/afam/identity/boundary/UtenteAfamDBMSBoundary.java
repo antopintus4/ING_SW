@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UtenteAfamDBMSBoundary extends JpaRepository<UtenteAfam, String> {
+public interface UtenteAfamDBMSBoundary extends JpaRepository<UtenteAfam, java.util.UUID> {
     Optional<UtenteAfam> findByUsername(String username);
     Optional<UtenteAfam> findByEmail(String email);
 }

@@ -143,7 +143,7 @@ public class ProfileControl {
     }
 
     @GetMapping("/public/{id}")
-    public ResponseEntity<?> getPublicProfile(@PathVariable Long id) {
+    public ResponseEntity<?> getPublicProfile(@PathVariable java.util.UUID id) {
         Optional<Profilo> pOpt = profiloDBMSBoundary.findById(id);
         if (pOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Profilo non trovato.");

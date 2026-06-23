@@ -7,8 +7,8 @@ import jakarta.persistence.*;
 public class Allegato {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private java.util.UUID id;
 
     @Column(name = "url_file", nullable = false)
     private String urlFile;
@@ -17,8 +17,8 @@ public class Allegato {
     @JoinColumn(name = "contenuto_id", nullable = false)
     private Contenuto contenuto;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public java.util.UUID getId() { return id; }
+    public void setId(java.util.UUID id) { this.id = id; }
     public String getUrlFile() { return urlFile; }
     public void setUrlFile(String urlFile) { this.urlFile = urlFile; }
     public Contenuto getContenuto() { return contenuto; }

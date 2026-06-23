@@ -61,8 +61,11 @@
             </div>
             <div class="col-md-4 mb-3">
               <label for="cittaNascita" class="form-label">Città di Nascita</label>
-              <input type="text" class="form-control" id="cittaNascita" formControlName="cittaNascita"
+              <input type="text" class="form-control" id="cittaNascita" formControlName="cittaNascita" list="comuniList"
                      [ngClass]="{'is-invalid': registerForm.get('cittaNascita')?.invalid && registerForm.get('cittaNascita')?.touched}">
+              <datalist id="comuniList">
+                <option *ngFor="let c of comuniFiltrati" [value]="c.nome"></option>
+              </datalist>
             </div>
           </div>
 

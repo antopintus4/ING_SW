@@ -1,9 +1,6 @@
 package com.afam.identity.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -11,8 +8,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class UtenteAfam {
 
     @Id
-    @Column(name = "uuid", length = 36, nullable = false)
-    private String uuid;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "uuid", nullable = false)
+    private java.util.UUID uuid;
 
     @Column(name = "username", length = 50, nullable = false, unique = true)
     private String username;
@@ -49,11 +47,11 @@ public class UtenteAfam {
     public void recoveryPassword() {}
     public void recoveryEmail() {}
 
-    public String getUuid() {
+    public java.util.UUID getUuid() {
         return uuid;
     }
 
-    public void setUuid(String uuid) {
+    public void setUuid(java.util.UUID uuid) {
         this.uuid = uuid;
     }
 

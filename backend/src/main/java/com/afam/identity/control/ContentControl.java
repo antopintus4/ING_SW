@@ -67,7 +67,7 @@ public class ContentControl {
     }
 
     @DeleteMapping("/api/contenuti/{id}")
-    public ResponseEntity<?> eliminaContenuto(@PathVariable Long id) {
+    public ResponseEntity<?> eliminaContenuto(@PathVariable java.util.UUID id) {
         Optional<Contenuto> contenutoOpt = contenutoDBMSBoundary.findById(id);
         if (contenutoOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Contenuto non trovato");
@@ -79,7 +79,7 @@ public class ContentControl {
         }
 
         // Cancellazione fisica file
-        String uuid = pOpt.get().getUtenteAfam().getUuid();
+        String uuid = pOpt.get().getUtenteAfam().getUuid().toString();
         if (contenutoOpt.get().getAllegati() != null) {
             for(Allegato a : contenutoOpt.get().getAllegati()) {
                  try {
@@ -118,7 +118,7 @@ public class ContentControl {
     }
 
     @GetMapping("/api/gruppi/{id}")
-    public ResponseEntity<Gruppo> getDettaglioGruppo(@PathVariable Long id) {
+    public ResponseEntity<Gruppo> getDettaglioGruppo(@PathVariable java.util.UUID id) {
         Optional<Profilo> profiloOpt = getProfiloAttuale();
         if (profiloOpt.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
@@ -135,8 +135,8 @@ public class ContentControl {
     }
 
     @PostMapping("/api/gruppi/{gruppoId}/contenuti/{contenutoId}")
-    public ResponseEntity<?> aggregaContenuto(@PathVariable Long gruppoId, 
-                                              @PathVariable Long contenutoId) {
+    public ResponseEntity<?> aggregaContenuto(@PathVariable java.util.UUID gruppoId, 
+                                              @PathVariable java.util.UUID contenutoId) {
         Optional<Profilo> profiloOpt = getProfiloAttuale();
         if (profiloOpt.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
@@ -168,7 +168,7 @@ public class ContentControl {
     }
 
     @DeleteMapping("/api/gruppi/{id}")
-    public ResponseEntity<?> eliminaGruppo(@PathVariable Long id) {
+    public ResponseEntity<?> eliminaGruppo(@PathVariable java.util.UUID id) {
         Optional<Profilo> profiloOpt = getProfiloAttuale();
         if (profiloOpt.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 

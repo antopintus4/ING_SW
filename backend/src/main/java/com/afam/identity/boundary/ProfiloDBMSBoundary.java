@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.List;
 
 @Repository
-public interface ProfiloDBMSBoundary extends JpaRepository<Profilo, Long> {
-    Optional<Profilo> findByUtenteAfamUuid(String uuid);
+public interface ProfiloDBMSBoundary extends JpaRepository<Profilo, java.util.UUID> {
+    Optional<Profilo> findByUtenteAfamUuid(java.util.UUID uuid);
     List<Profilo> findByNomeContainingIgnoreCaseOrCognomeContainingIgnoreCase(String nome, String cognome);
 }

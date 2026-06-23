@@ -55,7 +55,7 @@ public class RegistrationControl {
         }
 
         UtenteAfam utente = new UtenteAfam();
-        utente.setUuid(UUID.randomUUID().toString());
+        utente.setUuid(UUID.randomUUID());
         utente.setUsername(request.getUsername());
         utente.setEmail(request.getEmail());
         utente.setPassword(passwordEncoder.encode(request.getPassword()));

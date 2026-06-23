@@ -32,10 +32,11 @@ public class CodiceFiscaleValidator {
         if (cf == null || cf.length() != 16) return false;
         if (nome == null || cognome == null || sesso == null || dataNascitaStr == null || citta == null) return false;
 
-        cf = cf.toUpperCase();
-        nome = nome.toUpperCase();
-        cognome = cognome.toUpperCase();
-        sesso = sesso.toUpperCase();
+        cf = cf.toUpperCase().trim();
+        nome = nome.toUpperCase().trim();
+        cognome = cognome.toUpperCase().trim();
+        sesso = sesso.toUpperCase().trim();
+        citta = citta.trim();
 
         try {
             LocalDate dataNascita = LocalDate.parse(dataNascitaStr, DateTimeFormatter.ISO_LOCAL_DATE);

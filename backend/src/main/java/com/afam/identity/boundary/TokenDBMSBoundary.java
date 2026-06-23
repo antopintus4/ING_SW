@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.List;
 
 @Repository
-public interface TokenDBMSBoundary extends JpaRepository<Token, Long> {
+public interface TokenDBMSBoundary extends JpaRepository<Token, java.util.UUID> {
     Optional<Token> findByValore(String valore);
     List<Token> findByUtenteAfamAndTipoAndValore(UtenteAfam utenteAfam, String tipo, String valore);
 }

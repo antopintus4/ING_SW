@@ -71,7 +71,7 @@ public class UploadControl {
             Profilo profilo = profiloOpt.get();
 
             // 1. Crea la cartella utente se non esiste
-            Path userUploadPath = Paths.get(UPLOAD_DIR, utente.getUuid());
+            Path userUploadPath = Paths.get(UPLOAD_DIR, utente.getUuid().toString());
             if (!Files.exists(userUploadPath)) {
                 Files.createDirectories(userUploadPath);
             }

@@ -80,6 +80,16 @@ public class AuthControl {
         extraClaims.put("role", "AFAM");
         final String jwt = jwtService.generateToken(extraClaims, userDetails);
         
+        if (utenteOpt.isPresent()) {
+            Token loginToken = new Token();
+            loginToken.setValore(jwt);
+            loginToken.setScadenza(LocalDateTime.now().plusDays(1));
+            loginToken.setTipo("LOGIN");
+            loginToken.setUtenteAfam(utenteOpt.get());
+            loginToken.setAccessTime(LocalDateTime.now());
+            tokenDBMSBoundary.save(loginToken);
+        }
+        
         return ResponseEntity.ok(new AuthResponse(jwt));
     }
 
@@ -99,12 +109,21 @@ public class AuthControl {
             for (Token t : tokens) {
                 if (t.getScadenza().isAfter(LocalDateTime.now())) {
                     // OTP Valido, generiamo il JWT
-                    tokenDBMSBoundary.delete(t); // Consuma l'OTP
+                    tokenDBMSBoundary.delete(t); // Consuma l'OTPOffset
 
                     final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
                     Map<String, Object> extraClaims = new HashMap<>();
                     extraClaims.put("role", "AFAM");
                     final String jwt = jwtService.generateToken(extraClaims, userDetails);
+
+                    Token loginToken = new Token();
+                    loginToken.setValore(jwt);
+                    loginToken.setScadenza(LocalDateTime.now().plusDays(1));
+                    loginToken.setTipo("LOGIN");
+                    loginToken.setUtenteAfam(utente);
+                    loginToken.setAccessTime(LocalDateTime.now());
+                    tokenDBMSBoundary.save(loginToken);
+
                     return ResponseEntity.ok(new AuthResponse(jwt));
                 }
             }

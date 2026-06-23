@@ -54,7 +54,7 @@ public class ViewControl {
     }
 
     @GetMapping("/api/contenuti/{id}")
-    public ResponseEntity<?> getDettaglioContenuto(@PathVariable Long id) {
+    public ResponseEntity<?> getDettaglioContenuto(@PathVariable java.util.UUID id) {
         Optional<Contenuto> contenutoOpt = contenutoDBMSBoundary.findById(id);
         if (contenutoOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Contenuto non trovato");
@@ -74,7 +74,7 @@ public class ViewControl {
     }
 
     @GetMapping("/api/contenuti/public/{id}")
-    public ResponseEntity<?> getPublicContenuto(@PathVariable Long id) {
+    public ResponseEntity<?> getPublicContenuto(@PathVariable java.util.UUID id) {
         Optional<Contenuto> contenutoOpt = contenutoDBMSBoundary.findById(id);
         if (contenutoOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Contenuto non trovato");
@@ -89,7 +89,7 @@ public class ViewControl {
     }
 
     @GetMapping("/api/contenuti/download/{allegatoId}/file")
-    public ResponseEntity<?> downloadFile(@PathVariable Long allegatoId) {
+    public ResponseEntity<?> downloadFile(@PathVariable java.util.UUID allegatoId) {
         Optional<Allegato> allegatoOpt = allegatoDBMSBoundary.findById(allegatoId);
         if (allegatoOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Allegato non trovato");
@@ -97,7 +97,7 @@ public class ViewControl {
 
         Allegato allegato = allegatoOpt.get();
         Contenuto c = allegato.getContenuto();
-        String uuidProprietario = c.getProfilo().getUtenteAfam().getUuid();
+        String uuidProprietario = c.getProfilo().getUtenteAfam().getUuid().toString();
 
         try {
             Path file = Paths.get(UPLOAD_DIR, uuidProprietario, allegato.getUrlFile());

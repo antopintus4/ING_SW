@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ContenutoDBMSBoundary extends JpaRepository<Contenuto, Long> {
+public interface ContenutoDBMSBoundary extends JpaRepository<Contenuto, java.util.UUID> {
     List<Contenuto> findByProfilo(Profilo profilo);
-    List<Contenuto> findByProfiloId(Long profiloId);
+    List<Contenuto> findByProfiloId(java.util.UUID profiloId);
     List<Contenuto> findByTitoloContainingIgnoreCaseAndPolicyVisibilita(String titolo, String policyVisibilita);
 }

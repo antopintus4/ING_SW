@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface GruppoDBMSBoundary extends JpaRepository<Gruppo, Long> {
+public interface GruppoDBMSBoundary extends JpaRepository<Gruppo, java.util.UUID> {
     List<Gruppo> findByNomeContainingIgnoreCase(String nome);
-    List<Gruppo> findByProfiloId(Long profiloId);
+    List<Gruppo> findByProfiloId(java.util.UUID profiloId);
 }

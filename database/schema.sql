@@ -1,7 +1,7 @@
 -- 1. UTENTE AFAM
 -- Tabella principale per l'autenticazione.
 CREATE TABLE utente_afam (
-    uuid VARCHAR(36) PRIMARY KEY,
+    uuid UUID PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
@@ -14,22 +14,21 @@ CREATE TABLE utente_afam (
 -- 2. TOKEN
 -- Collegata 1 a N con l'Utente (un utente può avere più token attivi/scaduti).
 CREATE TABLE token (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY,
     valore VARCHAR(255) NOT NULL UNIQUE,
     scadenza TIMESTAMP NOT NULL,
     tipo VARCHAR(50) NOT NULL,
-    utente_uuid VARCHAR(36) NOT NULL,
+    utente_uuid UUID NOT NULL, -- Allineato a UUID per la Foreign Key
+    access_time TIMESTAMP,
     FOREIGN KEY (utente_uuid) REFERENCES utente_afam(uuid) ON DELETE CASCADE
 );
 
 -- 3. PROFILO (con Anagrafica e Dati Accademici aggregati)
 -- Relazione 1:1 con utente_afam (garantita dal vincolo UNIQUE sulla foreign key).
 CREATE TABLE profilo (
-    id SERIAL PRIMARY KEY,
-    utente_uuid VARCHAR(36) NOT NULL UNIQUE,
+    id UUID PRIMARY KEY,
+    utente_uuid UUID NOT NULL UNIQUE,
     descrizione TEXT,
-    interessi TEXT,
-    competenze TEXT,
     policy_visibilita VARCHAR(50),
     foto_profilo VARCHAR(255),
     
@@ -52,32 +51,46 @@ CREATE TABLE profilo (
     FOREIGN KEY (utente_uuid) REFERENCES utente_afam(uuid) ON DELETE CASCADE
 );
 
+CREATE TABLE profilo_interessi (
+    profilo_id UUID NOT NULL,
+    interesse VARCHAR(255) NOT NULL,
+    PRIMARY KEY (profilo_id, interesse),
+    FOREIGN KEY (profilo_id) REFERENCES profilo(id) ON DELETE CASCADE
+);
+
+CREATE TABLE profilo_competenze (
+    profilo_id UUID NOT NULL,
+    competenza VARCHAR(255) NOT NULL,
+    PRIMARY KEY (profilo_id, competenza),
+    FOREIGN KEY (profilo_id) REFERENCES profilo(id) ON DELETE CASCADE
+);
+
 -- 4. GRUPPO
 -- Relazione dal 'portfolio' del profilo.
 CREATE TABLE gruppo (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
-    profilo_id INT NOT NULL, -- Il proprietario del gruppo
+    profilo_id UUID NOT NULL, -- Il proprietario del gruppo
     FOREIGN KEY (profilo_id) REFERENCES profilo(id) ON DELETE CASCADE
 );
 
 -- 5. CONTENUTO
 -- Relazione dal 'portfolio' del profilo.
 CREATE TABLE contenuto (
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY,
     titolo VARCHAR(255) NOT NULL,
     tipo VARCHAR(50),
     descrizione TEXT,
     policy_visibilita VARCHAR(50),
     numero_visualizzazioni INT DEFAULT 0,
-    profilo_id INT NOT NULL, -- L'utente che ha creato il contenuto
+    profilo_id UUID NOT NULL, -- L'utente che ha creato il contenuto
     FOREIGN KEY (profilo_id) REFERENCES profilo(id) ON DELETE CASCADE
 );
 
 -- 6. ALLEGATO (Risolve l'attributo multivalore "allegati" di Contenuto)
 CREATE TABLE allegato (
-    id SERIAL PRIMARY KEY,
-    contenuto_id INT NOT NULL,
+    id UUID PRIMARY KEY,
+    contenuto_id UUID NOT NULL,
     url_file VARCHAR(255) NOT NULL,
     FOREIGN KEY (contenuto_id) REFERENCES contenuto(id) ON DELETE CASCADE
 );
@@ -85,25 +98,23 @@ CREATE TABLE allegato (
 -- 7. TABELLE DI GIUNZIONE PER AUTORI E COLLABORATORI (Risolve attributi multivalore)
 -- Permettono di associare più profili a un contenuto come autori o collaboratori.
 CREATE TABLE contenuto_autore (
-    contenuto_id INT NOT NULL,
-    profilo_id INT NOT NULL,
-    PRIMARY KEY (contenuto_id, profilo_id),
-    FOREIGN KEY (contenuto_id) REFERENCES contenuto(id) ON DELETE CASCADE,
-    FOREIGN KEY (profilo_id) REFERENCES profilo(id) ON DELETE CASCADE
+    contenuto_id UUID NOT NULL,
+    nome_autore VARCHAR(255) NOT NULL,
+    PRIMARY KEY (contenuto_id, nome_autore),
+    FOREIGN KEY (contenuto_id) REFERENCES contenuto(id) ON DELETE CASCADE
 );
 
 CREATE TABLE contenuto_collaboratore (
-    contenuto_id INT NOT NULL,
-    profilo_id INT NOT NULL,
-    PRIMARY KEY (contenuto_id, profilo_id),
-    FOREIGN KEY (contenuto_id) REFERENCES contenuto(id) ON DELETE CASCADE,
-    FOREIGN KEY (profilo_id) REFERENCES profilo(id) ON DELETE CASCADE
+    contenuto_id UUID NOT NULL,
+    nome_collaboratore VARCHAR(255) NOT NULL,
+    PRIMARY KEY (contenuto_id, nome_collaboratore),
+    FOREIGN KEY (contenuto_id) REFERENCES contenuto(id) ON DELETE CASCADE
 );
 
 -- 8. TABELLA DI GIUNZIONE GRUPPO-CONTENUTO (Risolve la relazione N:M "aggrega")
 CREATE TABLE gruppo_contenuto (
-    gruppo_id INT NOT NULL,
-    contenuto_id INT NOT NULL,
+    gruppo_id UUID NOT NULL,
+    contenuto_id UUID NOT NULL,
     PRIMARY KEY (gruppo_id, contenuto_id),
     FOREIGN KEY (gruppo_id) REFERENCES gruppo(id) ON DELETE CASCADE,
     FOREIGN KEY (contenuto_id) REFERENCES contenuto(id) ON DELETE CASCADE
@@ -120,9 +131,9 @@ CREATE TABLE link (
     numero_visualizzazioni INT DEFAULT 0,
     
     -- Chiavi esterne (NULLABLE per supportare il collegamento a entità diverse)
-    profilo_id INT DEFAULT NULL,
-    gruppo_id INT DEFAULT NULL,
-    contenuto_id INT DEFAULT NULL,
+    profilo_id UUID DEFAULT NULL,
+    gruppo_id UUID DEFAULT NULL,
+    contenuto_id UUID DEFAULT NULL,
     
     FOREIGN KEY (profilo_id) REFERENCES profilo(id) ON DELETE CASCADE,
     FOREIGN KEY (gruppo_id) REFERENCES gruppo(id) ON DELETE CASCADE,

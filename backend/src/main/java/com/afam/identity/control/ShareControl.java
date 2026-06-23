@@ -63,7 +63,7 @@ public class ShareControl {
         Optional<Profilo> pOpt = getProfiloAttuale();
         if (pOpt.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
-        Long contenutoId = Long.valueOf(request.get("contenutoId").toString());
+        java.util.UUID contenutoId = java.util.UUID.fromString(request.get("contenutoId").toString());
         int daysToExpire = Integer.parseInt(request.get("daysToExpire").toString());
 
         Optional<Contenuto> cOpt = contenutoDBMSBoundary.findById(contenutoId);
@@ -151,7 +151,7 @@ public class ShareControl {
         }
 
         Allegato allegato = c.getAllegati().get(0);
-        String uuidProprietario = c.getProfilo().getUtenteAfam().getUuid();
+        String uuidProprietario = c.getProfilo().getUtenteAfam().getUuid().toString();
 
         try {
             Path file = Paths.get(UPLOAD_DIR, uuidProprietario, allegato.getUrlFile());

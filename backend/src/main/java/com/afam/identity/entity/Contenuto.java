@@ -8,8 +8,8 @@ import java.util.List;
 public class Contenuto {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private java.util.UUID id;
 
     @Column(nullable = false)
     private String titolo;
@@ -60,8 +60,8 @@ public class Contenuto {
     public void getLink() {}
     public void setLink() {}
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public java.util.UUID getId() { return id; }
+    public void setId(java.util.UUID id) { this.id = id; }
     public String getTitolo() { return titolo; }
     public void setTitolo(String titolo) { this.titolo = titolo; }
     public String getTipo() { return tipo; }

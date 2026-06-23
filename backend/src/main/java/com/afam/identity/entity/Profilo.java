@@ -9,8 +9,8 @@ import java.util.List;
 public class Profilo {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private java.util.UUID id;
 
     @OneToOne
     @JoinColumn(name = "utente_uuid", referencedColumnName = "uuid", unique = true, nullable = false)
@@ -82,8 +82,8 @@ public class Profilo {
     public void calculateCF() {}
     public void validateBirthday() {}
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public java.util.UUID getId() { return id; }
+    public void setId(java.util.UUID id) { this.id = id; }
     public UtenteAfam getUtenteAfam() { return utenteAfam; }
     public void setUtenteAfam(UtenteAfam utenteAfam) { this.utenteAfam = utenteAfam; }
     public String getDescrizione() { return descrizione; }
