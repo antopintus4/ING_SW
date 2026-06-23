@@ -10,12 +10,18 @@ export class ContentService {
 
   constructor(private http: HttpClient) {}
 
-  uploadContent(file: File, titolo: string, descrizione: string, policyVisibilita: string): Observable<any> {
+  uploadContent(file: File, descrizioneFile: File, titolo: string, policyVisibilita: string, autori?: string, collaboratori?: string): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('descrizioneFile', descrizioneFile);
     formData.append('titolo', titolo);
-    formData.append('descrizione', descrizione);
     formData.append('policyVisibilita', policyVisibilita);
+    if (autori) {
+      formData.append('autori', autori);
+    }
+    if (collaboratori) {
+      formData.append('collaboratori', collaboratori);
+    }
 
     return this.http.post(`${this.apiUrl}/upload`, formData, { responseType: 'text' });
   }

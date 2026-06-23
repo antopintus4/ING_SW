@@ -47,7 +47,7 @@ public class UploadControl {
     public ResponseEntity<?> uploadContenuto(
             @RequestParam("file") MultipartFile file,
             @RequestParam("titolo") String titolo,
-            @RequestParam("descrizione") String descrizione,
+            @RequestParam("descrizioneFile") MultipartFile descrizioneFile,
             @RequestParam("policyVisibilita") String policyVisibilita,
             @RequestParam(value = "autori", required = false) String autori,
             @RequestParam(value = "collaboratori", required = false) String collaboratori) {
@@ -69,6 +69,12 @@ public class UploadControl {
             }
 
             Profilo profilo = profiloOpt.get();
+
+            // Leggi il file di descrizione
+            String descrizione = "";
+            if (descrizioneFile != null && !descrizioneFile.isEmpty()) {
+                descrizione = new String(descrizioneFile.getBytes(), java.nio.charset.StandardCharsets.UTF_8);
+            }
 
             // 1. Crea la cartella utente se non esiste
             Path userUploadPath = Paths.get(UPLOAD_DIR, utente.getUuid().toString());

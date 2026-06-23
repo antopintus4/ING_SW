@@ -17,9 +17,19 @@
             </div>
 
             <div class="mb-3">
-              <label for="descrizione" class="form-label">Descrizione</label>
-              <textarea class="form-control" id="descrizione" rows="3" formControlName="descrizione"
-                        [ngClass]="{'is-invalid': uploadForm.get('descrizione')?.invalid && uploadForm.get('descrizione')?.touched}"></textarea>
+              <label for="descrizioneFile" class="form-label">File di Descrizione (Testo)</label>
+              <input type="file" class="form-control" id="descrizioneFile" (change)="onDescrizioneFileSelected($event)" accept=".txt,.md,.json">
+              <div class="form-text">Carica un file di testo contenente la descrizione.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="autori" class="form-label">Autori (separati da virgola)</label>
+              <input type="text" class="form-control" id="autori" formControlName="autori" placeholder="es. Autore 1, Autore 2">
+            </div>
+
+            <div class="mb-3">
+              <label for="collaboratori" class="form-label">Collaboratori (separati da virgola)</label>
+              <input type="text" class="form-control" id="collaboratori" formControlName="collaboratori" placeholder="es. Collab 1, Collab 2">
             </div>
 
             <div class="mb-3">
@@ -37,7 +47,7 @@
               <div class="form-text">Puoi caricare file immagine, PDF, video o archivi.</div>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100" [disabled]="uploadForm.invalid || !selectedFile">
+            <button type="submit" class="btn btn-primary w-100" [disabled]="uploadForm.invalid || !selectedFile || !selectedDescrizioneFile">
               Carica Contenuto
             </button>
           </form>

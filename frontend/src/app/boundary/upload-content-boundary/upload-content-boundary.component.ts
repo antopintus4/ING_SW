@@ -13,14 +13,16 @@ import { ContentService } from '../../services/content.service';
 export class UploadContentBoundaryComponent {
   uploadForm: FormGroup;
   selectedFile: File | null = null;
+  selectedDescrizioneFile: File | null = null;
   errorMessage: string = '';
   successMessage: string = '';
 
   constructor(private fb: FormBuilder, private contentService: ContentService) {
     this.uploadForm = this.fb.group({
       titolo: ['', Validators.required],
-      descrizione: ['', Validators.required],
-      policyVisibilita: ['Pubblico', Validators.required]
+      policyVisibilita: ['Pubblico', Validators.required],
+      autori: [''],
+      collaboratori: ['']
     });
   }
 
@@ -37,22 +39,37 @@ export class UploadContentBoundaryComponent {
     }
   }
 
+  onDescrizioneFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.selectedDescrizioneFile = file;
+    }
+  }
+
   onSubmit() {
-    if (this.uploadForm.invalid || !this.selectedFile) {
-      this.errorMessage = 'Compila tutti i campi e seleziona un file.';
+    if (this.uploadForm.invalid || !this.selectedFile || !this.selectedDescrizioneFile) {
+      this.errorMessage = 'Compila tutti i campi e seleziona i file richiesti.';
       return;
     }
 
     this.errorMessage = '';
     this.successMessage = '';
 
-    const { titolo, descrizione, policyVisibilita } = this.uploadForm.value;
+    const { titolo, policyVisibilita, autori, collaboratori } = this.uploadForm.value;
 
-    this.contentService.uploadContent(this.selectedFile, titolo, descrizione, policyVisibilita).subscribe({
+    this.contentService.uploadContent(
+      this.selectedFile,
+      this.selectedDescrizioneFile,
+      titolo,
+      policyVisibilita,
+      autori,
+      collaboratori
+    ).subscribe({
       next: (res) => {
         this.successMessage = 'Contenuto caricato con successo!';
         this.uploadForm.reset({ policyVisibilita: 'Pubblico' });
         this.selectedFile = null;
+        this.selectedDescrizioneFile = null;
       },
       error: (err) => {
         this.errorMessage = 'Errore durante l\'upload: ' + (err.error || err.message);
