@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class RecoveryService {
-  private apiUrl = 'http://localhost:8080/api/recovery';
+  private apiUrl = '/api/recovery';
 
   constructor(private http: HttpClient) {}
 

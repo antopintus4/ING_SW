@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class LinkService {
-  private apiUrl = 'http://localhost:8080/api/links';
+  private apiUrl = '/api/links';
 
   constructor(private http: HttpClient) {}
 

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class GroupService {
-  private apiUrl = 'http://localhost:8080/api/gruppi';
+  private apiUrl = '/api/gruppi';
 
   constructor(private http: HttpClient) {}
 
