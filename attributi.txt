@@ -1,0 +1,113 @@
+Created task.md
+Viewed login-boundary.component.ts:1-62
+Viewed registration-boundary.component.ts:1-118
+Viewed otp-boundary.component.ts:1-58
+Viewed identity-provider-boundary.component.ts:1-13
+Viewed recovery-boundary.component.ts:1-56
+Viewed recovery-reset-boundary.component.ts:1-60
+Viewed profile-boundary.component.ts:1-60
+Viewed edit-anagrafica-boundary.component.ts:1-56
+Viewed edit-credentials-boundary.component.ts:1-56
+Viewed edit-password-boundary.component.ts:1-44
+Viewed other-edits-boundary.component.ts:1-13
+Viewed public-profile-boundary.component.ts:1-36
+Viewed content-management-boundary.component.ts:1-129
+Viewed upload-content-boundary.component.ts:1-80
+Viewed content-view-boundary.component.ts:1-54
+Viewed preview-boundary.component.ts:1-13
+Viewed group-management-boundary.component.ts:1-55
+Viewed group-view-boundary.component.ts:1-35
+Viewed public-content-view-boundary.component.ts:1-56
+Viewed share-boundary.component.ts:1-64
+Viewed active-links-boundary.component.ts:1-53
+Viewed link-settings-boundary.component.ts:1-13
+Viewed results-boundary.component.ts:1-50
+Viewed home-boundary.component.ts:1-13
+Viewed message-boundary.component.ts:1-13
+Viewed error-page-boundary.component.ts:1-14
+Viewed error-message-boundary.component.ts:1-39
+Edited task.md
+
+Ecco il report completo con tutti gli attributi dei dati estratti dalle classi Boundary (componenti Angular) del frontend. Come da te indicato, sono stati esclusi i servizi iniettati nel costruttore e la struttura raggruppa le boundary per macro-aree, evidenziando i collegamenti agli oggetti Control ed Entity come definito nell'ODD e nel codice sorgente.
+
+### 1. Gestione Account (Autenticazione e Registrazione)
+- **Oggetti Control:** `AuthControl`, `RegistrationControl`
+- **Modello Oggetti (Entity):** `UtenteAfam`, `Token`
+
+| Classe Boundary | Attributi (Tipo) |
+|---|---|
+| **LoginBoundary** | `loginForm` (FormGroup)<br>`errorMessage` (string) |
+| **RegistrationBoundary** | `registerForm` (FormGroup)<br>`errorMessage` (string)<br>`successMessage` (string)<br>`comuni` (any[])<br>`comuniFiltrati` (any[]) |
+| **OtpBoundary** | `otpForm` (FormGroup)<br>`errorMessage` (string)<br>`username` (string) |
+| **IdentityProviderBoundary** | *(Nessun attributo di stato esplicito)* |
+| **RecoveryBoundary** | `email` (string)<br>`username` (string)<br>`mode` ('password' \| 'email')<br>`successMessage` (string)<br>`errorMessage` (string) |
+| **RecoveryResetBoundary** | `token` (string)<br>`newPassword` (any)<br>`confirmPassword` (any)<br>`errorMessage` (string)<br>`successMessage` (string) |
+
+---
+
+### 2. Gestione Profilo
+- **Oggetti Control:** `ProfileControl`
+- **Modello Oggetti (Entity):** `Profilo`
+
+| Classe Boundary | Attributi (Tipo) |
+|---|---|
+| **ProfileBoundary** | `setupStep` ('idle' \| 'awaiting_otp' \| 'success')<br>`otpCode` (string)<br>`errorMessage` (string)<br>`profilo` (any) |
+| **EditAnagraficaBoundary** | `anagrafica` (any: {nome, cognome, dataNascita, codiceFiscale, citta, indirizzo, telefono})<br>`errorMessage` (string)<br>`successMessage` (string) |
+| **EditCredentialsBoundary** | `credentials` (any: {username, email})<br>`errorMessage` (string)<br>`successMessage` (string) |
+| **EditPasswordBoundary** | `passwords` (any: {currentPassword, newPassword, confirmPassword})<br>`errorMessage` (string)<br>`successMessage` (string) |
+| **OtherEditsBoundary** | *(Nessun attributo di stato esplicito)* |
+| **PublicProfileBoundary** | `profilo` (any)<br>`errorMessage` (string) |
+
+---
+
+### 3. Caricamento e Gestione Contenuti
+- **Oggetti Control:** `UploadControl`, `ContentControl`, `ViewControl`
+- **Modello Oggetti (Entity):** `Contenuto`, `Allegato`, `Gruppo`
+
+| Classe Boundary | Attributi (Tipo) |
+|---|---|
+| **ContentManagementBoundary** | `contents` (any[])<br>`errorMessage` (string)<br>`successMessage` (string)<br>`selectedContentId` (number \| null)<br>`scadenzaGiorni` (number)<br>`shareModalInstance` (any)<br>`groups` (any[])<br>`selectedGroupId` (number \| null)<br>`groupModalInstance` (any) |
+| **UploadContentBoundary** | `uploadForm` (FormGroup)<br>`selectedFile` (File \| null)<br>`selectedDescrizioneFile` (File \| null)<br>`errorMessage` (string)<br>`successMessage` (string) |
+| **ContentViewBoundary** | `contenuto` (any)<br>`errorMessage` (string) |
+| **PreviewBoundary** | *(Nessun attributo di stato esplicito)* |
+| **GroupManagementBoundary** | `groups` (any[])<br>`newGroupName` (string)<br>`errorMessage` (string)<br>`successMessage` (string) |
+| **GroupViewBoundary** | `group` (any)<br>`errorMessage` (string) |
+| **PublicContentViewBoundary** | `contenuto` (any)<br>`errorMessage` (string) |
+
+---
+
+### 4. Condivisione
+- **Oggetti Control:** `ShareControl`
+- **Modello Oggetti (Entity):** `Link`
+
+| Classe Boundary | Attributi (Tipo) |
+|---|---|
+| **ShareBoundary** | `contenuto` (any)<br>`errorMessage` (string)<br>`identificatore` (string) |
+| **ActiveLinksBoundary** | `links` (any[])<br>`errorMessage` (string) |
+| **LinkSettingsBoundary** | *(Nessun attributo di stato esplicito)* |
+
+---
+
+### 5. Ricerca e Visualizzazione
+- **Oggetti Control:** `SearchControl`, `ViewControl`
+- **Modello Oggetti (Entity):** `Profilo`, `Contenuto`, `Gruppo` (Tutti i dati recuperabili)
+
+| Classe Boundary | Attributi (Tipo) |
+|---|---|
+| **ResultsBoundary** | `query` (string)<br>`utenti` (any[])<br>`contenuti` (any[])<br>`gruppi` (any[])<br>`errorMessage` (string)<br>`isSearching` (boolean) |
+| **HomeBoundary** | *(Nessun attributo di stato esplicito)* |
+
+---
+
+### 6. Gestione Errori e Messaggistica
+- **Oggetti Control:** *(Gestione errori tramite status HTTP dei vari Control)*
+- **Modello Oggetti (Entity):** *(Nessuna entità di base dati diretta, opera mediante messaggistica HTTP/DTO)*
+
+| Classe Boundary | Attributi (Tipo) |
+|---|---|
+| **ErrorMessageBoundary** | `errorType` (string)<br>`errorMessage` (string)<br>`errorIcon` (string) |
+| **MessageBoundary** | *(Nessun attributo di stato esplicito)* |
+| **ErrorPageBoundary** | *(Nessun attributo di stato esplicito)* |
+
+> [!NOTE]
+> Le boundary etichettate con "Nessun attributo di stato esplicito" sono componenti prettamente presentazionali o in cui non sono state dichiarate variabili di stato nel file Typescript principale all'interno del progetto. Le entità ad essi collegate sono invece gestite dallo strato DBMSBoundary (Repository).
