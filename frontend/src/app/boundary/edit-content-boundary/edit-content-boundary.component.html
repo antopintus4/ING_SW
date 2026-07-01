@@ -1,0 +1,113 @@
+<div class="container mt-5">
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h4 class="mb-0">Modifica Contenuto</h4>
+      <a routerLink="/content" class="btn btn-outline-light btn-sm">Torna alla Lista</a>
+    </div>
+    <div class="card-body p-4">
+      
+      <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+      <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+
+      <div *ngIf="!content" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+
+      <div *ngIf="content">
+        <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+          
+          <h5 class="mb-3 text-secondary border-bottom pb-2">Metadati Principali</h5>
+          
+          <div class="row">
+            <div class="col-md-8 mb-3">
+              <label for="titolo" class="form-label fw-bold">Titolo</label>
+              <input type="text" class="form-control" id="titolo" formControlName="titolo"
+                     [ngClass]="{'is-invalid': editForm.get('titolo')?.invalid && editForm.get('titolo')?.touched}">
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="policyVisibilita" class="form-label fw-bold">Policy Visibilità</label>
+              <select class="form-select" id="policyVisibilita" formControlName="policyVisibilita"
+                      [ngClass]="{'is-invalid': editForm.get('policyVisibilita')?.invalid && editForm.get('policyVisibilita')?.touched}">
+                <option value="Pubblico">Pubblico</option>
+                <option value="Privato">Privato</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="autori" class="form-label fw-bold">Autori (separati da virgola)</label>
+              <input type="text" class="form-control" id="autori" formControlName="autori">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="collaboratori" class="form-label fw-bold">Collaboratori (separati da virgola)</label>
+              <input type="text" class="form-control" id="collaboratori" formControlName="collaboratori">
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label for="descrizione" class="form-label fw-bold">Modifica Descrizione</label>
+            <div class="card bg-light mb-2">
+              <div class="card-body py-2 px-3 text-muted" style="white-space: pre-wrap; max-height: 150px; overflow-y: auto; font-size: 0.9rem;">
+                <strong class="d-block mb-1 text-dark">Descrizione attuale:</strong>
+                {{ content.descrizione || 'Nessuna descrizione presente.' }}
+              </div>
+            </div>
+            <textarea class="form-control" id="descrizione" rows="3" formControlName="descrizione" 
+                      placeholder="Scrivi qui per aggiungere testo alla descrizione attuale..."></textarea>
+            <div class="form-text text-info">
+              <i class="bi bi-info-circle me-1"></i> Il testo inserito verrà appeso alla descrizione attuale. 
+              <strong>Digita <code>/delete</code> all'inizio per rimpiazzare o cancellare completamente la descrizione precedente.</strong>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" [disabled]="editForm.invalid">
+            <i class="bi bi-save me-2"></i> Salva Modifiche Metadati
+          </button>
+        </form>
+
+        <hr class="my-5">
+
+        <h5 class="mb-3 text-secondary border-bottom pb-2">Gestione Allegati</h5>
+        
+        <!-- Tabella Allegati Attuali -->
+        <div class="mb-4">
+          <h6>Allegati Esistenti</h6>
+          <div *ngIf="content.allegati?.length === 0" class="alert alert-light border">
+            Nessun file allegato a questo contenuto.
+          </div>
+          <ul class="list-group" *ngIf="content.allegati?.length > 0">
+            <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let a of content.allegati">
+              <span class="text-truncate" style="max-width: 80%;">
+                <i class="bi bi-file-earmark-text me-2 text-primary"></i> {{ a.urlFile }}
+              </span>
+              <button class="btn btn-sm btn-outline-danger" (click)="deleteAllegato(a.id)">
+                <i class="bi bi-trash"></i> Elimina
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Aggiunta Nuovo Allegato -->
+        <div class="card bg-light border-0">
+          <div class="card-body">
+            <h6>Aggiungi Nuovo Allegato</h6>
+            <div class="row align-items-center">
+              <div class="col-md-9">
+                <input class="form-control" type="file" (change)="onFileSelected($event)">
+              </div>
+              <div class="col-md-3 text-end mt-2 mt-md-0">
+                <button class="btn btn-success w-100" (click)="uploadAllegato()" [disabled]="!selectedFile">
+                  <i class="bi bi-upload me-2"></i> Carica
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

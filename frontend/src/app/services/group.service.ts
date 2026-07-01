@@ -14,7 +14,7 @@ export class GroupService {
     return this.http.get<any[]>(this.apiUrl);
   }
 
-  getGroup(id: number): Observable<any> {
+  getGroup(id: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
 
@@ -22,11 +22,19 @@ export class GroupService {
     return this.http.post<any>(this.apiUrl, { nome });
   }
 
-  deleteGroup(id: number): Observable<any> {
+  deleteGroup(id: string): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 
-  addContentToGroup(groupId: number, contentId: number): Observable<any> {
+  addContentToGroup(groupId: string, contentId: string): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/${groupId}/contenuti/${contentId}`, {});
+  }
+
+  removeContentFromGroup(groupId: string, contentId: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${groupId}/contenuti/${contentId}`);
+  }
+
+  updateGroup(id: string, nome: string): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}`, { nome });
   }
 }

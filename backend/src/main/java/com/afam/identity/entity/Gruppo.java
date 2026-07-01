@@ -24,20 +24,20 @@ public class Gruppo {
         joinColumns = @JoinColumn(name = "gruppo_id"),
         inverseJoinColumns = @JoinColumn(name = "contenuto_id")
     )
-    private List<Contenuto> listaContenuti;
+    protected List<Contenuto> listaContenuti;
 
     @OneToMany(mappedBy = "gruppo", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Link> linkAssociati;
+    protected List<Link> linkAssociati;
 
     // Metodi UML (segnaposto per aderenza 100% al RAD)
     public void creaGruppo() {}
-    public void aggiungiContenuto() {}
-    public void rimuoviContenuto() {}
-    public void groupExist() {}
-    public void getContenutiMethod() {} // Evita conflitto con getter
+    public void aggiungiContenuto(Contenuto c) {}
+    public void rimuoviContenuto(Contenuto c) {}
+    public boolean groupExist() { return false; }
+    public List<Contenuto> getContenuti() { return listaContenuti; }
     public void eliminaGruppo() {}
-    public void getLink() {}
-    public void setLink() {}
+    public List<Link> getLink() { return linkAssociati; }
+    public void setLink(Link l) {}
 
     public java.util.UUID getId() { return id; }
     public void setId(java.util.UUID id) { this.id = id; }

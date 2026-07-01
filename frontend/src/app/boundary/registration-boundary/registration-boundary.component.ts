@@ -19,6 +19,7 @@ export class RegistrationBoundaryComponent implements OnInit {
   successMessage: string = '';
   comuni: any[] = [];
   comuniFiltrati: any[] = [];
+  currentStep: number = 1;
 
   constructor(
     private fb: FormBuilder,
@@ -35,7 +36,12 @@ export class RegistrationBoundaryComponent implements OnInit {
       sesso: ['', Validators.required],
       dataNascita: ['', Validators.required],
       cittaNascita: ['', Validators.required],
-      codiceFiscale: ['', [Validators.required, Validators.pattern('^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$')]]
+      codiceFiscale: ['', [Validators.required, Validators.pattern('^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$')]],
+      istituzione: ['', Validators.required],
+      dominioIstituzionale: ['', Validators.required],
+      matricola: ['', Validators.required],
+      corsoDiStudi: ['', Validators.required],
+      annoAccademico: ['', Validators.required]
     });
   }
 
@@ -65,8 +71,36 @@ export class RegistrationBoundaryComponent implements OnInit {
       .slice(0, 10);
   }
 
+  nextStep() {
+    this.errorMessage = '';
+    if (this.currentStep === 1) {
+      if (this.registerForm.get('username')?.invalid || this.registerForm.get('email')?.invalid || this.registerForm.get('password')?.invalid) {
+        this.errorMessage = 'Compila correttamente i campi del primo step.';
+        return;
+      }
+      this.currentStep++;
+    } else if (this.currentStep === 2) {
+      if (this.registerForm.get('nome')?.invalid || this.registerForm.get('cognome')?.invalid || this.registerForm.get('sesso')?.invalid ||
+          this.registerForm.get('dataNascita')?.invalid || this.registerForm.get('cittaNascita')?.invalid || this.registerForm.get('codiceFiscale')?.invalid) {
+        this.errorMessage = 'Compila correttamente i campi anagrafici e genera il codice fiscale.';
+        return;
+      }
+      this.currentStep++;
+    }
+  }
+
+  previousStep() {
+    this.errorMessage = '';
+    if (this.currentStep > 1) {
+      this.currentStep--;
+    }
+  }
+
   onSubmit() {
-    if (this.registerForm.invalid) return;
+    if (this.currentStep !== 3 || this.registerForm.invalid) {
+      this.errorMessage = 'Compila tutti i campi prima di confermare.';
+      return;
+    }
 
     this.errorMessage = '';
     this.successMessage = '';

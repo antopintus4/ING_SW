@@ -43,11 +43,25 @@ export class GroupManagementBoundaryComponent implements OnInit {
     });
   }
 
-  deleteGroup(id: number) {
+  deleteGroup(id: string) {
     if (confirm('Sei sicuro di voler eliminare questo gruppo? I contenuti all\'interno non verranno cancellati, ma la cartella andrà persa.')) {
       this.groupService.deleteGroup(id).subscribe({
         next: () => this.loadGroups(),
         error: () => this.errorMessage = 'Impossibile eliminare il gruppo.'
+      });
+    }
+  }
+
+  renameGroup(id: string, currentName: string) {
+    const newName = prompt('Inserisci il nuovo nome per il gruppo:', currentName);
+    if (newName && newName.trim() !== '' && newName !== currentName) {
+      this.groupService.updateGroup(id, newName.trim()).subscribe({
+        next: () => {
+          this.successMessage = 'Gruppo rinominato con successo!';
+          this.loadGroups();
+          setTimeout(() => this.successMessage = '', 3000);
+        },
+        error: () => this.errorMessage = 'Errore durante la ridenominazione del gruppo.'
       });
     }
   }

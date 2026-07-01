@@ -114,6 +114,31 @@ public class ShareControl {
         return ResponseEntity.ok("Link revocato con successo");
     }
 
+    @Autowired
+    private com.afam.identity.service.EmailService emailService;
+
+    @PostMapping("/send")
+    public ResponseEntity<?> inviaLinkViaMail(@RequestBody Map<String, String> request) {
+        Optional<Profilo> pOpt = getProfiloAttuale();
+        if (pOpt.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        String identificatore = request.get("identificatore");
+        String toEmail = request.get("email");
+
+        Optional<Link> linkOpt = linkDBMSBoundary.findById(identificatore);
+        if (linkOpt.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        Link link = linkOpt.get();
+        if (!link.getProfilo().getId().equals(pOpt.get().getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Non autorizzato");
+        }
+
+        String url = "http://localhost:4200/shared/" + link.getIdentificatoreLink();
+        emailService.sendDirectShareEmail(toEmail, url, link.getContenuto() != null ? link.getContenuto().getTitolo() : "Risorsa Condivisa");
+
+        return ResponseEntity.ok("Link inviato con successo all'indirizzo email specificato");
+    }
+
     // ==========================================
     // ENDPOINT PUBBLICI (No Auth Richiesta)
     // ==========================================

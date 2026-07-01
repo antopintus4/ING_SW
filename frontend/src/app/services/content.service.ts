@@ -10,10 +10,12 @@ export class ContentService {
 
   constructor(private http: HttpClient) {}
 
-  uploadContent(file: File, descrizioneFile: File, titolo: string, policyVisibilita: string, autori?: string, collaboratori?: string): Observable<any> {
+  uploadContent(file: File, descrizioneFile: File | null, titolo: string, policyVisibilita: string, autori?: string, collaboratori?: string): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('descrizioneFile', descrizioneFile);
+    if (descrizioneFile) {
+      formData.append('descrizioneFile', descrizioneFile);
+    }
     formData.append('titolo', titolo);
     formData.append('policyVisibilita', policyVisibilita);
     if (autori) {
@@ -34,7 +36,7 @@ export class ContentService {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
 
-  downloadContent(allegatoId: number): Observable<Blob> {
+  downloadContent(allegatoId: string): Observable<Blob> {
     return this.http.get(`${this.apiUrl}/download/${allegatoId}/file`, { responseType: 'blob' });
   }
 
@@ -44,5 +46,19 @@ export class ContentService {
 
   getPublicContent(id: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/public/${id}`);
+  }
+
+  updateContent(id: number, data: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, data);
+  }
+
+  addAllegato(contentId: number, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post(`${this.apiUrl}/${contentId}/allegati`, formData);
+  }
+
+  deleteAllegato(contentId: number, allegatoId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${contentId}/allegati/${allegatoId}`, { responseType: 'text' });
   }
 }

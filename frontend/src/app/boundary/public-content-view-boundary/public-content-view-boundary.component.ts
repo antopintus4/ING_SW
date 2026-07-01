@@ -39,13 +39,13 @@ export class PublicContentViewBoundaryComponent implements OnInit {
     });
   }
 
-  downloadAllegato(allegatoId: number, nomeFile: string) {
+  download(allegatoId: string, filename: string = 'file') {
     this.contentService.downloadContent(allegatoId).subscribe({
       next: (blob: Blob) => {
         const a = document.createElement('a');
         const objectUrl = window.URL.createObjectURL(blob);
         a.href = objectUrl;
-        a.download = nomeFile || 'download';
+        a.download = filename || 'download';
         a.click();
         window.URL.revokeObjectURL(objectUrl);
       },

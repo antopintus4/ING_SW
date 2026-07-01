@@ -1,1 +1,45 @@
-<p>other-edits-boundary works!</p>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0">Altre Modifiche</h4>
+        </div>
+        <div class="card-body">
+          <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+          <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+
+          <form (ngSubmit)="save()">
+            <div class="mb-3">
+              <label class="form-label">Privacy (Visibilità del Profilo)</label>
+              <select class="form-select" name="policyVisibilita" [(ngModel)]="otherEdits.policyVisibilita">
+                <option value="Pubblico">Pubblico</option>
+                <option value="Privato">Privato</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Descrizione</label>
+              <textarea class="form-control" name="descrizione" [(ngModel)]="otherEdits.descrizione" rows="4" placeholder="Parlaci di te..."></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Hobby (Interessi)</label>
+              <input type="text" class="form-control" name="interessi" [(ngModel)]="interessiStr" placeholder="Es. Pittura, Chitarra, Lettura (separati da virgola)">
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">Skills (Competenze)</label>
+              <input type="text" class="form-control" name="competenze" [(ngModel)]="competenzeStr" placeholder="Es. Composizione, Editing Audio (separate da virgola)">
+            </div>
+
+            <div class="d-flex justify-content-end">
+              <a routerLink="/profile" class="btn btn-secondary me-2">Annulla</a>
+              <button type="submit" class="btn btn-primary">Salva Modifiche</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -26,7 +26,8 @@
           <td>{{ c.titolo }}</td>
           <td><span class="badge bg-secondary">{{ c.tipo }}</span></td>
           <td class="text-end">
-            <a [routerLink]="['/content/view', c.id]" class="btn btn-sm btn-outline-primary">Apri Contenuto</a>
+            <a [routerLink]="['/content/view', c.id]" class="btn btn-sm btn-outline-primary me-1">Apri Contenuto</a>
+            <button class="btn btn-sm btn-outline-warning" (click)="removeContent(c.id)"><i class="bi bi-x-circle"></i> Rimuovi</button>
           </td>
         </tr>
       </tbody>

@@ -41,24 +41,26 @@ public class Contenuto {
     @ElementCollection
     @CollectionTable(name = "contenuto_collaboratore", joinColumns = @JoinColumn(name = "contenuto_id"))
     @Column(name = "nome_collaboratore")
-    private List<String> collaboratori;
+    protected List<String> collaboratori;
 
     @OneToMany(mappedBy = "contenuto", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Link> linkAssociati;
+    protected List<Link> linkAssociati;
+
+    @ManyToMany(mappedBy = "listaContenuti")
+    private List<Gruppo> gruppi;
 
     // Metodi UML (segnaposto per aderenza 100% al RAD)
     public void caricaContenuto() {}
     public void modificaContenuto() {}
     public void eliminaContenuto() {}
-    public void aggiungiAutore() {}
-    public void aggiungiCollaboratore() {}
-    public void rimuoviAllegato() {}
-    public void aggiornaVisibilita() {}
-    public void getAnteprima() {}
-    public void checkFormato() {}
-    public void getNumeroVisualizzazioniMethod() {} // Rinominato leggermente per non nascondere il getter
-    public void getLink() {}
-    public void setLink() {}
+    public void aggiungiAutore(String nome) {}
+    public void aggiungiCollaboratore(String nome) {}
+    public void rimuoviAllegato(Allegato a) {}
+    public void aggiornaVisibilita(String policy) {}
+    public byte[] getAnteprima() { return null; }
+    public boolean checkFormato() { return false; }
+    public List<Link> getLink() { return linkAssociati; }
+    public void setLink(Link l) {}
 
     public java.util.UUID getId() { return id; }
     public void setId(java.util.UUID id) { this.id = id; }
@@ -82,4 +84,6 @@ public class Contenuto {
     public void setCollaboratori(List<String> collaboratori) { this.collaboratori = collaboratori; }
     public List<Link> getLinkAssociati() { return linkAssociati; }
     public void setLinkAssociati(List<Link> linkAssociati) { this.linkAssociati = linkAssociati; }
+    public List<Gruppo> getGruppi() { return gruppi; }
+    public void setGruppi(List<Gruppo> gruppi) { this.gruppi = gruppi; }
 }

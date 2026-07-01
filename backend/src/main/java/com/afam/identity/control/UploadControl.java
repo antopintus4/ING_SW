@@ -47,7 +47,7 @@ public class UploadControl {
     public ResponseEntity<?> uploadContenuto(
             @RequestParam("file") MultipartFile file,
             @RequestParam("titolo") String titolo,
-            @RequestParam("descrizioneFile") MultipartFile descrizioneFile,
+            @RequestParam(value = "descrizioneFile", required = false) MultipartFile descrizioneFile,
             @RequestParam("policyVisibilita") String policyVisibilita,
             @RequestParam(value = "autori", required = false) String autori,
             @RequestParam(value = "collaboratori", required = false) String collaboratori) {
@@ -73,6 +73,9 @@ public class UploadControl {
             // Leggi il file di descrizione
             String descrizione = "";
             if (descrizioneFile != null && !descrizioneFile.isEmpty()) {
+                if (!"text/plain".equals(descrizioneFile.getContentType())) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Il file di descrizione deve essere di tipo testo.");
+                }
                 descrizione = new String(descrizioneFile.getBytes(), java.nio.charset.StandardCharsets.UTF_8);
             }
 
@@ -96,7 +99,9 @@ public class UploadControl {
             contenuto.setProfilo(profilo);
 
             if (autori != null && !autori.trim().isEmpty()) {
-                contenuto.setAutori(List.of(autori.split(",")));
+                contenuto.setAutori(new ArrayList<>(List.of(autori.split(","))));
+            } else {
+                contenuto.setAutori(new ArrayList<>(List.of(profilo.getNome() + " " + profilo.getCognome())));
             }
             if (collaboratori != null && !collaboratori.trim().isEmpty()) {
                 contenuto.setCollaboratori(List.of(collaboratori.split(",")));

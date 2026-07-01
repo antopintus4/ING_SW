@@ -12,7 +12,7 @@ public class Link {
     private String identificatoreLink;
 
     @Column(name = "data_scadenza")
-    private LocalDateTime dataScadenza;
+    protected LocalDateTime dataScadenza;
 
     @Column(name = "risorsa_associata", length = 255)
     private String risorsaAssociata;
@@ -24,7 +24,7 @@ public class Link {
     private String impostazioni;
 
     @Column(name = "numero_visualizzazioni")
-    private Integer numeroVisualizzazioni = 0;
+    protected Integer numeroVisualizzazioni = 0;
 
     @ManyToOne
     @JoinColumn(name = "profilo_id")
@@ -42,8 +42,8 @@ public class Link {
     public void generaLink() {}
     public void disabilitaLink() {}
     public void modificaImpostazioni() {}
-    public void checkLink() {}
-    public void isAttivo() {}
+    public boolean checkLink() { return false; }
+    public boolean isAttivo() { return false; }
     public void incrementaVisualizzazioni() {}
 
     public String getIdentificatoreLink() { return identificatoreLink; }

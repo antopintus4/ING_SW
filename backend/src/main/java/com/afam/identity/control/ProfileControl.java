@@ -7,6 +7,7 @@ import com.afam.identity.dto.AnagraficaDTO;
 import com.afam.identity.dto.AuthResponse;
 import com.afam.identity.dto.CredentialsDTO;
 import com.afam.identity.dto.PasswordDTO;
+import com.afam.identity.dto.OtherEditsDTO;
 import com.afam.identity.entity.Contenuto;
 import com.afam.identity.entity.Profilo;
 import com.afam.identity.entity.UtenteAfam;
@@ -96,6 +97,27 @@ public class ProfileControl {
         response.put("indirizzo", profilo.getIndirizzo());
         response.put("telefono", profilo.getTelefono());
         
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/other")
+    public ResponseEntity<?> updateOther(@RequestBody OtherEditsDTO request) {
+        Profilo profilo = getProfiloCorrente();
+        if (profilo == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        profilo.setPolicyVisibilita(request.getPolicyVisibilita());
+        profilo.setDescrizione(request.getDescrizione());
+        profilo.setInteressi(request.getInteressi());
+        profilo.setCompetenze(request.getCompetenze());
+
+        profiloDBMSBoundary.save(profilo);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("policyVisibilita", profilo.getPolicyVisibilita());
+        response.put("descrizione", profilo.getDescrizione());
+        response.put("interessi", profilo.getInteressi());
+        response.put("competenze", profilo.getCompetenze());
+
         return ResponseEntity.ok(response);
     }
 

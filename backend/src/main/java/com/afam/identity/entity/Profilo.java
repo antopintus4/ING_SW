@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.afam.identity.dto.AnagraficaDTO;
+import com.afam.identity.dto.DatiAccademiciDTO;
+
 @Entity
 @Table(name = "profilo")
 public class Profilo {
@@ -17,17 +20,17 @@ public class Profilo {
     private UtenteAfam utenteAfam;
 
     @Column(columnDefinition = "TEXT")
-    private String descrizione;
+    protected String descrizione;
 
     @ElementCollection
     @CollectionTable(name = "profilo_interessi", joinColumns = @JoinColumn(name = "profilo_id"))
     @Column(name = "interesse")
-    private List<String> interessi;
+    protected List<String> interessi;
 
     @ElementCollection
     @CollectionTable(name = "profilo_competenze", joinColumns = @JoinColumn(name = "profilo_id"))
     @Column(name = "competenza")
-    private List<String> competenze;
+    protected List<String> competenze;
 
     @Column(name = "policy_visibilita", length = 50)
     private String policyVisibilita;
@@ -35,52 +38,58 @@ public class Profilo {
     @Column(name = "foto_profilo")
     private String fotoProfilo;
 
+    @OneToMany(mappedBy = "profilo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Contenuto> contenuti;
+
+    @OneToMany(mappedBy = "profilo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Gruppo> gruppi;
+
     // Campi flat per Anagrafica
     @Column(length = 50)
-    private String nome;
+    protected String nome;
 
     @Column(length = 50)
-    private String cognome;
+    protected String cognome;
 
     @Column(name = "data_nascita")
-    private java.time.LocalDate dataNascita;
+    protected java.time.LocalDate dataNascita;
 
     @Column(name = "codice_fiscale", unique = true, length = 16)
-    private String codiceFiscale;
+    protected String codiceFiscale;
 
     @Column(length = 100)
-    private String citta;
+    protected String citta;
 
     @Column(length = 255)
-    private String indirizzo;
+    protected String indirizzo;
 
     @Column(length = 20)
-    private String telefono;
+    protected String telefono;
 
     // Campi flat per DatiAccademici
     @Column(length = 100)
-    private String istituzione;
+    protected String istituzione;
 
     @Column(name = "dominio_istituzionale", length = 100)
-    private String dominioIstituzionale;
+    protected String dominioIstituzionale;
 
     @Column(length = 50)
     private String matricola;
 
     @Column(name = "corso_di_studi", length = 100)
-    private String corsoDiStudi;
+    protected String corsoDiStudi;
 
     @Column(name = "anno_accademico", length = 20)
-    private String annoAccademico;
+    protected String annoAccademico;
 
     // Metodi UML (segnaposto per aderenza 100% al RAD)
-    public void getProfilo() {}
-    public void modifyAnagrafica() {}
-    public void modifyDatiAccademici() {}
+    public Profilo getProfilo() { return this; }
+    public void modifyAnagrafica(AnagraficaDTO a) {}
+    public void modifyDatiAccademici(DatiAccademiciDTO d) {}
     public void modifyAltreInformazioni() {}
-    public void aggiornaVisibilitaProfilo() {}
-    public void calculateCF() {}
-    public void validateBirthday() {}
+    public void aggiornaVisibilitaProfilo(String policy) {}
+    public String calculateCF() { return null; }
+    public boolean validateBirthday() { return false; }
 
     public java.util.UUID getId() { return id; }
     public void setId(java.util.UUID id) { this.id = id; }
@@ -96,6 +105,10 @@ public class Profilo {
     public void setPolicyVisibilita(String policyVisibilita) { this.policyVisibilita = policyVisibilita; }
     public String getFotoProfilo() { return fotoProfilo; }
     public void setFotoProfilo(String fotoProfilo) { this.fotoProfilo = fotoProfilo; }
+    public List<Contenuto> getContenuti() { return contenuti; }
+    public void setContenuti(List<Contenuto> contenuti) { this.contenuti = contenuti; }
+    public List<Gruppo> getGruppi() { return gruppi; }
+    public void setGruppi(List<Gruppo> gruppi) { this.gruppi = gruppi; }
 
     // Getters and Setters per Anagrafica
     public String getNome() { return nome; }

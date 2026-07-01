@@ -27,6 +27,7 @@ import { GroupManagementBoundaryComponent } from './boundary/group-management-bo
 import { GroupViewBoundaryComponent } from './boundary/group-view-boundary/group-view-boundary.component';
 import { PublicContentViewBoundaryComponent } from './boundary/public-content-view-boundary/public-content-view-boundary.component';
 import { PublicProfileBoundaryComponent } from './boundary/public-profile-boundary/public-profile-boundary.component';
+import { EditContentBoundaryComponent } from './boundary/edit-content-boundary/edit-content-boundary.component';
 import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -45,6 +46,7 @@ export const routes: Routes = [
     { path: 'content', component: ContentManagementBoundaryComponent, canActivate: [AuthGuard] },
     { path: 'content/upload', component: UploadContentBoundaryComponent, canActivate: [AuthGuard] },
     { path: 'content/view/:id', component: ContentViewBoundaryComponent, canActivate: [AuthGuard] },
+    { path: 'content/edit/:id', component: EditContentBoundaryComponent, canActivate: [AuthGuard] },
     { path: 'content/preview', component: PreviewBoundaryComponent, canActivate: [AuthGuard] },
     { path: 'public/content/:id', component: PublicContentViewBoundaryComponent },
     { path: 'public/profile/:id', component: PublicProfileBoundaryComponent },

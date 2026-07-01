@@ -38,8 +38,8 @@
               Scarica
             </button>
             
-            <!-- Placeholder Modifica -->
-            <button class="btn btn-sm btn-outline-secondary me-2" title="Modifica (non implementato)">Modifica</button>
+            <!-- Bottone Modifica -->
+            <a [routerLink]="['/content/edit', c.id]" class="btn btn-sm btn-outline-secondary me-2">Modifica</a>
             
             <button class="btn btn-sm btn-outline-info me-2" (click)="openGroupModal(c.id)">Aggrega</button>
             

@@ -15,7 +15,7 @@ public class Token {
     private String valore;
 
     @Column(nullable = false)
-    private LocalDateTime scadenza;
+    protected LocalDateTime scadenza;
 
     @Column(nullable = false, length = 50)
     private String tipo;
@@ -28,10 +28,10 @@ public class Token {
     private UtenteAfam utenteAfam;
 
     // Metodi UML (segnaposto per aderenza 100% al RAD)
-    public void generaToken() {}
-    public void checkToken() {}
-    public void isScaduto() {}
-    public void inviaViaMail() {}
+    public String generaToken() { return null; }
+    public boolean checkToken(String valore) { return this.valore.equals(valore); }
+    public boolean isScaduto() { return scadenza != null && java.time.LocalDateTime.now().isAfter(scadenza); }
+    public void inviaViaMail(String destinatario) {}
 
     public java.util.UUID getId() { return id; }
     public void setId(java.util.UUID id) { this.id = id; }

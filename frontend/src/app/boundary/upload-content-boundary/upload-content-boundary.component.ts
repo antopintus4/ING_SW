@@ -42,13 +42,19 @@ export class UploadContentBoundaryComponent {
   onDescrizioneFileSelected(event: any) {
     const file: File = event.target.files[0];
     if (file) {
-      this.selectedDescrizioneFile = file;
+      if (file.type !== 'text/plain') {
+        this.errorMessage = 'Il file di descrizione deve essere un file di testo (.txt).';
+        this.selectedDescrizioneFile = null;
+      } else {
+        this.selectedDescrizioneFile = file;
+        this.errorMessage = '';
+      }
     }
   }
 
   onSubmit() {
-    if (this.uploadForm.invalid || !this.selectedFile || !this.selectedDescrizioneFile) {
-      this.errorMessage = 'Compila tutti i campi e seleziona i file richiesti.';
+    if (this.uploadForm.invalid || !this.selectedFile) {
+      this.errorMessage = 'Compila tutti i campi obbligatori e seleziona il file principale.';
       return;
     }
 

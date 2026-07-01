@@ -72,6 +72,11 @@ public class RegistrationControl {
         p.setCodiceFiscale(request.getCodiceFiscale());
         p.setDataNascita(request.getDataNascita() != null ? java.time.LocalDate.parse(request.getDataNascita()) : null);
         p.setCitta(request.getCittaNascita());
+        p.setIstituzione(request.getIstituzione());
+        p.setDominioIstituzionale(request.getDominioIstituzionale());
+        p.setMatricola(request.getMatricola());
+        p.setCorsoDiStudi(request.getCorsoDiStudi());
+        p.setAnnoAccademico(request.getAnnoAccademico());
 
         profiloDBMSBoundary.save(p);
 

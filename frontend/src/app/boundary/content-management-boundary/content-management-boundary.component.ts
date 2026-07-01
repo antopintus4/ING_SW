@@ -49,7 +49,7 @@ export class ContentManagementBoundaryComponent implements OnInit {
     });
   }
 
-  download(allegatoId: number, filename: string = 'file') {
+  download(allegatoId: string, filename: string = 'file') {
     this.contentService.downloadContent(allegatoId).subscribe((blob) => {
       const a = document.createElement('a');
       const objectUrl = URL.createObjectURL(blob);
@@ -111,8 +111,8 @@ export class ContentManagementBoundaryComponent implements OnInit {
   }
 
   confirmGroupAggregation() {
-    if (this.selectedContentId && this.selectedGroupId) {
-      this.groupService.addContentToGroup(this.selectedGroupId, this.selectedContentId).subscribe({
+    if (this.selectedGroupId && this.selectedContentId) {
+      this.groupService.addContentToGroup(this.selectedGroupId.toString(), this.selectedContentId.toString()).subscribe({
         next: () => {
           this.successMessage = 'Contenuto aggregato al gruppo con successo!';
           this.closeGroupModal();

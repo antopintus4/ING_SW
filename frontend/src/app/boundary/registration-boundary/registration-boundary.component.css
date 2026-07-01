@@ -1,0 +1,95 @@
+.stepper-wrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.stepper-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 15px;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background-color: #e0e0e0;
+  z-index: 1;
+}
+
+.stepper-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  z-index: 2;
+}
+
+.step-counter {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  margin-bottom: 8px;
+  transition: all 0.3s ease;
+}
+
+.step-name {
+  font-size: 14px;
+  color: #6c757d;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.stepper-item.active .step-counter {
+  background-color: #0d6efd;
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(13, 110, 253, 0.3);
+}
+
+.stepper-item.active .step-name {
+  color: #0d6efd;
+  font-weight: bold;
+}
+
+.stepper-item.completed .step-counter {
+  background-color: #198754;
+}
+
+.stepper-item.completed .step-name {
+  color: #198754;
+}
+
+/* Slide in animation for steps */
+.slide-in {
+  animation: slideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.card {
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}

@@ -13,10 +13,10 @@ public class UtenteAfam {
     private java.util.UUID uuid;
 
     @Column(name = "username", length = 50, nullable = false, unique = true)
-    private String username;
+    protected String username;
 
     @Column(name = "email", length = 100, nullable = false, unique = true)
-    private String email;
+    protected String email;
 
     @JsonIgnore
     @Column(name = "password", length = 255, nullable = false)
@@ -37,15 +37,7 @@ public class UtenteAfam {
     public UtenteAfam() {
     }
 
-    // Metodi UML (segnaposto per aderenza 100% al RAD)
-    public void registration() {}
-    public void login() {}
-    public void logout() {}
-    public void validateCredential() {}
-    public void generateAccessToken() {}
-    public void modifyUserCredential() {}
-    public void recoveryPassword() {}
-    public void recoveryEmail() {}
+    // Metodi UML non di competenza dell'entità (eseguiti dai control)
 
     public java.util.UUID getUuid() {
         return uuid;

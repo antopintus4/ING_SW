@@ -1,10 +1,16 @@
 package com.afam.identity.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import java.util.Random;
 
 @Service
 public class EmailService {
+
+    @Autowired
+    private JavaMailSender mailSender;
 
     public String generateOtp() {
         Random random = new Random();
@@ -13,29 +19,34 @@ public class EmailService {
     }
 
     public void sendOtpEmail(String toEmail, String otp) {
-        // Mock dell'invio email: in un ambiente di produzione qui si userà JavaMailSender
-        System.out.println("==========================================================");
-        System.out.println("MOCK EMAIL SENDER - INVIATO A: " + toEmail);
-        System.out.println("Oggetto: Il tuo codice OTP per AFAM Identity");
-        System.out.println("Messaggio: Il tuo codice temporaneo è: " + otp);
-        System.out.println("==========================================================");
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(toEmail);
+        message.setSubject("Il tuo codice OTP per AFAM Identity");
+        message.setText("Il tuo codice temporaneo è: " + otp);
+        mailSender.send(message);
     }
 
     public void sendRecoveryEmail(String toEmail, String token) {
-        System.out.println("==========================================================");
-        System.out.println("MOCK EMAIL SENDER - INVIATO A: " + toEmail);
-        System.out.println("Oggetto: Recupero Password AFAM Identity");
-        System.out.println("Messaggio: Clicca sul seguente link per reimpostare la tua password:");
-        System.out.println("http://localhost:4200/recovery/reset?token=" + token);
-        System.out.println("==========================================================");
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(toEmail);
+        message.setSubject("Recupero Password AFAM Identity");
+        message.setText("Clicca sul seguente link per reimpostare la tua password:\nhttp://localhost:4200/recovery/reset?token=" + token);
+        mailSender.send(message);
     }
 
     public void sendUsernameRecoveryEmail(String toEmail, String username) {
-        System.out.println("==========================================================");
-        System.out.println("MOCK EMAIL SENDER - INVIATO A: " + toEmail);
-        System.out.println("Oggetto: Recupero Email AFAM Identity");
-        System.out.println("Messaggio: Hai richiesto un recupero email per l'account: " + username);
-        System.out.println("Questa è l'email associata al tuo account.");
-        System.out.println("==========================================================");
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(toEmail);
+        message.setSubject("Recupero Username AFAM Identity");
+        message.setText("Hai richiesto un recupero email per l'account: " + username + "\nQuesta è l'email associata al tuo account.");
+        mailSender.send(message);
+    }
+
+    public void sendDirectShareEmail(String toEmail, String linkCondivisione, String risorsa) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(toEmail);
+        message.setSubject("Qualcuno ha condiviso un contenuto con te");
+        message.setText("Un utente ha condiviso la seguente risorsa con te: " + risorsa + "\nPuoi visualizzarla a questo link:\n" + linkCondivisione);
+        mailSender.send(message);
     }
 }

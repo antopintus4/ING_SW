@@ -29,4 +29,8 @@ export class ProfileService {
   updatePassword(data: any): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/password`, data);
   }
+
+  updateOtherEdits(data: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/other`, data);
+  }
 }

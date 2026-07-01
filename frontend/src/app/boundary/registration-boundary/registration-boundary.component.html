@@ -1,88 +1,151 @@
 <div class="row justify-content-center mt-5">
   <div class="col-md-8 col-lg-6">
-    <div class="card shadow-sm">
-      <div class="card-body p-4">
-        <h3 class="card-title text-center mb-4">Registrazione</h3>
+    <div class="card shadow-lg border-0 rounded-4">
+      <div class="card-body p-5">
+        <h3 class="card-title text-center mb-4 fw-bold">Registrazione</h3>
         
+        <!-- Stepper Indicator -->
+        <div class="stepper-wrapper mb-5">
+          <div class="stepper-item" [ngClass]="{'completed': currentStep > 1, 'active': currentStep === 1}">
+            <div class="step-counter">1</div>
+            <div class="step-name">Credenziali</div>
+          </div>
+          <div class="stepper-item" [ngClass]="{'completed': currentStep > 2, 'active': currentStep === 2}">
+            <div class="step-counter">2</div>
+            <div class="step-name">Anagrafica</div>
+          </div>
+          <div class="stepper-item" [ngClass]="{'active': currentStep === 3}">
+            <div class="step-counter">3</div>
+            <div class="step-name">Carriera</div>
+          </div>
+        </div>
+
         <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
         <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
 
         <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
           
-          <div class="row">
-            <div class="col-md-6 mb-3">
+          <!-- STEP 1: Credenziali -->
+          <div *ngIf="currentStep === 1" class="step-content slide-in">
+            <h5 class="mb-4 text-primary">Inserimento email e password</h5>
+            <div class="mb-3">
               <label for="username" class="form-label">Username</label>
-              <input type="text" class="form-control" id="username" formControlName="username"
+              <input type="text" class="form-control form-control-lg" id="username" formControlName="username" placeholder="Scegli un username"
                      [ngClass]="{'is-invalid': registerForm.get('username')?.invalid && registerForm.get('username')?.touched}">
             </div>
-            <div class="col-md-6 mb-3">
-              <label for="email" class="form-label">Email</label>
-              <input type="email" class="form-control" id="email" formControlName="email"
+            <div class="mb-3">
+              <label for="email" class="form-label">Email istituzionale</label>
+              <input type="email" class="form-control form-control-lg" id="email" formControlName="email" placeholder="es. mario.rossi@studenti.istituzione.it"
                      [ngClass]="{'is-invalid': registerForm.get('email')?.invalid && registerForm.get('email')?.touched}">
             </div>
-          </div>
-
-          <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="password" formControlName="password"
-                   [ngClass]="{'is-invalid': registerForm.get('password')?.invalid && registerForm.get('password')?.touched}">
-          </div>
-
-          <hr class="my-4">
-          <h5 class="mb-3">Dati Anagrafici</h5>
-
-          <div class="row">
-            <div class="col-md-6 mb-3">
-              <label for="nome" class="form-label">Nome</label>
-              <input type="text" class="form-control" id="nome" formControlName="nome"
-                     [ngClass]="{'is-invalid': registerForm.get('nome')?.invalid && registerForm.get('nome')?.touched}">
-            </div>
-            <div class="col-md-6 mb-3">
-              <label for="cognome" class="form-label">Cognome</label>
-              <input type="text" class="form-control" id="cognome" formControlName="cognome"
-                     [ngClass]="{'is-invalid': registerForm.get('cognome')?.invalid && registerForm.get('cognome')?.touched}">
+            <div class="mb-4">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" class="form-control form-control-lg" id="password" formControlName="password" placeholder="Scegli una password sicura"
+                     [ngClass]="{'is-invalid': registerForm.get('password')?.invalid && registerForm.get('password')?.touched}">
             </div>
           </div>
 
-          <div class="row">
-            <div class="col-md-4 mb-3">
-              <label for="sesso" class="form-label">Sesso</label>
-              <select class="form-select" id="sesso" formControlName="sesso"
-                      [ngClass]="{'is-invalid': registerForm.get('sesso')?.invalid && registerForm.get('sesso')?.touched}">
-                <option value="">Seleziona</option>
-                <option value="M">Maschio</option>
-                <option value="F">Femmina</option>
-              </select>
+          <!-- STEP 2: Anagrafica -->
+          <div *ngIf="currentStep === 2" class="step-content slide-in">
+            <h5 class="mb-4 text-primary">Inserimento anagrafica</h5>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="nome" class="form-label">Nome</label>
+                <input type="text" class="form-control" id="nome" formControlName="nome"
+                       [ngClass]="{'is-invalid': registerForm.get('nome')?.invalid && registerForm.get('nome')?.touched}">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="cognome" class="form-label">Cognome</label>
+                <input type="text" class="form-control" id="cognome" formControlName="cognome"
+                       [ngClass]="{'is-invalid': registerForm.get('cognome')?.invalid && registerForm.get('cognome')?.touched}">
+              </div>
             </div>
-            <div class="col-md-4 mb-3">
-              <label for="dataNascita" class="form-label">Data di Nascita</label>
-              <input type="date" class="form-control" id="dataNascita" formControlName="dataNascita"
-                     [ngClass]="{'is-invalid': registerForm.get('dataNascita')?.invalid && registerForm.get('dataNascita')?.touched}">
+
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label for="sesso" class="form-label">Sesso</label>
+                <select class="form-select" id="sesso" formControlName="sesso"
+                        [ngClass]="{'is-invalid': registerForm.get('sesso')?.invalid && registerForm.get('sesso')?.touched}">
+                  <option value="">Seleziona</option>
+                  <option value="M">Maschio</option>
+                  <option value="F">Femmina</option>
+                </select>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label for="dataNascita" class="form-label">Data Nascita</label>
+                <input type="date" class="form-control" id="dataNascita" formControlName="dataNascita"
+                       [ngClass]="{'is-invalid': registerForm.get('dataNascita')?.invalid && registerForm.get('dataNascita')?.touched}">
+              </div>
+              <div class="col-md-4 mb-3">
+                <label for="cittaNascita" class="form-label">Città Nascita</label>
+                <input type="text" class="form-control" id="cittaNascita" formControlName="cittaNascita" list="comuniList"
+                       [ngClass]="{'is-invalid': registerForm.get('cittaNascita')?.invalid && registerForm.get('cittaNascita')?.touched}">
+                <datalist id="comuniList">
+                  <option *ngFor="let c of comuniFiltrati" [value]="c.nome"></option>
+                </datalist>
+              </div>
             </div>
-            <div class="col-md-4 mb-3">
-              <label for="cittaNascita" class="form-label">Città di Nascita</label>
-              <input type="text" class="form-control" id="cittaNascita" formControlName="cittaNascita" list="comuniList"
-                     [ngClass]="{'is-invalid': registerForm.get('cittaNascita')?.invalid && registerForm.get('cittaNascita')?.touched}">
-              <datalist id="comuniList">
-                <option *ngFor="let c of comuniFiltrati" [value]="c.nome"></option>
-              </datalist>
+
+            <div class="row align-items-end mb-4">
+              <div class="col-md-8 mb-3 mb-md-0">
+                <label for="codiceFiscale" class="form-label">Codice Fiscale</label>
+                <input type="text" class="form-control" id="codiceFiscale" formControlName="codiceFiscale"
+                       [ngClass]="{'is-invalid': registerForm.get('codiceFiscale')?.invalid && registerForm.get('codiceFiscale')?.touched}">
+              </div>
+              <div class="col-md-4">
+                <button type="button" class="btn btn-outline-primary w-100" (click)="generaCF()">Genera CF</button>
+              </div>
             </div>
           </div>
 
-          <div class="row align-items-end mb-4">
-            <div class="col-md-8 mb-3 mb-md-0">
-              <label for="codiceFiscale" class="form-label">Codice Fiscale</label>
-              <input type="text" class="form-control" id="codiceFiscale" formControlName="codiceFiscale"
-                     [ngClass]="{'is-invalid': registerForm.get('codiceFiscale')?.invalid && registerForm.get('codiceFiscale')?.touched}">
+          <!-- STEP 3: Carriera Accademica -->
+          <div *ngIf="currentStep === 3" class="step-content slide-in">
+            <h5 class="mb-4 text-primary">Inserimento carriera accademica</h5>
+            <div class="mb-3">
+              <label for="istituzione" class="form-label">Istituzione (Es. Conservatorio di Milano)</label>
+              <input type="text" class="form-control form-control-lg" id="istituzione" formControlName="istituzione"
+                     [ngClass]="{'is-invalid': registerForm.get('istituzione')?.invalid && registerForm.get('istituzione')?.touched}">
             </div>
-            <div class="col-md-4">
-              <button type="button" class="btn btn-outline-secondary w-100" (click)="generaCF()">Genera CF</button>
+            <div class="mb-3">
+              <label for="dominioIstituzionale" class="form-label">Dominio Istituzionale (Es. &#64;studenti.consmilano.it)</label>
+              <input type="text" class="form-control form-control-lg" id="dominioIstituzionale" formControlName="dominioIstituzionale"
+                     [ngClass]="{'is-invalid': registerForm.get('dominioIstituzionale')?.invalid && registerForm.get('dominioIstituzionale')?.touched}">
+            </div>
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label for="matricola" class="form-label">Matricola</label>
+                <input type="text" class="form-control" id="matricola" formControlName="matricola"
+                       [ngClass]="{'is-invalid': registerForm.get('matricola')?.invalid && registerForm.get('matricola')?.touched}">
+              </div>
+              <div class="col-md-4 mb-3">
+                <label for="corsoDiStudi" class="form-label">Corso di Studi</label>
+                <input type="text" class="form-control" id="corsoDiStudi" formControlName="corsoDiStudi"
+                       [ngClass]="{'is-invalid': registerForm.get('corsoDiStudi')?.invalid && registerForm.get('corsoDiStudi')?.touched}">
+              </div>
+              <div class="col-md-4 mb-4">
+                <label for="annoAccademico" class="form-label">Anno Acc.</label>
+                <input type="text" class="form-control" id="annoAccademico" formControlName="annoAccademico" placeholder="es. 2023/2024"
+                       [ngClass]="{'is-invalid': registerForm.get('annoAccademico')?.invalid && registerForm.get('annoAccademico')?.touched}">
+              </div>
             </div>
           </div>
 
-          <button type="submit" class="btn btn-primary w-100" [disabled]="registerForm.invalid">Registrati</button>
+          <!-- Navigation Buttons -->
+          <div class="d-flex justify-content-between mt-4">
+            <button type="button" class="btn btn-outline-secondary px-4 py-2" *ngIf="currentStep > 1" (click)="previousStep()">
+              <i class="bi bi-arrow-left me-2"></i> Indietro
+            </button>
+            <div class="ms-auto">
+              <button type="button" class="btn btn-primary px-4 py-2" *ngIf="currentStep < 3" (click)="nextStep()">
+                Avanti <i class="bi bi-arrow-right ms-2"></i>
+              </button>
+              <button type="submit" class="btn btn-success px-4 py-2" *ngIf="currentStep === 3" [disabled]="registerForm.invalid">
+                <i class="bi bi-check-circle me-2"></i> Registrati
+              </button>
+            </div>
+          </div>
+
         </form>
-        
       </div>
     </div>
   </div>
