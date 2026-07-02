@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
-import com.afam.identity.middleware.Sauron;
+import com.afam.identity.middleware.Validator;
 
 @RestController
 @RequestMapping("/api/registration")
@@ -43,15 +43,15 @@ public class RegistrationControl {
             return ResponseEntity.badRequest().body("La password deve contenere almeno 12 caratteri");
         }
 
-        request.setUsername(Sauron.sanitize(request.getUsername(), false));
-        request.setNome(Sauron.sanitize(request.getNome(), false));
-        request.setCognome(Sauron.sanitize(request.getCognome(), false));
-        request.setCittaNascita(Sauron.sanitize(request.getCittaNascita(), false));
-        request.setIstituzione(Sauron.sanitize(request.getIstituzione(), false));
-        request.setDominioIstituzionale(Sauron.sanitize(request.getDominioIstituzionale(), false));
-        request.setMatricola(Sauron.sanitize(request.getMatricola(), false));
-        request.setCorsoDiStudi(Sauron.sanitize(request.getCorsoDiStudi(), false));
-        request.setAnnoAccademico(Sauron.sanitize(request.getAnnoAccademico(), false));
+        request.setUsername(Validator.sanitize(request.getUsername(), false));
+        request.setNome(Validator.sanitize(request.getNome(), false));
+        request.setCognome(Validator.sanitize(request.getCognome(), false));
+        request.setCittaNascita(Validator.sanitize(request.getCittaNascita(), false));
+        request.setIstituzione(Validator.sanitize(request.getIstituzione(), false));
+        request.setDominioIstituzionale(Validator.sanitize(request.getDominioIstituzionale(), false));
+        request.setMatricola(Validator.sanitize(request.getMatricola(), false));
+        request.setCorsoDiStudi(Validator.sanitize(request.getCorsoDiStudi(), false));
+        request.setAnnoAccademico(Validator.sanitize(request.getAnnoAccademico(), false));
 
         if (utenteAfamDBMSBoundary.findByUsername(request.getUsername()).isPresent()) {
             return ResponseEntity.badRequest().body("Username già in uso");
@@ -75,7 +75,6 @@ public class RegistrationControl {
         }
 
         UtenteAfam utente = new UtenteAfam();
-        utente.setUuid(UUID.randomUUID());
         utente.setUsername(request.getUsername());
         utente.setEmail(request.getEmail());
         utente.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -100,6 +99,6 @@ public class RegistrationControl {
 
         profiloDBMSBoundary.save(p);
 
-        return ResponseEntity.ok("Registrazione completata con successo");
+        return ResponseEntity.ok(java.util.Collections.singletonMap("message", "Registrazione completata con successo"));
     }
 }

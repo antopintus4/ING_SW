@@ -51,6 +51,7 @@ export const routes: Routes = [
     { path: 'public/content/:id', component: PublicContentViewBoundaryComponent },
     { path: 'public/profile/:id', component: PublicProfileBoundaryComponent },
     { path: 'share/:identificatore', component: ShareBoundaryComponent },
+    { path: 'links', component: ActiveLinksBoundaryComponent, canActivate: [AuthGuard] },
     { path: 'search', component: ResultsBoundaryComponent },
     { path: 'groups', component: GroupManagementBoundaryComponent, canActivate: [AuthGuard] },
     { path: 'groups/view/:id', component: GroupViewBoundaryComponent, canActivate: [AuthGuard] },

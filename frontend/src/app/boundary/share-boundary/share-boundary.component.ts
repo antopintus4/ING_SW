@@ -60,4 +60,17 @@ export class ShareBoundaryComponent implements OnInit {
       }
     });
   }
+
+  view() {
+    this.linkService.downloadPublicFile(this.identificatore).subscribe({
+      next: (blob) => {
+        const file = new Blob([blob], { type: blob.type });
+        const objectUrl = URL.createObjectURL(file);
+        window.open(objectUrl, '_blank');
+      },
+      error: () => {
+        alert('Errore durante la visualizzazione del file.');
+      }
+    });
+  }
 }

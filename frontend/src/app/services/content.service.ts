@@ -32,7 +32,7 @@ export class ContentService {
     return this.http.get<any[]>(this.apiUrl);
   }
 
-  getContent(id: number): Observable<any> {
+  getContent(id: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
 
@@ -40,25 +40,25 @@ export class ContentService {
     return this.http.get(`${this.apiUrl}/download/${allegatoId}/file`, { responseType: 'blob' });
   }
 
-  deleteContent(id: number): Observable<any> {
+  deleteContent(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`, { responseType: 'text' });
   }
 
-  getPublicContent(id: number): Observable<any> {
+  getPublicContent(id: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/public/${id}`);
   }
 
-  updateContent(id: number, data: any): Observable<any> {
+  updateContent(id: string, data: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/${id}`, data);
   }
 
-  addAllegato(contentId: number, file: File): Observable<any> {
+  addAllegato(contentId: string, file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
     return this.http.post(`${this.apiUrl}/${contentId}/allegati`, formData);
   }
 
-  deleteAllegato(contentId: number, allegatoId: string): Observable<any> {
+  deleteAllegato(contentId: string, allegatoId: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${contentId}/allegati/${allegatoId}`, { responseType: 'text' });
   }
 }

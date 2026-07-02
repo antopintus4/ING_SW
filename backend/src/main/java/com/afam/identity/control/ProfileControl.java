@@ -11,7 +11,7 @@ import com.afam.identity.dto.OtherEditsDTO;
 import com.afam.identity.entity.Contenuto;
 import com.afam.identity.entity.Profilo;
 import com.afam.identity.entity.UtenteAfam;
-import com.afam.identity.middleware.Sauron;
+import com.afam.identity.middleware.Validator;
 import com.afam.identity.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -51,6 +51,9 @@ public class ProfileControl {
 
     @Autowired
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    private CodiceFiscaleValidator cfValidator;
 
     private UtenteAfam getUtenteCorrente() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -92,13 +95,13 @@ public class ProfileControl {
             return ResponseEntity.badRequest().body("Il Codice Fiscale non corrisponde ai dati anagrafici forniti.");
         }
 
-        profilo.setNome(Sauron.sanitize(request.getNome(), false));
-        profilo.setCognome(Sauron.sanitize(request.getCognome(), false));
+        profilo.setNome(Validator.sanitize(request.getNome(), false));
+        profilo.setCognome(Validator.sanitize(request.getCognome(), false));
         profilo.setDataNascita(request.getDataNascita());
         profilo.setCodiceFiscale(request.getCodiceFiscale());
-        profilo.setCitta(Sauron.sanitize(request.getCitta(), false));
-        profilo.setIndirizzo(Sauron.sanitize(request.getIndirizzo(), false));
-        profilo.setTelefono(Sauron.sanitize(request.getTelefono(), false));
+        profilo.setCitta(Validator.sanitize(request.getCitta(), false));
+        profilo.setIndirizzo(Validator.sanitize(request.getIndirizzo(), false));
+        profilo.setTelefono(Validator.sanitize(request.getTelefono(), false));
 
         profiloDBMSBoundary.save(profilo);
 
@@ -119,10 +122,10 @@ public class ProfileControl {
         Profilo profilo = getProfiloCorrente();
         if (profilo == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
-        profilo.setPolicyVisibilita(Sauron.sanitize(request.getPolicyVisibilita(), false));
-        profilo.setDescrizione(Sauron.sanitize(request.getDescrizione(), false));
-        profilo.setInteressi(Sauron.sanitize(request.getInteressi(), false));
-        profilo.setCompetenze(Sauron.sanitize(request.getCompetenze(), false));
+        profilo.setPolicyVisibilita(Validator.sanitize(request.getPolicyVisibilita(), false));
+        profilo.setDescrizione(Validator.sanitize(request.getDescrizione(), false));
+        profilo.setInteressi(Validator.sanitize(request.getInteressi(), false));
+        profilo.setCompetenze(Validator.sanitize(request.getCompetenze(), false));
 
         profiloDBMSBoundary.save(profilo);
 
@@ -144,7 +147,7 @@ public class ProfileControl {
             return ResponseEntity.badRequest().body("Formato email non valido");
         }
         
-        request.setUsername(Sauron.sanitize(request.getUsername(), false));
+        request.setUsername(Validator.sanitize(request.getUsername(), false));
 
         // Check if username/email are already used by someone else
         if (!utente.getUsername().equals(request.getUsername()) && 
@@ -174,18 +177,18 @@ public class ProfileControl {
         if (utente == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         if (request.getNewPassword() == null || request.getNewPassword().length() < 12) {
-            return ResponseEntity.badRequest().body("La nuova password deve contenere almeno 12 caratteri");
+            return ResponseEntity.badRequest().body(java.util.Collections.singletonMap("error", "La nuova password deve contenere almeno 12 caratteri"));
         }
 
         if (!passwordEncoder.matches(request.getCurrentPassword(), utente.getPassword())) {
-            return ResponseEntity.badRequest().body("La password attuale non è corretta");
+            return ResponseEntity.badRequest().body(java.util.Collections.singletonMap("error", "La password attuale non è corretta"));
         }
 
         utente.setPassword(passwordEncoder.encode(request.getNewPassword()));
         utenteAfamDBMSBoundary.save(utente);
 
         
-        return ResponseEntity.ok("Credenziali aggiornate con successo. Effettua nuovamente il login.");
+        return ResponseEntity.ok(java.util.Collections.singletonMap("message", "Credenziali aggiornate con successo. Effettua nuovamente il login."));
     }
 
     @GetMapping("/public/{id}")

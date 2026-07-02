@@ -9,22 +9,137 @@
     </div>
     
     <div class="card-body">
-      <h5 class="card-title text-muted mb-4">Informazioni Dettagliate</h5>
-      
-      <p class="card-text">
-        <strong>Descrizione:</strong><br>
-        {{ contenuto.descrizione }}
-      </p>
+      <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+
+      <!-- Nuove informazioni dal RAD -->
+      <div class="row mt-3 mb-3 border-start border-4 border-primary ps-3">
+        <div class="col-md-4">
+          <p class="mb-1"><i class="bi bi-people me-2"></i><strong>Autori:</strong><br> {{ contenuto.autori || 'Nessuno specificato' }}</p>
+        </div>
+        <div class="col-md-4">
+          <p class="mb-1"><i class="bi bi-person-badge me-2"></i><strong>Collaboratori:</strong><br> {{ contenuto.collaboratori || 'Nessuno specificato' }}</p>
+        </div>
+        <div class="col-md-4">
+          <p class="mb-1"><i class="bi bi-eye me-2"></i><strong>Visualizzazioni:</strong><br> {{ contenuto.numeroVisualizzazioni || 0 }}</p>
+        </div>
+      </div>
+
+      <div *ngIf="mediaUrl" class="mt-4 text-center bg-light p-3 rounded">
+        <ng-container [ngSwitch]="true">
+          <!-- Image -->
+          <img *ngSwitchCase="mediaType.startsWith('image/')" [src]="mediaUrl" class="img-fluid rounded" style="max-height: 500px;" alt="Anteprima">
+          
+          <!-- Video -->
+          <video *ngSwitchCase="mediaType.startsWith('video/')" [src]="mediaUrl" controls class="w-100 rounded" style="max-height: 500px;">
+            Il tuo browser non supporta il tag video.
+          </video>
+          
+          <!-- Audio -->
+          <audio *ngSwitchCase="mediaType.startsWith('audio/')" [src]="mediaUrl" controls class="w-100">
+            Il tuo browser non supporta il tag audio.
+          </audio>
+          
+          <!-- PDF -->
+          <object *ngSwitchCase="mediaType === 'application/pdf'" [data]="mediaUrl" type="application/pdf" class="w-100 rounded" style="height: 600px;">
+            <p>Il tuo browser non ha un plugin PDF. <a [href]="mediaUrl">Clicca qui per scaricare il PDF.</a></p>
+          </object>
+          
+          <!-- Default -->
+          <div *ngSwitchDefault class="alert alert-info mb-0">
+            <i class="bi bi-file-earmark me-2"></i> L'anteprima per questo tipo di file ({{ mediaType }}) non è supportata nativamente. Utilizza il tasto "Scarica".
+          </div>
+        </ng-container>
+      </div>
 
       <div class="row mt-4">
-        <div class="col-md-6">
+        <div class="col-md-4">
           <p><strong>Tipo File:</strong> {{ contenuto.tipo }}</p>
         </div>
-        <div class="col-md-6 text-end">
-          <button class="btn btn-success me-2" (click)="download()">
+        <div class="col-md-8 text-end">
+          <a [routerLink]="['/content/edit', contenuto.id]" class="btn btn-sm btn-outline-secondary me-2">Modifica</a>
+          <button class="btn btn-sm btn-outline-info me-2" (click)="openGroupModal()">Aggrega</button>
+          <button class="btn btn-sm btn-outline-warning me-2" (click)="share()">Condividi</button>
+          <button class="btn btn-sm btn-outline-danger me-2" (click)="delete()">Elimina</button>
+          
+          <button class="btn btn-sm btn-info me-2 text-white" (click)="view()">
+            <i class="bi bi-eye"></i> Visualizza File
+          </button>
+          <button class="btn btn-sm btn-success me-2" (click)="download()">
             <i class="bi bi-download"></i> Scarica Allegato
           </button>
-          <a routerLink="/content" class="btn btn-outline-secondary">Torna alla Lista</a>
+          <a routerLink="/content" class="btn btn-sm btn-outline-secondary">Torna alla Lista</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Aggrega a Gruppo -->
+  <div class="modal fade" id="groupModal" tabindex="-1" aria-labelledby="groupModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="groupModalLabel">Aggrega al Gruppo</h5>
+          <button type="button" class="btn-close" (click)="closeGroupModal()" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div *ngIf="groups.length === 0" class="alert alert-warning">
+            Non hai ancora creato nessun gruppo. Vai alla sezione "Gruppi" per crearne uno.
+          </div>
+          <div class="mb-3" *ngIf="groups.length > 0">
+            <label for="groupSelect" class="form-label">Scegli il gruppo di destinazione:</label>
+            <select id="groupSelect" class="form-select" [(ngModel)]="selectedGroupId">
+              <option [ngValue]="null" disabled>Seleziona un gruppo...</option>
+              <option *ngFor="let g of groups" [ngValue]="g.id">{{ g.nome }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeGroupModal()">Annulla</button>
+          <button type="button" class="btn btn-info" [disabled]="!selectedGroupId" (click)="confirmGroupAggregation()">Conferma</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Condivisione -->
+  <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="shareModalLabel">Condividi Contenuto</h5>
+          <button type="button" class="btn-close" (click)="closeShareModal()" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Generazione Link -->
+          <div class="mb-4">
+            <h6><i class="bi bi-link-45deg me-2"></i>Genera Link Condivisibile</h6>
+            <div class="mb-2">
+              <label for="scadenza" class="form-label">Giorni di validità:</label>
+              <input type="number" id="scadenza" class="form-control" [(ngModel)]="scadenzaGiorni" min="1" max="365">
+            </div>
+            <button class="btn btn-primary btn-sm mb-2" (click)="generateLink()">Genera Link</button>
+            
+            <div *ngIf="generatedLink" class="input-group mt-2">
+              <input type="text" class="form-control" [value]="generatedLink" readonly>
+              <button class="btn btn-outline-secondary" type="button" (click)="copyLink()"><i class="bi bi-clipboard"></i> Copia</button>
+            </div>
+          </div>
+  
+          <hr>
+  
+          <!-- Invio Email -->
+          <div>
+            <h6><i class="bi bi-envelope me-2"></i>Invia via E-mail</h6>
+            <div *ngIf="emailSuccessMessage" class="text-success small mt-2">{{ emailSuccessMessage }}</div>
+            <div *ngIf="emailErrorMessage" class="text-danger small mt-2">{{ emailErrorMessage }}</div>
+            <div class="input-group mt-2">
+              <input type="email" class="form-control" placeholder="Indirizzo e-mail destinatario" [(ngModel)]="emailDestinatario">
+              <button class="btn btn-outline-primary" type="button" (click)="sendEmail()">Invia</button>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeShareModal()">Chiudi</button>
         </div>
       </div>
     </div>

@@ -10,7 +10,7 @@ export class LinkService {
 
   constructor(private http: HttpClient) {}
 
-  createLink(contenutoId: number, daysToExpire: number): Observable<any> {
+  createLink(contenutoId: string, daysToExpire: number): Observable<any> {
     return this.http.post(this.apiUrl, { contenutoId, daysToExpire });
   }
 
@@ -28,5 +28,9 @@ export class LinkService {
 
   downloadPublicFile(identificatore: string): Observable<Blob> {
     return this.http.get(`${this.apiUrl}/shared/${identificatore}/download`, { responseType: 'blob' });
+  }
+
+  sendLinkViaEmail(email: string, identificatore: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/send`, { email, identificatore });
   }
 }

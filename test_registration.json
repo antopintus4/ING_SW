@@ -1,0 +1,16 @@
+{
+    "username": "antopintus",
+    "email": "anto@unip.it",
+    "password": "NuovaPassword123!",
+    "nome": "Antonio",
+    "cognome": "Pintus",
+    "sesso": "M",
+    "dataNascita": "2000-01-01",
+    "cittaNascita": "Roma",
+    "codiceFiscale": "PNTNTN00A01H501O",
+    "istituzione": "UNIPA",
+    "dominioIstituzionale": "anto@unip.it",
+    "matricola": "0769578",
+    "corsoDiStudi": "ING_INF",
+    "annoAccademico": "2025/2026"
+}

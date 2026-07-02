@@ -13,7 +13,7 @@ import { ContentService } from '../../services/content.service';
 })
 export class EditContentBoundaryComponent implements OnInit {
   editForm: FormGroup;
-  contentId: number | null = null;
+  contentId: string | null = null;
   content: any = null;
   errorMessage: string = '';
   successMessage: string = '';
@@ -37,7 +37,7 @@ export class EditContentBoundaryComponent implements OnInit {
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
-      this.contentId = Number(idParam);
+      this.contentId = idParam;
       this.loadContent();
     }
   }

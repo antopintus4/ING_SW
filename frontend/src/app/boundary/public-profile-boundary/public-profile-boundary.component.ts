@@ -22,11 +22,11 @@ export class PublicProfileBoundaryComponent implements OnInit {
   ngOnInit() {
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
-      this.loadProfile(Number(idParam));
+      this.loadProfile(idParam);
     }
   }
 
-  loadProfile(id: number) {
+  loadProfile(id: string) {
     this.profileService.getPublicProfile(id).subscribe({
       next: (data) => this.profilo = data,
       error: () => this.errorMessage = 'Profilo non trovato o non disponibile.'

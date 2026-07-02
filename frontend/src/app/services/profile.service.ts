@@ -22,7 +22,7 @@ export class ProfileService {
     return this.http.put(`${this.apiUrl}/credentials`, payload);
   }
 
-  getPublicProfile(id: number): Observable<any> {
+  getPublicProfile(id: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/public/${id}`);
   }
 

@@ -86,6 +86,7 @@ public class Profilo {
     protected String annoAccademico;
 
     // Metodi UML (segnaposto per aderenza 100% al RAD)
+    @JsonIgnore
     public Profilo getProfilo() { return this; }
     public void modifyAnagrafica(AnagraficaDTO a) {}
     public void modifyDatiAccademici(DatiAccademiciDTO d) {}

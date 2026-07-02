@@ -92,19 +92,19 @@ public class UploadControl {
 
             // 3. Salva nel DB (Contenuto e Allegato)
             Contenuto contenuto = new Contenuto();
-            contenuto.setTitolo(com.afam.identity.middleware.Sauron.sanitize(titolo, false));
-            contenuto.setDescrizione(com.afam.identity.middleware.Sauron.sanitize(descrizione, false));
-            contenuto.setPolicyVisibilita(com.afam.identity.middleware.Sauron.sanitize(policyVisibilita, false));
+            contenuto.setTitolo(com.afam.identity.middleware.Validator.sanitize(titolo, false));
+            contenuto.setDescrizione(com.afam.identity.middleware.Validator.sanitize(descrizione, false));
+            contenuto.setPolicyVisibilita(com.afam.identity.middleware.Validator.sanitize(policyVisibilita, false));
             contenuto.setTipo(file.getContentType());
             contenuto.setProfilo(profilo);
 
             if (autori != null && !autori.trim().isEmpty()) {
-                contenuto.setAutori(new ArrayList<>(List.of(com.afam.identity.middleware.Sauron.sanitize(autori, false).split(","))));
+                contenuto.setAutori(new ArrayList<>(List.of(com.afam.identity.middleware.Validator.sanitize(autori, false).split(","))));
             } else {
                 contenuto.setAutori(new ArrayList<>(List.of(profilo.getNome() + " " + profilo.getCognome())));
             }
             if (collaboratori != null && !collaboratori.trim().isEmpty()) {
-                contenuto.setCollaboratori(new ArrayList<>(List.of(com.afam.identity.middleware.Sauron.sanitize(collaboratori, false).split(","))));
+                contenuto.setCollaboratori(new ArrayList<>(List.of(com.afam.identity.middleware.Validator.sanitize(collaboratori, false).split(","))));
             }
 
             Contenuto savedContenuto = contenutoDBMSBoundary.save(contenuto);

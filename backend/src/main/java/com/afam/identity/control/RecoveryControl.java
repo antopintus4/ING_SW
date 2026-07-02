@@ -50,7 +50,7 @@ public class RecoveryControl {
             emailService.sendRecoveryEmail(utente.getEmail(), token.getValore());
         }
         
-        return ResponseEntity.ok("Email con le istruzioni per il recupero della password inviata.");
+        return ResponseEntity.ok(java.util.Collections.singletonMap("message", "Email con le istruzioni per il recupero della password inviata."));
     }
 
     @PostMapping("/reset")
@@ -63,7 +63,7 @@ public class RecoveryControl {
             Token token = optToken.get();
             
             if (token.getScadenza().isBefore(LocalDateTime.now()) || !"PWD_RECOVERY".equals(token.getTipo())) {
-                return ResponseEntity.badRequest().body("Token scaduto o non valido.");
+                return ResponseEntity.badRequest().body(java.util.Collections.singletonMap("error", "Token scaduto o non valido."));
             }
             
             UtenteAfam utente = token.getUtenteAfam();
@@ -73,10 +73,10 @@ public class RecoveryControl {
             // Invalida il token usandolo (eliminandolo)
             tokenDBMSBoundary.delete(token);
             
-            return ResponseEntity.ok("Modifica della password avvenuta con successo.");
+            return ResponseEntity.ok(java.util.Collections.singletonMap("message", "Modifica della password avvenuta con successo."));
         }
         
-        return ResponseEntity.badRequest().body("Token non trovato.");
+        return ResponseEntity.badRequest().body(java.util.Collections.singletonMap("error", "Token non trovato."));
     }
 
     @PostMapping("/request-email")

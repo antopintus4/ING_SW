@@ -20,13 +20,18 @@ export class ContentManagementBoundaryComponent implements OnInit {
   errorMessage: string = '';
   successMessage: string = '';
 
-  selectedContentId: number | null = null;
+  selectedContentId: string | null = null;
   scadenzaGiorni: number = 7;
-  shareModalInstance: any;
 
   groups: any[] = [];
-  selectedGroupId: number | null = null;
+  selectedGroupId: string | null = null;
   groupModalInstance: any;
+
+  shareModalInstance: any;
+  shareEmail: string = '';
+  generatedLink: string = '';
+  emailSuccessMessage: string = '';
+  emailErrorMessage: string = '';
 
   constructor(
     private contentService: ContentService, 
@@ -60,7 +65,15 @@ export class ContentManagementBoundaryComponent implements OnInit {
     });
   }
 
-  delete(id: number) {
+  view(allegatoId: string) {
+    this.contentService.downloadContent(allegatoId).subscribe((blob) => {
+      const file = new Blob([blob], { type: blob.type });
+      const objectUrl = URL.createObjectURL(file);
+      window.open(objectUrl, '_blank');
+    });
+  }
+
+  delete(id: string) {
     if (confirm('Sei sicuro di voler eliminare questo contenuto?')) {
       this.contentService.deleteContent(id).subscribe({
         next: () => {
@@ -73,21 +86,71 @@ export class ContentManagementBoundaryComponent implements OnInit {
     }
   }
 
-  share(contenutoId: number) {
-    const days = prompt('Inserisci il numero di giorni di validità del link (es. 7):', '7');
-    if (days != null && !isNaN(Number(days))) {
-      this.linkService.createLink(contenutoId, Number(days)).subscribe({
+  share(contenutoId: string) {
+    this.selectedContentId = contenutoId;
+    this.scadenzaGiorni = 7;
+    this.generatedLink = '';
+    this.shareEmail = '';
+    this.emailSuccessMessage = '';
+    this.emailErrorMessage = '';
+    
+    const modalEl = document.getElementById('shareModal');
+    if (modalEl) {
+      this.shareModalInstance = new bootstrap.Modal(modalEl);
+      this.shareModalInstance.show();
+    }
+  }
+
+  closeShareModal() {
+    if (this.shareModalInstance) {
+      this.shareModalInstance.hide();
+    }
+    this.selectedContentId = null;
+  }
+
+  generateLink() {
+    if (this.selectedContentId && this.scadenzaGiorni > 0) {
+      this.linkService.createLink(this.selectedContentId, this.scadenzaGiorni).subscribe({
         next: (link) => {
-          this.successMessage = `Link generato: ${window.location.origin}/share/${link.identificatoreLink}`;
+          this.generatedLink = `${window.location.origin}/share/${link.identificatoreLink}`;
         },
         error: () => {
           this.errorMessage = 'Errore durante la generazione del link.';
+          this.closeShareModal();
         }
       });
     }
   }
 
-  openGroupModal(contentId: number) {
+  copyLink() {
+    if (this.generatedLink) {
+      navigator.clipboard.writeText(this.generatedLink).then(() => {
+        // Optional: show a small toast or temporary indicator
+      });
+    }
+  }
+
+  sendEmail() {
+    if (this.shareEmail && this.generatedLink) {
+      this.emailSuccessMessage = '';
+      this.emailErrorMessage = '';
+      // Assumes the linkService has a sendEmail method that accepts the email and the link identifier
+      // We extract the identifier from the generated link
+      const identificatore = this.generatedLink.split('/').pop();
+      if (identificatore) {
+        this.linkService.sendLinkViaEmail(this.shareEmail, identificatore).subscribe({
+          next: () => {
+            this.emailSuccessMessage = 'E-mail inviata con successo!';
+          },
+          error: () => {
+            this.emailErrorMessage = 'Errore durante l\'invio dell\'e-mail.';
+          }
+        });
+      }
+    }
+  }
+
+  openGroupModal(contentId: string) {
     this.selectedContentId = contentId;
     this.groupService.getGroups().subscribe({
       next: (data) => {

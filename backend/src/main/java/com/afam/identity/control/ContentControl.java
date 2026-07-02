@@ -10,7 +10,7 @@ import com.afam.identity.entity.Contenuto;
 import com.afam.identity.entity.Gruppo;
 import com.afam.identity.entity.Profilo;
 import com.afam.identity.entity.UtenteAfam;
-import com.afam.identity.middleware.Sauron;
+import com.afam.identity.middleware.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -81,22 +81,22 @@ public class ContentControl {
         Contenuto c = contenutoOpt.get();
         if (!c.getProfilo().getId().equals(pOpt.get().getId())) return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Accesso negato");
 
-        c.setTitolo(Sauron.sanitize(request.getTitolo(), false));
-        c.setPolicyVisibilita(Sauron.sanitize(request.getPolicyVisibilita(), false));
+        c.setTitolo(Validator.sanitize(request.getTitolo(), false));
+        c.setPolicyVisibilita(Validator.sanitize(request.getPolicyVisibilita(), false));
         
         if (request.getAutori() != null && !request.getAutori().trim().isEmpty()) {
-            c.setAutori(new java.util.ArrayList<>(java.util.List.of(Sauron.sanitize(request.getAutori(), false).split(","))));
+            c.setAutori(new java.util.ArrayList<>(java.util.List.of(Validator.sanitize(request.getAutori(), false).split(","))));
         } else {
             c.setAutori(new java.util.ArrayList<>(java.util.List.of(pOpt.get().getNome() + " " + pOpt.get().getCognome())));
         }
 
         if (request.getCollaboratori() != null && !request.getCollaboratori().trim().isEmpty()) {
-            c.setCollaboratori(new java.util.ArrayList<>(java.util.List.of(Sauron.sanitize(request.getCollaboratori(), false).split(","))));
+            c.setCollaboratori(new java.util.ArrayList<>(java.util.List.of(Validator.sanitize(request.getCollaboratori(), false).split(","))));
         } else {
             c.setCollaboratori(new java.util.ArrayList<>());
         }
 
-        String reqDesc = Sauron.sanitize(request.getDescrizione(), false);
+        String reqDesc = Validator.sanitize(request.getDescrizione(), false);
         if (reqDesc != null && !reqDesc.trim().isEmpty()) {
             if (reqDesc.startsWith("/delete")) {
                 String remainder = reqDesc.substring(7).trim();
