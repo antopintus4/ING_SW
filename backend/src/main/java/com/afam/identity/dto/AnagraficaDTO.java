@@ -10,7 +10,11 @@ public class AnagraficaDTO {
     private String citta;
     private String indirizzo;
     private String telefono;
+    private String sesso;
 
+    public String getSesso() { return sesso; }
+    public void setSesso(String sesso) { this.sesso = sesso; }
+    
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }
     public String getCognome() { return cognome; }

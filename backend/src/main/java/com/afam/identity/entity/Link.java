@@ -1,6 +1,7 @@
 package com.afam.identity.entity;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDateTime;
 
 @Entity
@@ -26,14 +27,17 @@ public class Link {
     @Column(name = "numero_visualizzazioni")
     protected Integer numeroVisualizzazioni = 0;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "profilo_id")
     private Profilo profilo;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "gruppo_id")
     private Gruppo gruppo;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "contenuto_id")
     private Contenuto contenuto;

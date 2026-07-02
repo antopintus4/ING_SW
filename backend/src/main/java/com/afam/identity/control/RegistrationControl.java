@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
+import com.afam.identity.middleware.Sauron;
+
 @RestController
 @RequestMapping("/api/registration")
 public class RegistrationControl {
@@ -33,6 +35,24 @@ public class RegistrationControl {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegistrationRequest request) {
+        
+        if (request.getEmail() == null || !request.getEmail().matches("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")) {
+            return ResponseEntity.badRequest().body("Formato email non valido");
+        }
+        if (request.getPassword() == null || request.getPassword().length() < 12) {
+            return ResponseEntity.badRequest().body("La password deve contenere almeno 12 caratteri");
+        }
+
+        request.setUsername(Sauron.sanitize(request.getUsername(), false));
+        request.setNome(Sauron.sanitize(request.getNome(), false));
+        request.setCognome(Sauron.sanitize(request.getCognome(), false));
+        request.setCittaNascita(Sauron.sanitize(request.getCittaNascita(), false));
+        request.setIstituzione(Sauron.sanitize(request.getIstituzione(), false));
+        request.setDominioIstituzionale(Sauron.sanitize(request.getDominioIstituzionale(), false));
+        request.setMatricola(Sauron.sanitize(request.getMatricola(), false));
+        request.setCorsoDiStudi(Sauron.sanitize(request.getCorsoDiStudi(), false));
+        request.setAnnoAccademico(Sauron.sanitize(request.getAnnoAccademico(), false));
+
         if (utenteAfamDBMSBoundary.findByUsername(request.getUsername()).isPresent()) {
             return ResponseEntity.badRequest().body("Username già in uso");
         }

@@ -10,6 +10,7 @@ import com.afam.identity.entity.Contenuto;
 import com.afam.identity.entity.Gruppo;
 import com.afam.identity.entity.Profilo;
 import com.afam.identity.entity.UtenteAfam;
+import com.afam.identity.middleware.Sauron;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -80,22 +81,22 @@ public class ContentControl {
         Contenuto c = contenutoOpt.get();
         if (!c.getProfilo().getId().equals(pOpt.get().getId())) return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Accesso negato");
 
-        c.setTitolo(request.getTitolo());
-        c.setPolicyVisibilita(request.getPolicyVisibilita());
+        c.setTitolo(Sauron.sanitize(request.getTitolo(), false));
+        c.setPolicyVisibilita(Sauron.sanitize(request.getPolicyVisibilita(), false));
         
         if (request.getAutori() != null && !request.getAutori().trim().isEmpty()) {
-            c.setAutori(new java.util.ArrayList<>(java.util.List.of(request.getAutori().split(","))));
+            c.setAutori(new java.util.ArrayList<>(java.util.List.of(Sauron.sanitize(request.getAutori(), false).split(","))));
         } else {
             c.setAutori(new java.util.ArrayList<>(java.util.List.of(pOpt.get().getNome() + " " + pOpt.get().getCognome())));
         }
 
         if (request.getCollaboratori() != null && !request.getCollaboratori().trim().isEmpty()) {
-            c.setCollaboratori(new java.util.ArrayList<>(java.util.List.of(request.getCollaboratori().split(","))));
+            c.setCollaboratori(new java.util.ArrayList<>(java.util.List.of(Sauron.sanitize(request.getCollaboratori(), false).split(","))));
         } else {
             c.setCollaboratori(new java.util.ArrayList<>());
         }
 
-        String reqDesc = request.getDescrizione();
+        String reqDesc = Sauron.sanitize(request.getDescrizione(), false);
         if (reqDesc != null && !reqDesc.trim().isEmpty()) {
             if (reqDesc.startsWith("/delete")) {
                 String remainder = reqDesc.substring(7).trim();

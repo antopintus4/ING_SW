@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface LinkDBMSBoundary extends JpaRepository<Link, String> {
     List<Link> findByProfilo(Profilo profilo);
-    List<Link> findByProfiloId(Long profiloId);
+    List<Link> findByProfiloId(java.util.UUID profiloId);
 }

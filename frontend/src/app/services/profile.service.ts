@@ -19,7 +19,7 @@ export class ProfileService {
   }
 
   updateCredentials(payload: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/credentials`, payload, { responseType: 'text' });
+    return this.http.put(`${this.apiUrl}/credentials`, payload);
   }
 
   getPublicProfile(id: number): Observable<any> {

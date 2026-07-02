@@ -52,6 +52,7 @@ export class EditAnagraficaBoundaryComponent implements OnInit {
   }
 
   save() {
+    this.anagrafica.sesso = this.sesso;
     this.profileService.updateAnagrafica(this.anagrafica).subscribe({
       next: () => {
         this.successMessage = 'Dati anagrafici aggiornati con successo!';

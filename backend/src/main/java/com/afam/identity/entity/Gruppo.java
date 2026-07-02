@@ -1,6 +1,7 @@
 package com.afam.identity.entity;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 
 @Entity
@@ -14,6 +15,7 @@ public class Gruppo {
     @Column(nullable = false, length = 100)
     private String nome;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "profilo_id", nullable = false)
     private Profilo profilo;
@@ -26,6 +28,7 @@ public class Gruppo {
     )
     protected List<Contenuto> listaContenuti;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "gruppo", cascade = CascadeType.ALL, orphanRemoval = true)
     protected List<Link> linkAssociati;
 

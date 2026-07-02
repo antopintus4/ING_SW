@@ -29,8 +29,8 @@ export class RegistrationBoundaryComponent implements OnInit {
   ) {
     this.registerForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(4)]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
+      email: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9_!#$%&\\\'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$')]],
+      password: ['', [Validators.required, Validators.minLength(12)]],
       nome: ['', Validators.required],
       cognome: ['', Validators.required],
       sesso: ['', Validators.required],

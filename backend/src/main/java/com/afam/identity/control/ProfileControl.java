@@ -11,6 +11,7 @@ import com.afam.identity.dto.OtherEditsDTO;
 import com.afam.identity.entity.Contenuto;
 import com.afam.identity.entity.Profilo;
 import com.afam.identity.entity.UtenteAfam;
+import com.afam.identity.middleware.Sauron;
 import com.afam.identity.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -78,13 +79,26 @@ public class ProfileControl {
         Profilo profilo = getProfiloCorrente();
         if (profilo == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
-        profilo.setNome(request.getNome());
-        profilo.setCognome(request.getCognome());
+        boolean isCfValid = cfValidator.validaCodiceFiscale(
+                request.getCodiceFiscale(),
+                request.getNome(),
+                request.getCognome(),
+                request.getSesso(),
+                request.getDataNascita() != null ? request.getDataNascita().toString() : null,
+                request.getCitta()
+        );
+
+        if (!isCfValid) {
+            return ResponseEntity.badRequest().body("Il Codice Fiscale non corrisponde ai dati anagrafici forniti.");
+        }
+
+        profilo.setNome(Sauron.sanitize(request.getNome(), false));
+        profilo.setCognome(Sauron.sanitize(request.getCognome(), false));
         profilo.setDataNascita(request.getDataNascita());
         profilo.setCodiceFiscale(request.getCodiceFiscale());
-        profilo.setCitta(request.getCitta());
-        profilo.setIndirizzo(request.getIndirizzo());
-        profilo.setTelefono(request.getTelefono());
+        profilo.setCitta(Sauron.sanitize(request.getCitta(), false));
+        profilo.setIndirizzo(Sauron.sanitize(request.getIndirizzo(), false));
+        profilo.setTelefono(Sauron.sanitize(request.getTelefono(), false));
 
         profiloDBMSBoundary.save(profilo);
 
@@ -105,10 +119,10 @@ public class ProfileControl {
         Profilo profilo = getProfiloCorrente();
         if (profilo == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
-        profilo.setPolicyVisibilita(request.getPolicyVisibilita());
-        profilo.setDescrizione(request.getDescrizione());
-        profilo.setInteressi(request.getInteressi());
-        profilo.setCompetenze(request.getCompetenze());
+        profilo.setPolicyVisibilita(Sauron.sanitize(request.getPolicyVisibilita(), false));
+        profilo.setDescrizione(Sauron.sanitize(request.getDescrizione(), false));
+        profilo.setInteressi(Sauron.sanitize(request.getInteressi(), false));
+        profilo.setCompetenze(Sauron.sanitize(request.getCompetenze(), false));
 
         profiloDBMSBoundary.save(profilo);
 
@@ -125,6 +139,12 @@ public class ProfileControl {
     public ResponseEntity<?> updateCredentials(@RequestBody CredentialsDTO request) {
         UtenteAfam utente = getUtenteCorrente();
         if (utente == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        if (request.getEmail() == null || !request.getEmail().matches("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")) {
+            return ResponseEntity.badRequest().body("Formato email non valido");
+        }
+        
+        request.setUsername(Sauron.sanitize(request.getUsername(), false));
 
         // Check if username/email are already used by someone else
         if (!utente.getUsername().equals(request.getUsername()) && 
@@ -152,6 +172,10 @@ public class ProfileControl {
     public ResponseEntity<?> updatePassword(@RequestBody PasswordDTO request) {
         UtenteAfam utente = getUtenteCorrente();
         if (utente == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        if (request.getNewPassword() == null || request.getNewPassword().length() < 12) {
+            return ResponseEntity.badRequest().body("La nuova password deve contenere almeno 12 caratteri");
+        }
 
         if (!passwordEncoder.matches(request.getCurrentPassword(), utente.getPassword())) {
             return ResponseEntity.badRequest().body("La password attuale non è corretta");

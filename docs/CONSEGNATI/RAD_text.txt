@@ -1,0 +1,2368 @@
+   
+ 
+   
+ UNIVERSITÀ DEGLI STUDI  
+DIPARTIMENTO DI INGEGNERIA  
+Corso di Laurea in Ingegneria Informatica  
+ 
+Requirements Analysis Document  
+Sistema per la gestione dell’identità digitale  
+degli studenti delle istituzioni AFAM  
+ 
+Insegnamento di Ingegneria del Software / Progettazione del Software  
+Anno Accademico 2025 – 2026  
+Documento di Analisi dei Requisiti  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Gruppo:  
+Chiarelli Antonino Maria  
+Riccardo Centonze  
+Federico Meli  
+Gabriele Mattia Guccione   
+ 
+   
+ Requirements Analysis Document  Identità digitale AFAM  
+Pagina 3 di 113  
+1. Introduzione  ................................ ................................ ................................ ................................ .........  3 
+1.1 Obiettivo del sistema  ................................ ................................ ................................ .....................  4 
+1.2 Acronimi  ................................ ................................ ................................ ................................ .........  4 
+1.3 Definizioni ................................ ................................ ................................ ................................ .......  4 
+2. Sistema attuale  ................................ ................................ ................................ ................................ ..... 5 
+3. Sistema proposto  ................................ ................................ ................................ ................................ . 6 
+3.1 Overview  ................................ ................................ ................................ ................................ ........  7 
+3.2 Requisiti funzionali  ................................ ................................ ................................ .........................  7 
+3.2.1 Servizi offerti all’Utente AFAM  ................................ ................................ ...............................  7 
+3.2.2 Servizi offerti al Visualizzatore  ................................ ................................ ................................  8 
+3.2.3 Vincoli su input e validazione  ................................ ................................ ................................ .. 8 
+3.3 Requisiti non funzionali  ................................ ................................ ................................ ..................  8 
+3.3.1 Requisiti di sicurezza  ................................ ................................ ................................ ...............  8 
+3.3.2 Requisiti di affidabilità e disponibilità  ................................ ................................ .....................  8 
+3.3.3 Requisiti di usabilità  ................................ ................................ ................................ ................  8 
+3.3.4 Considerazioni legislative e diritti d'autore  ................................ ................................ ............  8 
+4. Modelli del sistema  ................................ ................................ ................................ ..............................  8 
+4.1 Modello dei casi d’uso ................................ ................................ ................................ ....................  9 
+4.1.1 Attori coinvolti  ................................ ................................ ................................ ........................  9 
+4.1.2 Vista d’insieme  ................................ ................................ ................................ ........................  9 
+4.1.3 Macro caso d’uso — Comportamento eccezionale  ................................ ..............................  10 
+4.1.3.1 Caduta Connessione ................................ ................................ ................................ .......  11 
+4.1.4 Macro caso d’uso — Autenticazione  ................................ ................................ ....................  12 
+4.1.4.1 Login Con Credenziali  ................................ ................................ ................................ ..... 13 
+4.1.4.2 Login Con Digital ID Provider  ................................ ................................ .........................  16 
+4.1.4.3 Logout  ................................ ................................ ................................ ............................  19 
+Figura 5 — Diagramma di sequenza — Logout  ................................ ................................ ..........  20 
+4.1.4.4 Macro caso d’uso — Registrazione  ................................ ................................ ................  21 
+4.1.5 Macro caso d’uso — Recupero credenziali  ................................ ................................ ...........  24 
+4.1.6.1 Richiesta Recupero Password  ................................ ................................ ........................  25 
+4.1.6.2 Recupero Password  ................................ ................................ ................................ ........  26 
+4.1.6.3 Richiesta Recupero Email  ................................ ................................ ...............................  28 
+4.1.7 Macro caso d’uso — Caricamento contenuti  ................................ ................................ .......  29 
+4.1.7.1 Caricamento Nuovo Contenuto  ................................ ................................ .....................  30 
+4.1.7.2 Aggiorna Visibilita’  ................................ ................................ ................................ .........  31 
+4.1.7.3 Rimuovi Allegato  ................................ ................................ ................................ ............  32 
+4.1.7.4 Annulla Caricamento  ................................ ................................ ................................ ...... 33 Requirements Analysis Document  Identità digitale AFAM  
+Pagina 4 di 113 4.1.7.5 Aggiungi Autore ................................ ................................ ................................ ..............  34 
+4.1.7.6 Aggiungi Collaboratore  ................................ ................................ ................................ .. 35 
+4.1.7.7 Visualizza Anteprima Contenuto  ................................ ................................ ....................  36 
+4.1.7.8 Inserimento Dati Contenuto  ................................ ................................ ..........................  37 
+4.1.8 Macro caso d’uso — Gestione contenuti  ................................ ................................ ..............  38 
+4.1.8.1 Visualizza Lista Contenuti  ................................ ................................ ...............................  39 
+4.1.8.2 Visualizza_contenuto  ................................ ................................ ................................ ..... 41 
+4.1.8.3 Modifica Contenuto (da lista)  ................................ ................................ ........................  42 
+4.1.8.4 Modifica Contenuto (da contenuto)  ................................ ................................ ..............  43 
+4.1.8.5 Elimina Contenuto (da lista)  ................................ ................................ ...........................  44 
+4.1.8.6 Elimina Contenuto (da contenuto)  ................................ ................................ ................  45 
+4.1.8.7 Raggruppa Contenuti (da lista)  ................................ ................................ ......................  47 
+4.1.8.8 Raggruppa Contenuti (da contenuto)  ................................ ................................ ............  48 
+4.1.9 Macro caso d’uso — Condivisione  ................................ ................................ ........................  52 
+4.1.9.1 Genera Link  ................................ ................................ ................................ ....................  53 
+4.1.9.2 Impostazioni Link  ................................ ................................ ................................ ...........  55 
+4.1.9.3 Condivisione Diretta  ................................ ................................ ................................ .......  56 
+4.1.9.4 Visualizza Link Attivi  ................................ ................................ ................................ .......  57 
+4.1.9.5 Disabilita Link  ................................ ................................ ................................ .................  58 
+4.1.10 Macro caso d’uso — Ricerca  ................................ ................................ ...............................  59 
+4.1.10.1 Cerca Utente  ................................ ................................ ................................ ................  60 
+4.1.10.2 Cerca Gruppo  ................................ ................................ ................................ ...............  61 
+4.1.10.3 Cerca Contenuto  ................................ ................................ ................................ ..........  62 
+4.1.10.4 Cerca Autore  ................................ ................................ ................................ ................  63 
+4.1.10.5 Cerca Collaboratori  ................................ ................................ ................................ ...... 64 
+4.1.11 Macro caso d’uso — Visualizza contenuti  ................................ ................................ ..........  65 
+4.1.11.1 Visualizza Contenuti  ................................ ................................ ................................ ..... 66 
+4.1.11.2 Visualizza Contenuti Con URL  ................................ ................................ ......................  67 
+4.1.12 Macro caso d’uso — Modifica profilo  ................................ ................................ .................  68 
+4.1.12.1 Modifica Credenziali  ................................ ................................ ................................ .... 69 
+4.1.12.2 Modifica Password  ................................ ................................ ................................ .......  71 
+4.1.12.3 Modifica Anagrafica  ................................ ................................ ................................ ..... 73 
+4.1.12.4 Altre Modifiche  ................................ ................................ ................................ ............  75 
+4.1.13 Macro caso d’uso — Gestione errori  ................................ ................................ ..................  76 
+4.1.13.1 Errore Ricerca  ................................ ................................ ................................ ...............  77 
+4.1.13.2 Errore Condivisione  ................................ ................................ ................................ ...... 79 
+4.1.13.3 Errore Creazione Link  ................................ ................................ ................................ ... 79 
+4.1.13.4 Errore Modifica Profilo ................................ ................................ ................................ . 80 Requirements Analysis Document  Identità digitale AFAM  
+Pagina 5 di 113 4.1.13.5 Errore Apertura Link ................................ ................................ ................................ ..... 81 
+4.1.13.6 Errore Caduta Di Connessione  ................................ ................................ .....................  82 
+4.1.13.7 Errore Visualizza Contenuti  ................................ ................................ ..........................  83 
+4.2 Modello degli oggetti  ................................ ................................ ................................ ...................  84 
+4.2.1 Classi Utente AFAM e Profilo  ................................ ................................ ................................  85 
+4.2.2 Classe Contenuto  ................................ ................................ ................................ ..................  85 
+4.2.3 Classe Gruppo  ................................ ................................ ................................ .......................  86 
+4.2.4 Classe Link  ................................ ................................ ................................ .............................  86 
+4.2.5 Classe Token  ................................ ................................ ................................ ..........................  86 
+4.2.6 Relazioni tra le classi  ................................ ................................ ................................ .............  86 
+4.2.7 Oggetti boundary e control  ................................ ................................ ................................ ... 87 
+4.2.8 Diagrammi delle classi  ................................ ................................ ................................ ...........  87 
+4.2.8.1 Entità  ................................ ................................ ................................ ..............................  87 
+4.2.8.2 Gestione Account - Registrazione  ................................ ................................ ..................  87 
+4.2.8.3 Gestione Account – Accesso  ................................ ................................ ..........................  88 
+4.2.8.4 Gestione Account – Logout  ................................ ................................ ............................  89 
+4.2.8.5 Gestione Account – Recupero Password  ................................ ................................ .......  90 
+4.2.8.6 Gestione Profilo ................................ ................................ ................................ ..............  91 
+4.2.8.7 Caricamento Contenuti  ................................ ................................ ................................ .. 92 
+4.2.8.8 Gestione Contenuti  ................................ ................................ ................................ ........  93 
+4.2.8.9 Visualizzazione  ................................ ................................ ................................ ...............  94 
+4.2.8.10 Ricerca  ................................ ................................ ................................ ..........................  95 
+4.2.8.11 Condivisione  ................................ ................................ ................................ .................  96 
+4.2.8.12 Comportamento eccezionale  ................................ ................................ .......................  97 
+MOCKUP  ................................ ................................ ................................ ................................ .................  98 
+HOMEPAGE  ................................ ................................ ................................ ................................ .... 99 
+LOGIN  ................................ ................................ ................................ ................................ ...........  100 
+REGISTRAZIONE  ................................ ................................ ................................ ............................  100 
+OTP-2FA ................................ ................................ ................................ ................................ ........  100 
+RECUPERO CREDENZIALI  ................................ ................................ ................................ ..............  101 
+PROFILO  ................................ ................................ ................................ ................................ ........  101 
+MODIFICA PASSWORD  ................................ ................................ ................................ .................  102 
+MODIFICA CREDENZIALI  ................................ ................................ ................................ ...............  102 
+MODIFICA ANAGRAFICA  ................................ ................................ ................................ ..............  103 
+LISTA CONTENUTI  ................................ ................................ ................................ .........................  103 
+CONTENUTI AGGREGA  ................................ ................................ ................................ .................  104 
+CARICA CONTENUTO  ................................ ................................ ................................ ....................  105 
+DETTAGLI CONTENUTO  ................................ ................................ ................................ ................  105 Requirements Analysis Document  Identità digitale AFAM  
+Pagina 6 di 113 CONTENUTO PUBBLICO  ................................ ................................ ................................ ...............  106 
+PROFILO PUBBLICO  ................................ ................................ ................................ ......................  106 
+CONDIVISIONE LINK  ................................ ................................ ................................ .....................  106 
+RICERCA RISULTATI  ................................ ................................ ................................ ......................  107 
+LISTA GRUPPI  ................................ ................................ ................................ ................................  107 
+DETTAGLIO GRUPPO  ................................ ................................ ................................ ....................  108 
+LINK ATTIVI  ................................ ................................ ................................ ................................ ... 108 
+ERRORE 404  ................................ ................................ ................................ ................................ .. 109 
+ERRORE SERVER  ................................ ................................ ................................ ...........................  109 
+ Requirements Analysis Document  Identità digitale AFAM  
+Pagina 1 di 113 1. Introduzione  
+1.1 Obiettivo del sistema  
+Il sistema oggetto del presente documento ha l’obiettivo di fornire alle istituzioni AFAM (Alta 
+Formazione Artistica, Musicale e Coreutica) uno strumento digitale che consenta agli studenti di 
+rappresentare in modo efficace e moderno il proprio percorso ar tistico e formativo, costruendo una 
+propria identità digitale unica all’interno dell’istituzione.  
+Tale identità non si limita ai dati anagrafici o accademici, ma include la produzione artistica dello 
+studente — registrazioni audio, video, spartiti, curriculum e ulteriori materiali — organizzata in 
+maniera flessibile. Il sistema permette allo studente d i decidere autonomamente quali parti del proprio 
+profilo rendere visibili e in quali contesti, di condividerle anche con soggetti esterni all’istituzione 
+mediante appositi collegamenti, e di verificare se i contenuti condivisi siano stati effettivamente 
+visualizzati.  
+L’accesso al sistema avviene mediante credenziali personali, in modo sicuro, con funzionalità di base 
+per la gestione dell’account e per il recupero delle credenziali. La progettazione tiene conto dei principi 
+di affidabilità, sicurezza e verificabilità de ll’identità propri dei sistemi di identità digitale riconosciuti a 
+livello nazionale ed europeo (SPID, CIE, eIDAS), in prospettiva di future integrazioni.  
+1.2 Acronimi  
+Acronimo  Versione estesa  
+AFAM  Alta Formazione Artistica, Musicale e Coreutica  
+RAD Requirements Analysis Document  
+ODD  Object Design Document  
+SDD System Design Document  
+UML  Unified Modeling Language  
+DBMS  Data Base Management System  
+OTP One‑Time Password  
+2FA Two‑Factor Authentication (autenticazione a due fattori)  
+SPID  Sistema Pubblico di Identità Digitale  
+CIE Carta d’Identità Elettronica  
+eIDAS  electronic IDentification, Authentication and trust Services  
+CF Codice Fiscale  
+QR Quick Response (code)  
+ACN Agenzia per la Cybersicurezza Nazionale  
+UUID  Universally Unique Identifier  
+PDF Portable Document Format  
+ Requirements Analysis Document  Identità digitale AFAM  
+Pagina 2 di 113 1.3 Definizioni  
+Termine  Significato  
+Utente AFAM  Studente appartenente all’istituzione AFAM e utilizzatore tipico 
+dell’applicazione. Una volta autenticato, gestisce il proprio profilo, carica e 
+gestisce i propri contenuti, ne definisce i permessi di visualizzazione e li 
+condivide con altri utenti.  
+Visualizzatore  Soggetto esterno all’istituzione, privo di account, che può unicamente 
+visualizzare i contenuti di un Utente AFAM, tramite ricerca o tramite link diretto 
+condiviso, nel rispetto delle policy di visibilità definite.  
+ID Provider  Sistema esterno di identità digitale riconosciuto (SPID o CIE) tramite cui l’Utente 
+AFAM può autenticarsi o registrarsi in alternativa alle credenziali locali.  
+DBMS  Sistema di gestione della base di dati dell’applicazione; attore esterno passivo 
+con cui il sistema dialoga per la persistenza e il recupero delle informazioni.  
+Contenuto  File caricato dall’Utente AFAM (audio, video, immagine, elaborato), 
+eventualmente composto da più allegati e corredato di metadati e policy di 
+visibilità.  
+Gruppo  Insieme astratto di due o più contenuti di un Utente AFAM, condivisibile con un 
+unico link, che non altera l’organizzazione dei contenuti scelta dall’utente.  
+Policy di visibilità  Regole, definite dall’Utente AFAM, che stabiliscono chi può visualizzare un 
+contenuto (Tutti, Privato, Nessuno o categoria specifica).  
+Link di condivisione  Collegamento univoco, eventualmente sotto forma di QR code, che consente 
+l’accesso ai soli contenuti selezionati dall’Utente AFAM, con possibile data di 
+scadenza.  
+Homepage  Interfaccia principale dell’Utente AFAM autenticato, dalla quale accede alle 
+funzionalità previste dal proprio ruolo. È altresì l’interfaccia principale del 
+visualizzatore, da questa interfaccia il visualizzatore può cercare utenti o 
+contenuti.  
+Token  Stringa temporanea generata dal sistema, utilizzata per la conferma dell’identità 
+(registrazione/2FA) o per il recupero delle credenziali.  
+ Requirements Analysis Document  Identità digitale AFAM  
+Pagina 3 di 113 2. Sistema attuale  
+Allo stato attuale non esiste un sistema software unitario adottato dall’istituzione AFAM per la 
+gestione dell’identità digitale degli studenti. Gli studenti si trovano a dover presentare il proprio profilo 
+attraverso documenti separati, file sparsi o mate riali inviati tramite e ‑mail, con difficoltà nel 
+mantenere coerenza, aggiornamento e controllo su ciò che viene condiviso.  
+La preparazione di portfolio, curriculum e raccolte di contenuti multimediali avviene in modo manuale 
+e risulta difficile da gestire e da adattare ai diversi contesti (audizioni, candidature, collaborazioni). 
+Inoltre, l’invio dei materiali tramite e ‑mail o  piattaforme generiche non offre allo studente alcun 
+controllo sull’effettiva visualizzazione dei contenuti condivisi. Le attività che il sistema proposto 
+intende automatizzare sono quindi attualmente svolte in maniera manuale e frammentata.  
+ Requirements Analysis Document  Identità digitale AFAM  
+Pagina 4 di 113 3. Sistema proposto  
+3.1 Overview  
+Il sistema proposto mira a risolvere l'attuale frammentazione dei materiali di presentazione degli 
+studenti, fornendo a ciascuno di essi uno spazio digitale unico e centralizzato all'interno dell'istituzione 
+AFAM. Questo ambiente è progettato per costruire , gestire e rappresentare in modo moderno ed 
+efficace la propria identità artistica e formativa. Oltre ai dati anagrafici e accademici, il sistema funge 
+da vero e proprio portfolio digitale, permettendo l'inclusione della produzione artistica dello student e 
+(come registrazioni audio, video, spartiti, curriculum e altro materiale rilevante).  
+Attraverso una gestione flessibile, l'utente può organizzare i propri contenuti multimediali definendo 
+policy di visibilità granulari, potendo scegliere esattamente quali parti del proprio profilo mostrare e 
+in quali contesti. Il sistema facilita la condiv isione mirata con soggetti esterni, come commissioni di 
+audizione o docenti di altre istituzioni, tramite la generazione di link di accesso specifici. Viene inoltre 
+offerto un riscontro analitico sulle visualizzazioni ottenute, permettendo allo studente di  valutare 
+l'efficacia delle proprie condivisioni e candidature.  
+L’infrastruttura, ospitata su un nodo locale dell'infrastruttura AFAM, pone una forte enfasi sulla 
+gestione affidabile dei dati, sulla tutela della privacy e sulla protezione delle opere artistiche originali 
+caricate. Considerata l'utenza di estrazione art istica, l'interfaccia è studiata per garantire la massima 
+chiarezza e facilità d'uso, assicurando l'accessibilità anche a utenti sprovvisti di competenze tecniche 
+avanzate. Infine, l'architettura è concepita per accogliere future espansioni, tra cui l'inte grazione 
+nativa con i sistemi di identità digitale nazionali ed europei (SPID, eIDAS) e la potenziale interoperabilità 
+con altre istituzioni AFAM.  
+3.2 Requisiti funzionali  
+Il sistema è progettato per servire due tipologie principali di attori — l’Utente AFAM  (lo studente) e il 
+Visualizzatore  (interno o esterno all'istituzione) — e interagisce con attori di sistema come gli ID 
+Provider  e il DBMS . Di seguito si dettagliano i servizi offerti per ciascun profilo.  
+3.2.1 Servizi offerti all’Utente AFAM  
+• Registrazione:  Processo di onboarding  per la creazione di un nuovo account istituzionale, che 
+include la validazione rigorosa dei dati inseriti e la conferma dell’identità, supportata dall'invio 
+di un codice OTP (One -Time Password).  
+• Autenticazione e Gestione Sessione:  Accesso sicuro alla piattaforma. Gli utenti possono 
+effettuare il login utilizzando le credenziali locali (e -mail e password) o avvalersi di Identity 
+Provider esterni (es. SPID, CIE). È inoltre garantita la funzione di disconnessione (Logout).  
+• Recupero Credenziali:  Procedura automatizzata e sicura per il ripristino dell'accesso in caso di 
+smarrimento della password o dello username, gestita tramite l'invio di un token temporaneo 
+univoco all'indirizzo e -mail associato all'account.  
+• Gestione del Profilo:  Funzionalità dedicata all'aggiornamento e alla manutenzione delle 
+proprie informazioni anagrafiche, di contatto e delle credenziali di accesso.  
+• Caricamento e Classificazione Contenuti:  Upload  di file multimediali e documentali (audio, 
+video, spartiti). In questa fase, lo studente può associare metadati (come co -autori o 
+collaboratori) e stabilire le policy di visibilità.  
+• Gestione Avanzata del Portfolio:  Spazio operativo dove lo studente può consultare, 
+modificare, raggruppare (in categorie astratte) ed eliminare i propri materiali. Un elemento 
+chiave è la dashboard  che fornisce il riscontro sul numero di visualizzazioni effettive ricevute 
+dai contenuti.  
+• Condivisione Dinamica:  Generazione di collegamenti (link o QR code) per condividere 
+selettivamente intere sezioni del profilo o singoli contenuti con soggetti esterni all'istituzione Requirements Analysis Document  Identità digitale AFAM  
+Pagina 5 di 113 AFAM. Il sistema permette di tracciare e gestire i link attivi, garantendo all'utente il pieno 
+controllo.  
+• Ricerca Interna:  Strumento di query  per individuare altri utenti, gruppi, contenuti specifici, 
+autori o collaboratori all'interno dell'ecosistema locale.  
+3.2.2 Servizi offerti al Visualizzatore  
+• Accesso e Visualizzazione Contenuti:  Consultazione dei materiali artistici e del profilo condivisi 
+da un Utente AFAM. L'accesso avviene tramite link diretto o tramite ricerca, ed è strettamente 
+vincolato alle policy di visibilità (pubblico, limitato, privato) impostate dallo studente.  
+• Ricerca Pubblica:  Funzionalità che permette al visualizzatore di cercare Utenti AFAM e 
+consultare unicamente i contenuti e le informazioni del profilo esplicitamente resi pubblici.  
+3.2.3 Vincoli su input e validazione  
+Per prevenire vulnerabilità e garantire l'integrità del database, il sistema effettua una rigorosa 
+sanitizzazione e validazione di tutti i dati in ingresso. In particolare, per evitare stringhe dannose, gli 
+input testuali non devono contenere i seguenti ca ratteri speciali:  
+@ , ‘ , ’ , / , ; , - , “ , ” , #  
+Costituisce eccezione esclusiva il campo destinato all'indirizzo e -mail, il quale è autorizzato a contenere 
+un singolo carattere @ per rispettare gli standard di formattazione.  
+3.3 Requisiti non funzionali  
+3.3.1 Requisiti di sicurezza  
+La protezione degli account e dei dati è una priorità architettonica. Le password sono trattate in 
+maniera conforme alle linee guida dell’Agenzia per la Cybersicurezza Nazionale (ACN), adottando 
+l'algoritmo di hashing forte Argon2 . Si impone una complessità minima della password pari a 12 
+caratteri. Gli indirizzi e -mail sono sottoposti a validazione tramite espressioni regolari (RegEx) rigorose. 
+Per elevare gli standard di sicurezza, l'autenticazione è rafforzabile mediante un seco ndo fattore (OTP), 
+e la progettazione generale rispetta i principi di verificabilità propri dei sistemi eIDAS e SPID.  
+3.3.2 Requisiti di affidabilità e disponibilità  
+Il sistema garantisce un'elevata resilienza gestendo in modo controllato le eccezioni e le condizioni di 
+errore, come le perdite di connessione o le mancate risposte da parte del DBMS. In caso di anomalia, 
+l'applicazione tutela l'integrità dei dati riporta ndo l'utente a uno stato di sistema valido, e fornisce un 
+feedback informativo chiaro mediante messaggi di errore dedicati e facilmente comprensibili.  
+3.3.3 Requisiti di usabilità  
+Tenendo conto che gli studenti AFAM provengono da percorsi di studio artistici e potrebbero non 
+possedere un background informatico avanzato, l'interfaccia utente (UI) è progettata secondo principi 
+cardine di chiarezza e accessibilità. La navigazione risul ta altamente intuitiva ed è orientata alla 
+massima facilità d'uso, minimizzando la curva di apprendimento per le operazioni quotidiane.  
+3.3.4 Considerazioni legislative e diritti d'autore  
+Il trattamento dei dati personali degli studenti avviene nel pieno rispetto della normativa vigente in 
+materia di protezione dei dati (es. GDPR). Parallelamente, poiché i materiali artistici caricati 
+costituiscono opere intellettuali originali degli studen ti, l'infrastruttura adotta garanzie adeguate per 
+la tutela e la protezione di tali asset creativi contro accessi o utilizzi non autorizzati.  
+ 
+ Requirements Analysis Document  Identità digitale AFAM  
+Pagina 6 di 113 4. Modelli del sistema  
+Il presente capitolo descrive i modelli del sistema secondo la notazione UML: il modello dei casi d’uso 
+(attori, vista d’insieme e macro casi d’uso con i relativi flussi degli eventi e diagrammi di sequenza), 
+seguito dal modello degli oggetti.  
+4.1 Modello dei casi d’uso  
+4.1.1 Attori coinvolti  
+UTENTE AFAM. L’attore “Utente AFAM” è l’utilizzatore tipico dell’applicazione. Questo attore 
+racchiude tutta la gestione del profilo e l’autenticazione. Esso ha la possibilità di caricare e gestire i 
+propri contenuti, fornendo dei permessi di visualizzazione per coloro  che possono visionare i loro 
+contenuti. L’Utente AFAM può, altresì, condividere il proprio profilo (o parte di esso) mediante link o 
+altre modalità (per esempio scansionando un QR code), ad altri utenti (interni o esterni). L’Utente 
+AFAM può modificare i permessi di visualizzazione in qualunque momento, accedendo all’apposita 
+interfaccia di “gestione contenuti”, dove sarà possibile visualizzare il numero di visualizzazioni del 
+contenuto. Quando un contenuto inviato dall’utente viene visualizzato tramite li nk, il sistema 
+incrementerà il numero di visualizzazioni sia in riferimento al link che al contenuto aperto dall’utente.  
+VISUALIZZATORE. L’attore “Visualizzatore” è un Utente AFAM esterno all’istituzione, esso non 
+possiede un account presso l’istituzione AFAM. Esso può solo visualizzare i contenuti di un dato 
+“Utente AFAM” o mediante ricerca o mediante link diretto inviato (condiviso) dall’ Utente AFAM. La 
+visualizzazione avviene secondo le regole descritte dall’attore “Utente AFAM” per ogni contenuto.  
+ID PROVIDER. L’attore "ID PROVIDER" rappresenta un sistema esterno di identità digitale riconosciuto, 
+quale SPID o CIE, mediante il quale l’Utente AFAM può procedere all’autenticazione in alternativa alle 
+credenziali locali dell’applicazione. Questo attore non possiede  un ruolo attivo nel sistema, ma agisce 
+da provider di identità: a fronte di una richiesta, esso verifica le credenziali dell’utente presso la propria 
+infrastruttura e restituisce al sistema le informazioni necessarie per procedere. La progettazione tiene 
+conto della possibilità di estendere tale supporto ad ulteriori standard di identità digitale europei, 
+come eIDAS, in prospettiva di future integrazioni con sistemi analoghi adottati da altre istituzioni 
+AFAM.  
+DBMS. L’attore "DBMS" è il sistema di gestione della base di dati dell’applicazione. Esso non è un 
+utente del sistema, bensì un attore esterno passivo con cui il sistema dialoga per la persistenza e il 
+recupero delle informazioni. Il DBMS è coinvolto nella quasi  totalità dei casi d’uso: è responsabile della 
+memorizzazione degli account utente, dei contenuti caricati, dei permessi di visualizzazione (e della 
+notificazione di essa), dei link di condivisione e dei relativi token di sessione. A fronte di ogni 
+interro gazione da parte del sistema, esso restituisce un esito – positivo o negativo – che determina il 
+flusso successivo dell’applicazione.  
+4.1.2 Vista d’insieme  
+Il diagramma seguente offre una vista d’insieme dei macro casi d’uso del sistema e delle relazioni con 
+gli attori coinvolti.  Requirements Analysis Document  Identità digitale AFAM  
+Pagina 7 di 113  
+Figura 1 — Vista d’insieme dei casi d’uso  
+Di seguito si riepilogano sinteticamente i macro casi d’uso, descritti in dettaglio nei paragrafi successivi.  
+• Caricamento contenuti. L’Utente AFAM può caricare contenuti (file audio, video, immagini, 
+elaborati) definendone i permessi di visualizzazione.  
+• Gestione contenuti. L’Utente AFAM può modificare o eliminare i propri contenuti, modificarne 
+i permessi di visualizzazione, raggrupparli e consultarne il numero di visualizzazioni.  
+• Condivisione. L’Utente AFAM può condividere contenuti o il proprio profilo verso visualizzatori 
+esterni mediante link o altri metodi (es. QR code), nel rispetto delle policy impostate.  
+• Modifica profilo. L’Utente AFAM può modificare i propri dati personali; lo username non è 
+modificabile in quanto gestito dal server.  
+• Autenticazione. L’Utente AFAM può autenticarsi tramite ID Provider (SPID o CIE) oppure con 
+e-mail e password; può eseguire la registrazione con relativa creazione del suo account nel 
+DBMS; l’account è validato tramite l’attore DBMS e l’utente può uscire da esso.  
+• Recupero credenziali. L’Utente AFAM può recuperare password e username mediante token 
+temporaneo inviato via e ‑mail.  
+• Ricerca. Consente di ricercare Utenti AFAM, gruppi, contenuti, autori e collaboratori per nome 
+o per altri campi.  
+• Visualizza contenuti. Il Visualizzatore può consultare i contenuti condivisi da un Utente AFAM, 
+nel rispetto delle relative policy di visibilità.  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 8 di 113 4.1.3 Macro caso d’uso — Comportamento eccezionale  
+Il presente macro caso d’uso raccoglie i comportamenti eccezionali che possono manifestarsi durante 
+il flusso degli eventi di numerosi altri casi d’uso, in particolare in occasione della comunicazione con il 
+DBMS o della perdita della connessione di rete. I casi qui descritti estendono pertanto, tramite 
+extension point, i casi d’uso che prevedono interazione con attori esterni.  
+4.1.3.1 Caduta Connessione  
+Nome  CADUTA CONNESSIONE  
+ID CADUTA_CONNESSIONE_CLIENT  
+Attori  Utente AFAM, Visualizzatore, DBMS  
+Precondizioni  Il client ha rilevato l’irraggiungibilità con il server.  
+Flusso degli eventi  1. L’Utente AFAM viene reindirizzato ad una pagina dedicata alla perdita di connessione 
+con il codice del motivo della perdita.  
+2. Il sistema genera un numero casuale.  
+3. FINCHE’ il sistema non risulta connesso:  
+3.1. Il sistema tenta la connessione col server.  
+3.2. SE il sistema non risulta ancora connesso:  
+3.2.1.  Il sistema incrementa il numero di tentativi rimasti.  
+3.2.2.  Il sistema attende un tempo casuale quadratico prima di ritentare la 
+connessione.  
+3.3. ALTRIMENTI:  
+3.3.1.  Il sistema interrompe la verifica della connessione.  
+4. Il sistema ritorna all’ultimo stato valido delle informazioni salvate.  
+Postcondizione  4. Il sistema reindirizza l’Utente AFAM alla pagina dove ha perso la connessione.  
+Note  Poichè l’applicazione è pensata client -server, l’errore di connessione deve essere gestito 
+sia nel client che nel server. Questo flusso si riferisce al comportamento del client. In questo 
+flusso per “sistema” si intende la logica del client.  
+1. Il sistema non permette all’utente di spostarsi in altre pagine (in modo diretto -cioè con 
+pulsanti di navigazioni forniti dall’applicazione -), per tanto l’utente potrà continuare ad 
+utilizzare il sito solo quando il sistema sarà connesso al server.  
+2. Il numero casuale generato è compreso tra 200 e 5000, estremi esclusi [l’unità di misura 
+sono millisecondi]  
+3.2.2. Il tempo atteso dal sistema segue l’andamento della funzione; il valore di base ‘x’ 
+viene generato alla prima iterazione. Questo tipo di approccio cerca di diluire la possibilità 
+di tentativi di connessione successivi con tempo troppo breve: è impro babile che un 
+sistema offline riesca a tornare online in pochi secondi.  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Nome  CADUTA CONNESSIONE  Requirements Analysis Document  Identità digitale AFAM  
+Pagina 9 di 113 ID CADUTA_CONNESSIONE_SERVER  
+Attori  Utente AFAM, Visualizzatore, DBMS  
+Precondizioni  Il server ha rilevato un errore di connessione.  
+Flusso degli eventi  1. Il sistema scarta eventuli operazioni in corso, eliminando le modifiche in 
+sospeso.  
+2. Il sistema tenta di ripristinare la connessione.  
+3. SE la connessione non è stata ripristinata:  
+3.1. Il sistema avvia il caso d’uso “ERRORE DI CONNESSIONE”.  
+3.2. SE il caso d’uso ritorna risposta positiva:  
+3.2.1.  Il sistema tenta di ripristinare la connessione.  
+3.2.2.  SE la connessione non è stata ripristinata:  
+3.2.2.1.  Il sistema esegue il riavvio.  
+4. SE la connessione è stata ripristinata:  
+4.1. Il sistema attende eventuali connessioni da parte di utenti.  
+Note  Poichè l’applicazione è pensata client -server, l’errore di connessione deve essere gestito 
+sia nel client che nel server. Questo flusso si riferisce al comportamento del client. In questo 
+flusso per “sistema” si intende il server.  
+3.1. Il sistema, dopo aver avviato il caso d’uso ERRORE DI CONNESSIONE, attende il 
+risultato. Tale caso d’uso torna una risposta negativa, se la connessione col DBMS è attiva 
+o si riesce a ripristinare, altrimenti, il sistema procede al riavvio. Per tal mo tivo non è 
+presente, nel punto 3.2 un ALTRIMENTI.  
+ Requirements Analysis Document  Identità digitale AFAM  
+Pagina 10 di 113 4.1.4 Macro caso d’uso — Autenticazione  
+Il macro caso d’uso Autenticazione permette a un Utente AFAM di registrarsi se non possiede già un 
+profilo nel sistema oppure di autenticarsi. La registrazione e l’autenticazione possono avvenire 
+mediante credenziali locali (e ‑mail e password) oppure trami te un Identity Provider esterno 
+riconosciuto (SPID o CIE). È prevista, ove attiva, una verifica in due fattori (2FA) con codice OTP. Infine, 
+l’utente ha anche la possibilità di uscire dal proprio account tramite Logout.   
+ 
+Figura 2 — Diagramma dei casi d’uso — Autenticazione  
+4.1.4.1 Login Con Credenziali  
+Nome  LOGIN CON CREDENZIALI  
+ID LOGIN_CON_ CREDENZIALI  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato a schermo la pagina di Login.  
+Flusso degli eventi  1. L’Utente AFAM preme il pulsante “Login con credenziali”.  
+2. Il sistema mostra a schermo il form di Login con credenziali.  
+3. L’Utente AFAM compila il form utilizzando la propria email e la propria password 
+(con possibilità di usare il proprio username al posto della email).  
+4. L’Utente AFAM preme il pulsante “Accedi”.  
+5. Il sistema invia al DBMS i dati inseriti dall’Utente AFAM.  
+6. SE: Il sistema riceve esito positivo dal DBMS (dati trovati e corrispondenti).  
+6.1. SE: L’Utente AFAM ha abilitato la 2FA nel proprio account.  
+6.1.1.  Il sistema genera ed invia un codice OTP alla mail 
+dell’Utente AFAM.  
+6.1.2.  Il sistema mostra a schermo un form per 
+l’inserimento del codice OTP (ottenuto in email).  
+6.1.3.  L’utente inserisce il codice OTP  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 11 di 113 6.1.4.  FINCHE’: il numero di tentativi rimasti è maggiore di 
+1: 
+6.1.4.1.  SE: L’Utente AFAM inserisce un codice OTP 
+valido.  
+6.1.4.1.1.  Il sistema mostra a schermo il 
+messaggio “Login effettuato con successo.”  
+6.1.4.1.2.  L’Utente AFAM preme il pulsante 
+“Ok”.  
+6.1.4.1.3.  Il sistema mostra a schermo 
+l’Homepage dell’Utente AFAM.  
+6.1.4.2.  ALTRIMENTI:  
+6.1.4.2.1.  Il sistema decrementa il numero di 
+tentativi rimasti.  
+6.1.4.2.2.  Il sistema mostra a schermo il 
+messaggio “Codice OTP errato: hai ancora 
+[tentativi] rimasti”.  
+6.1.4.2.3.  L’Utente AFAM preme il pulsante 
+“Ok”.  
+6.1.5.  Il sistema mostra a schermo il messaggio “Tentativi 
+esauriti”  
+6.1.6.  L’Utente AFAM clicca sul pulsante “Ok”  
+6.1.7.  Il sistema mostra a schermo la pagina di login.  
+6.2. ALTRIMENTI:  
+6.2.1.  Il sistema mostra a schermo il messaggio “Login 
+effettuato con successo.”  
+6.2.2.  L’Utente AFAM preme il pulsante “Ok”.  
+6.2.3.  Il sistema mostra a schermo l’Homepage dell’Utente 
+AFAM.  
+7. ALTRIMENTI:  
+7.1. Il sistema mostra a schermo il messaggio di errore “L’indirizzo email o 
+la password inseriti non sono validi.”  
+7.2. L’Utente AFAM preme il pulsante “Ok”.  
+7.3. Il sistema mostra a schermo il form di Login.  
+Postcondizione  6.1.4.1.3. Il sistema ha mostrato a schermo la pagina Homepage dell’Utente AFAM.  
+6.1.7. Il sistema ha mostrato a schermo la pagina di login  
+6.2.3 Il sistema ha mostrato a schermo la pagina Homepage dell’Utente AFAM.  
+7.3. Il sistema ha mostrato a schermo la pagina di login  
+Requisiti non 
+funzionali  La password deve contenere 12 caratteri.  
+La email deve rispettare il regex: ^[ \w-\.]+@([ \w-]+\.)+[\w-]{2,4}$  Requirements Analysis Document  Identità digitale AFAM  
+Pagina 12 di 113  
+ 
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 13 di 113  
+Figura 3 — Diagramma di sequenza — Login Con Credenziali  
+4.1.4.2 Login Con Digital ID Provider  
+Nome  LOGIN CON DIGITAL ID PROVIDER  
+ID LOGIN_CON_ID_PROVIDER  
+Attori  Utente AFAM, ID Provider, DBMS  
+Precondizioni  Il sistema ha mostrato a schermo la pagina di ‘Login’.  
+Flusso degli eventi  1. L’Utente AFAM preme il pulsante “Login con Digital ID Provider”.  
+2. Il sistema mostra a schermo un menù a tendina contenente i Digital ID Provider 
+supportati.  
+3. L’Utente AFAM sceglie l’ID Provider di sua preferenza.  
+4. Il sistema mostra a schermo la pagina di autenticazione del Provider selezionato.  
+5. L’Utente AFAM effettua l’autenticazione presso il Provider scelto.  
+6. Il sistema riceve dal Digital ID Provider i dati dell’Utente AFAM.  
+7. Il sistema invia al DBMS i dati ricevuti.  
+8. SE: Il sistema riceve esito positivo dal DBMS (Utente AFAM esistente).  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 14 di 113 8.1. Il sistema mostra a schermo il messaggio “Login effettuato con 
+successo.”  
+8.2. L’Utente AFAM preme il pulsante “Ok”.  
+8.3. Il sistema mostra a schermo l’Homepage dell’Utente AFAM.  
+9. ALTRIMENTI:  
+9.1. Il sistema interroga il DBMS richiedendo la registrazione dell’utente 
+tramite ID provider.  
+9.2. Il sistema mostra a schermo la pagina Homepage.  
+Sequenze alternative  Caduta connessione: gestita tramite extension point verso il caso d’uso «Comportamento 
+eccezionale — Caduta Connessione».  
+Postcondizione  8.3. Il sistema mostra a schermo l’Homepage dell’Utente AFAM.  
+9.2. Il sistema mostra a schermo la pagina Homepage.  
+Extension point  Reindirizzamento alla pagina di errore di connessione in caso di errore di connessione.  Requirements Analysis Document  Identità digitale AFAM  
+Pagina 15 di 113  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 16 di 113 Figura 4 — Diagramma di sequenza — Login Con Digital ID Provider  Requirements Analysis Document  Identità digitale AFAM  
+Pagina 17 di 113 4.1.4.3 Logout  
+Nome  LOGOUT  
+ID LOGOUT  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato a schermo la pagina modifica profilo.  
+Flusso degli eventi  1. L’utente clicca sul pulsante di Logout.  
+2. Il sistema mostra un messaggio a schermo chiedendo la conferma dell’uscita 
+dall’account.  
+3. L’utente clicca “Si”.  
+4. Il sistema chiede al DBMS di invalidare il token in uso dall’utente.  
+5. Il sistema termina la sessione dell’utente.  
+6. Il sistema mostra a schermo la pagina di Login.  
+Postcondizione  5. Il sistema ha mostrato a schermo la pagina di Login.  
+Sequenza alternativa  3. L’utente clicca “No”  
+3.1 Il sistema mostra la pagina di modifica profilo.  Requirements Analysis Document  Identità digitale AFAM  
+Pagina 18 di 113 Figura 5 — Diagramma di sequenza — Logout  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 19 di 113 4.1.4.4 Macro caso  d’uso — Registrazione  
+Nome  REGISTRAZIONE  
+ID REGISTRAZIONE  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato a schermo la pagina di ‘Login’.  
+Flusso degli eventi  1. L’Utente AFAM preme il pulsante “Crea un account”.  
+2. Il sistema mostra a schermo il form di registrazione.  
+3. L’Utente AFAM compila il form inserendo la propria mail istituzionale e la 
+propria password.  
+4. SE: La mail ha un dominio non valido.  
+4.1. Il sistema mostra in rosso sia il campo che la scritta “Mail non valida”  
+4.2. L’utente preme il pulsante “Ok”.  
+4.3. Il sistema ricarica la pagina di registrazione.  
+5. SE: La password ha un formato non valido.  
+5.1. Il sistema mostra in rosso sia il campo che la scritta “Password non 
+valida”  
+5.2. L’utente preme il pulsante “Ok”  
+5.3. Il sistema ricarica la pagina di registrazione.  
+6. L’Utente AFAM compila il form con i propri dati anagrafici (Nome, Cognome, 
+Data di nascita, Codice Fiscale).  
+7. L’Utente AFAM preme il pulsante ‘Continua’.  
+8. Il sistema elabora e verifica le informazioni inserite dall’Utente AFAM.  
+9. Il sistema verifica la validità del Codice Fiscale inserito calcolandolo.  
+10. SE: Il Codice Fiscale inserito combacia con il Codice Fiscale calcolato.  
+10.1. Il sistema mostra a schermo il form per l’inserimento dei dati 
+accademici.  
+10.2. L’Utente AFAM compila i campi con i propri dati accademici.  
+10.3. L’Utente AFAM preme il pulsante “Conferma”.  
+10.4. Il sistema invia le informazioni al DBMS per il salvataggio nel 
+database.  
+10.5. Il sistema genera un token di sicurezza temporaneo legato 
+all’account.  
+10.6. Il sistema interroga il DBMS richiedendo di memorizzare il 
+token.  
+10.7. Il sistema mostra a schermo il messaggio “Registrazione 
+profilo avvenuta con successo. Controllare la mail per confermare 
+l’account.”.  
+10.8. Il sistema invia la e -mail con l’OTP  
+10.9. Il sistema mostra a schermo il form dove l’utente deve 
+inserire l’OTP.  
+10.10.  L’Utente AFAM inserisce l’OTP ricevuto nella propria e -mail.  
+10.11.  Il sistema interroga il DBMS richiedendo il token inviato 
+all’utente.  
+10.12.  Il sistema confronta l’OTP inserito con quello ottenuto dal 
+DBMS.  
+10.13.  SE l’OTP è corretto:  
+10.13.1.  Il sistema mostra la pagina di Login.  
+10.14.  ALTRIMENTI:  
+10.14.1.  Il sistema mostra il messaggio “OTP errato”.  
+10.14.2.  L’utente preme il pulsante “Ok”.  
+10.14.3.  Il sistema mostra la pagina di registrazione.  Requirements Analysis Document  Identità digitale AFAM  
+Pagina 20 di 113 11. ALTRIMENTI:  
+11.1. Il sistema mostra a schermo il messaggio di errore “Il Codice 
+Fiscale inserito è errato. Compilare nuovamente con i propri dati.”  
+11.2. Il sistema mostra nuovamente la pagina di Registrazione.  
+Postcondizione  4.3./5.3. Il sistema ha mostrato a schermo la pagina di Registrazione.  
+10.13.1. Il sistema ha mostrato a schermo la pagina di Login.  
+10.14.3. Il sistema ha mostrato a schermo la pagina di registrazione.  
+11.2. Il sistema ha mostrato a schermo la pagina di Registrazione.  
+Extension point  Reindirizzamento alla pagina di errore di connessione in caso di errore di connessione.  
+Requisiti non 
+funzionali  La email deve rispettare il regex: ^[ \w-\.]+@([ \w-]+\.)+[\w-]{2,4}$  
+Note  Il punto 11.2. mostra la pagina di Registrazione assicurandosi di eliminare solo il campo 
+“Codice fiscale”. Tutti i restanti campi rimangono invariati.  Requirements Analysis Document  Identità digitale AFAM  
+Pagina 21 di 113 Figura 6 — Diagramma di sequenza — Registrazione (rev.)  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 22 di 113 4.1.5 Macro caso d’uso — Recupero credenziali  
+Il macro caso d’uso Recupero credenziali fornisce all’Utente AFAM gli strumenti per recuperare 
+l’accesso al proprio account in caso di smarrimento delle credenziali, mediante l’invio di un token 
+temporaneo all’indirizzo e -mail associato, sia per il reset della password sia per il recupero dello 
+username. L’Utente AFAM ha inoltre la possibilità di ricevere una notifica alla mail associata al proprio 
+profilo qualora dovesse essere dimenticata da quest’ultimo quella utilizzata  alla registrazione.  
+ 
+Figura 7 — Diagramma dei casi d’uso — Recupero credenziali  
+4.1.6.1 Richiesta Recupero Password  
+Nome  RICHIESTA RECUPERO PASSWORD  
+ID RICHIESTA_RECUPERO_PASSWORD  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato a schermo la pagina ‘Login’  
+Flusso degli eventi  1. L’utente preme il pulsante ‘Recupera Password’.  
+2. Il sistema mostra a schermo il form di recupero password richiedendo 
+l’inserimento dell’indirizzo email legato all’account.  
+3. L’Utente AFAM compila il form con la propria email e preme il pulsante invio.  
+4. Il sistema interroga il DBMS per verificare se la email inserita è associata a un 
+account registrato.  
+5. SE: Il sistema riceve esito positivo dal DBMS (l’Utente AFAM esiste).  
+5.1. Il sistema genera un token di sicurezza temporaneo legato all’account.  
+5.2. Il sistema invia un’email all’indirizzo indicato contenente il link per il 
+reset della password.  
+5.3. Il sistema mostra a schermo il messaggio di conferma “Email con le 
+istruzioni per il recupero della password inviata.”  
+5.4. L’utente preme il pulsante “Ok”.  
+5.5. Il sistema mostra a schermo la pagina di “Recupero password”.  
+6. ALTRIMENTI:  
+6.1. Il sistema mostra a schermo il messaggio di errore “Questo indirizzo 
+email non è associato a nessun account.”  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 23 di 113 6.2. L’utente preme il pulsante “Ok”.  
+6.3. Il sistema mostra a schermo la pagina di “Login”.  
+Sequenze alternative  Caduta connessione: gestita tramite extension point verso il caso d’uso «Comportamento 
+eccezionale — Caduta Connessione».  
+Postcondizione  5.5. Il sistema ha mostrato a schermo la pagina di “Recupero password”.  
+6.3. Il sistema ha mostrato a schermo la pagina di “Login”.  
+Extension point  Reindirizzamento alla pagina di errore di connessione in caso di errore di connessione.  
+Requisiti non 
+funzionali  L’email deve rispettare il regex: ^[ \w-\.]+@([ \w-]+\.)+[\w-]{2,4}$  
+Figura 8 — Diagramma di sequenza — Richiesta Recupero Password  
+ 
+4.1.6.2 Recupero Password  
+Nome  RECUPERO PASSWORD  
+ID RECUPERO_PASSWORD  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato a schermo il form per il recupero della password.  
+Flusso degli eventi  1. L’Utente AFAM compila i form 'Password’ e ‘Conferma Password’.  
+2. L’Utente AFAM preme il pulsante “Invia”.  
+3. Il sistema verifica le password.  
+4. SE le password sono uguali:  
+4.1. Il sistema interroga il DBMS richiedendo l’inserimento della nuova 
+password.  
+4.2. SE Il sistema riceve esito negativo dal DBMS:  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 24 di 113 4.2.1.  Il sistema mostra a schermo il messaggio “La nuova 
+password corrisponde a quella precedentemente inserita”.  
+4.2.2.  L’Utente AFAM preme il pulsante “Ok”.  
+4.2.3.  Il sistema mostra a schermo la pagina di recupero 
+password.  
+4.3. ALTRIMENTI:  
+4.3.1.  Il sistema mostra a schermo il messaggio “Modifica 
+della password avvenuta con successo”.  
+4.3.2.  L’Utente AFAM preme il pulsante “Ok”.  
+4.3.3.  Il sistema mostra a schermo la pagina di Login.  
+5. ALTRIMENTI:  
+5.1. Il sistema mostra all’Utente AFAM il messaggio “Password non uguali”.  
+5.2. L’Utente AFAM clicca il pulsante “Ok”.  
+5.3. Il sistema mostra a schermo il form per il cambio password.  
+Sequenze alternative  Caduta connessione: gestita tramite extension point verso il caso d’uso «Comportamento 
+eccezionale — Caduta Connessione».  
+Postcondizione  4.2.3 Il sistema ha mostrato a schermo la pagina di recupero password.  
+4.3.3 Il sistema ha mostrato a schermo la pagina di Login.  
+5.3 Il sistema ha mostrato a schermo il form per il cambio password.  
+Extension point  Reindirizzamento alla pagina di errore di connessione in caso di errore di connessione.  
+Requisiti non 
+funzionali  La password deve contenere 12 caratteri.  
+Note  Caso negativo DBMS necessario se la nuova password è uguale a quella precedente.  Requirements Analysis Document  Identità digitale AFAM  
+Pagina 25 di 113 Figura 9 — Diagramma di sequenza — Recupero Password  
+ 
+4.1.6.3 Richiesta Recupero Email  
+Nome  RICHIESTA RECUPERO EMAIL  
+ID RICHIESTA_RECUPERO_EMAIL  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato a schermo la pagina di ‘Login’.  
+Flusso degli eventi  1. L’Utente AFAM preme il pulsante ‘Email dimenticata’  
+2. Il sistema mostra a schermo il form di recupero della mail.  
+3. L’Utente AFAM inserisce il proprio Username e preme il pulsante di invio.  
+4. Il sistema interroga il DBMS per verificare se l’Username inserito è associato ad 
+un account registrato.  
+5. SE: Il sistema riceve esito positivo dal DBMS (l’username è associato ad un 
+account).  
+5.1. Il sistema interroga il DBMS per recuperare l’indirizzo email associato a 
+quell’Username.  
+5.2. Il sistema invia una email di notifica all’indirizzo recuperato.  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 26 di 113 5.3. Il sistema mostra a schermo il messaggio contenente l’email 
+parzialmente oscurata “E’ stata inviata una email di notifica all’indirizzo 
+email associato all’Username inserito: e*****@example.com”.  
+5.4. L’Utente AFAM preme il pulsante “Ok”.  
+5.5. Il sistema mostra a schermo la pagina di login.  
+6. ALTRIMENTI:  
+6.1. Il sistema mostra a schermo il messaggio di errore “Nessun account 
+associato all’Username inserito”.  
+6.2. L’Utente AFAM preme il pulsante ‘Conferma’.  
+1.1. Il sistema mostra a schermo il form per il recupero mail.  
+Sequenze alternative  Caduta connessione: gestita tramite extension point verso il caso d’uso «Comportamento 
+eccezionale — Caduta Connessione».  
+Postcondizione  5.5. Il sistema ha mostrato a schermo la pagina di login.  
+6.3 Il sistema ha mostrato a schermo il form per il recupero mail.  
+Extension point  CADUTA CONNESSIONE: Reindirizzamento alla pagina di errore di connessione in caso di 
+errore di connessione.  
+ 
+Figura 10 — Diagramma di sequenza — Richiesta Recupero Email  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 27 di 113 4.1.7 Macro caso d’uso — Caricamento contenuti  
+Il macro caso d’uso Caricamento contenuti consente all’Utente AFAM di caricare uno o più file (audio, 
+video, immagini, elaborati), associando a ciascun contenuto i relativi metadati (autori, collaboratori) e 
+le policy di visibilità. Il caricamento multiplo  è pensato per gestire contenuti compositi, come un video 
+corredato di copertina e descrizione.  
+ 
+Figura 11 — Diagramma dei casi d’uso — Caricamento contenuti  
+4.1.7.1 Caricamento Nuovo Contenuto  
+Nome  CARICAMENTO NUOVO CONTENUTO  
+ID NUOVO_CARICAMENTO  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato la pagina di gestione dei contenuti.  
+Flusso degli eventi  1. L’Utente AFAM clicca sul pulsante di caricamento di un nuovo contenuto dalla 
+sua pagina di gestione dei contenuti.  
+2. L’Utente AFAM sceglie il file da caricare.  
+3. Il sistema memorizza il percorso del file.  
+4. Il sistema carica un’anteprima del file scelto nella pagina dell’utente.  
+5. L’Utente AFAM inserisce il nome del contenuto.  
+6. L’Utente AFAM inserisce dati inerenti al file e le impostazioni relative ad esso.  
+7. L’Utente AFAM clicca su “Conferma caricamento”.  
+8. Il sistema memorizza i file caricati.  
+9. Il sistema invia al DBMS il percorso da memorizzare per il file caricato e le 
+relative impostazioni riguardo ad esso (altri campi).  
+10. l sistema conferma tramite pop -up la conferma del caricamento.  
+11. L’Utente AFAM clicca “Ok” dal pop -up. 
+12. Il sistema mostra a schermo la pagina di gestione dei contenuti con il nuovo 
+contenuto caricato.  
+Sequenze alternative  2. L’utente sceglie di caricare più file simultaneamente per lo stesso contenuto.  
+3. L’utente decide di annullare in un qualsiasi momento il caricamento tramite tasto 
+“Annulla” o tornando alla pagina precedente, il sistema elimina tutte le informazioni della 
+pagina e i percorsi dei file memorizzati.  
+3. SE il contenuto non riuscisse ad essere caricato:  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 28 di 113   3.1 Viene visualizzato un messaggio di errore.  
+  3.2 L’ Utente AFAM clicca su “OK”.  
+  3.3 Il sistema reindirizza l’utente alla pagina di “Caricamento nuovo contenuto”.  
+7. L’utente non inserisce il nome del contenuto  
+  7.1 Il sistema mostra a schermo un popup di errore.  
+  7.2 L’Utente AFAM clicca su “OK”.  
+  7.3 Il sistema reindirizza l’Utente AFAM alla pagina “Caricamento nuovo contenuto”.  
+Postcondizione  12. Il sistema ha mostrato a schermo la pagina di gestione dei contenuti con il nuovo 
+contenuto caricato.  
+Note  L’ Utente AFAM che intende eliminare un allegato, passa sopra esso con il mouse e viene 
+richiamato il caso d’uso di RIMUOVI ALLEGATO.  
+Figura 12 — Diagramma di sequenza — Caricamento Nuovo Contenuto  
+ 
+4.1.7.2 Aggiorna Visibilita’  
+Nome  AGGIORNA VISIBILITA’  
+ID AGGIORNA_VISIBILITA’  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato la pagina di “Caricamento nuovo contenuto” ed è stato caricato 
+almeno un allegato.  
+Flusso degli eventi  1. L’Utente AFAM seleziona l’opzione che preferisce dal riquadro “Visibilità”.  
+2. L’Utente AFAM preme “Conferma scelta”.  
+3. Il sistema interroga il DBMS richiedendo di applicare l’opzione scelta.  
+4. Il sistema mostra la pagina di “Caricamento nuovo contenuto”.  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 29 di 113 Postcondizione  4. Il sistema ha mostrato la pagina di “Caricamento nuovo contenuto”.  
+Extension point  Reindirizzamento alla pagina di errore di connessione in caso di caduta di essa.  
+Nota  1. La preferenza scelta rimane visualizzabile a schermo.  
+2. Il sistema, nella conferma del caricamento, memorizza la visibilità con le 
+informazioni relative al contenuto.  
+ 
+Figura 13 — Diagramma di sequenza — Aggiorna Visibilita’  
+ 
+4.1.7.3 Rimuovi Allegato  
+Nome  RIMUOVI ALLEGATO  
+ID RIMUOVI_ALLEGATO  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato la pagina di “Caricamento nuovo contenuto” ed è stato caricato 
+almeno un allegato.  
+Flusso degli eventi  1. L’Utente AFAM muove il cursore sopra l’anteprima dell’allegato e su di esso 
+compare un pulsante “X”.  
+2. L’Utente AFAM clicca sul pulsante “X”.  
+3. Il sistema elimina l’allegato dalla pagina.  
+4. SE non sono più presenti altri allegati:  
+4.1. Il sistema elimina le altre informazioni riempite fino a quel momento 
+dalla pagina.  
+5. Il sistema mostra la pagina di caricamento del nuovo contenuto.  
+Postcondizione  5. Il sistema ha mostrato la pagina di caricamento nuovo contenuto.  
+Extension point  Reindirizzamento alla pagina di errore di connessione in caso di caduta di essa.  
+ 
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 30 di 113  
+Figura 14 — Diagramma di sequenza — Rimuovi Allegato  
+ 
+4.1.7.4 Annulla Caricamento  
+Nome  ANNULLA CARICAMENTO  
+ID ANNULLA_CARICAMENTO  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato la pagina di “Caricamento nuovo contenuto”.  
+Flusso degli eventi  1. L’Utente AFAM preme il pulsante “Annulla”.  
+2. Il sistema mostra un pop -up per confermare l’annullamento del caricamento del 
+contenuto.  
+3. L’Utente AFAM preme il pulsante “Confermo” per confermare l’annullamento.  
+4. Il sistema elimina i dati inseriti nella pagina.  
+5. Il sistema mostra a schermo la pagina “Homepage”.  
+Sequenze alternative  2. L’ Utente AFAM clicca il pulsante “Annulla” o la “X” del pop -up, ritornando alla pagina 
+di caricamento contenuto compilata fino a quel momento.  
+Postcondizione  5. Il sistema ha mostrato la pagina “Homepage”.  
+Extension point  Reindirizzamento alla pagina di errore di connessione in caso di caduta di essa.  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 31 di 113 Figura 15 — Diagramma di sequenza — Annulla Caricamento  
+ 
+4.1.7.5 Aggiungi Autore  
+Nome  AGGIUNGI AUTORE  
+ID AGGIUNGI_AUTORE  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato a schermo la pagina di caricamento contenuto ed è stato caricato 
+almeno un allegato.  
+Flusso degli eventi  1. L’Utente AFAM inserisce il nome dell’autore nel campo “Autore/i”.  
+Sequenze alternative  1. L’Utente AFAM inserisce i nomi in modo errato rispetto l’indicizzazione con le 
+virgole  
+2. Il sistema mostra a schermo un messaggio di errore.  
+3. L’Utente AFAM preme il pulsante “Conferma”.  
+4. Il  sistema evidenzia di rosso il campo.  
+5. L’Utente AFAM clicca su “OK” nel pop -up di errore.  
+6. Il sistema mostra la pagina di caricamento compilata fino a quel momento.  
+Postcondizione  6. Il sistema ha mostrato la pagina di caricamento contenuto.  
+Extension point  Reindirizzamento alla pagina di errore di connessione in caso di caduta di essa.  
+Nota  Se l’Utente AFAM non inserisce alcun autore, il sistema utilizzerà il nome dell’utente stesso 
+come autore.  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 32 di 113 L’Utente AFAM che intende selezionare multipli autori deve dividere ogni nome con una 
+virgola.  
+Figura 16 — Diagramma di sequenza — Aggiungi Autore  
+ 
+4.1.7.6 Aggiungi Collaboratore  
+Nome  AGGIUNGI COLLABORATORE  
+ID AGGIUNGI_COLLABORATORE  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato a schermo la pagina di caricamento nuovo contenuto.  
+Flusso degli eventi  1. L’Utente AFAM inserisce il nome del collaboratore nel campo “Collaboratore/i”.  
+Sequenze alternative  1. L’utente inserisce in modo errato rispetto l’indicizzazione con le virgole.  
+2. Il sistema mostra a schermo un popup di errore.  
+3. L’utente clicca su “OK” nel pop -up di errore.  
+4. Il sistema mostra la pagina di caricamento compilata fino a quel momento.  
+Postcondizione  4. Il sistema ha mostrato la pagina di caricamento contenuto  
+Extension point  Reindirizzamento alla pagina di errore di connessione in caso di caduta di essa.  
+Nota  L’utente che intende selezionare multipli collaboratori deve dividere ogni nome con una 
+virgola.  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 33 di 113 Figura 17 — Diagramma di sequenza — Aggiungi Collaboratore  
+ 
+4.1.7.7 Visualizza Anteprima Contenuto  
+Nome  VISUALIZZA ANTEPRIMA CONTENUTO  
+ID VISUALIZZA_ANTEPRIMA_CARICAMENTO  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato a schermo la pagina di caricamento nuovo contenuto.  
+Flusso degli eventi  1. L’Utente AFAM clicca sull’anteprima del contenuto.  
+2. Il sistema mostra il contenuto caricato in un popup.  
+3. L’utente AFAM dopo aver terminato la visualizzazione chiude la pagina.  
+4. Il sistema mostra la pagina di caricamento nuovo contenuto.  
+Sequenze alternative  Il contenuto non riesce ad essere caricato:  
+1.1 Viene visualizzato un messaggio di errore.  
+1.2 L’Utente AFAM rimane nella pagina di caricamento finché non viene caricato il 
+contenuto.  
+ 
+Scade il timer di caricamento:  
+1.1 Viene visualizzato un messaggio d’errore nella pagina.  
+1.2 L’utente clicca su “OK”.  
+1.3 Il sistema reindirizza l’utente nella schermata di caricamento contenuto.  
+Postcondizione  4. Il sistema mostra la pagina di caricamento nuovo contenuto.  
+Extension point  Reindirizzamento alla pagina di errore di connessione in caso di caduta di essa.  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 34 di 113 Figura 18 — Diagramma di sequenza — Visualizza Contenuto  
+ 
+4.1.7.8 Inserimento Dati Contenuto  
+Nome  INSERIMENTO DATI CONTENUTO  
+ID INSERIMENTO_DATI_CONTENUTO  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato la pagina di caricamento nuovo contenuto.  
+Flusso degli eventi  1. L’Utente AFAM clicca sull’icona di inserimento aggiuntivo.  
+2. L’Utente AFAM sceglie il file di testo dedicato alla descrizione del contenuto.  
+3. SE il file scelto non è un file di testo  
+3.1. Il sistema mostra a schermo un messaggio di errore.  
+3.2. L’utente AFAM clicca su “OK” per confermare la visione del messaggio.  
+3.3. L’Utente AFAM viene riportato alla selezione del file.  
+4. Il sistema memorizza il percorso del file.  
+5. Il sistema mostra l’anteprima del contenuto.  
+Sequenze alternative  Il contenuto non riesce ad essere caricato:  
+1. Viene visualizzato un messaggio di errore.  
+2. L’utente clicca su “OK”.  
+3. Il sistema reindirizza l’Utente AFAM nella pagina di caricamento nuovo contenuto.  
+Postcondizione  5. Il sistema ha mostrato la pagina di caricamento nuovo contenuto.  
+Extension point  Reindirizzamento alla pagina di errore di connessione in caso di caduta di essa.  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 35 di 113  
+Figura 19 — Diagramma di sequenza — Inserimento Dati Contenuto  
+ 
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 36 di 113 4.1.8 Macro caso d’uso — Gestione contenuti  
+Il macro caso d’uso Gestione contenuti permette all’Utente AFAM di consultare, modificare, eliminare 
+e raggruppare i propri contenuti e di consultarne il numero di visualizzazioni. Il raggruppamento è una 
+proprietà astratta che consente di condividere più contenuti con un unico link, senza alterare 
+l’organizzazione scelta dall’utente.  
+fFigura 20 — Diagramma dei casi d’uso — Gestione contenuti  
+4.1.8.1 Visualizza Lista Contenuti  
+Nome  VISUALIZZA LISTA CONTENUTI  
+ID VISUALIZZA_LISTA_CONTENUTI  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato la pagina “Home” ed è in corso una sessione utente valida.  
+Flusso degli eventi  1. L’Utente AFAM preme il pulsante “Lista contenuti”.  
+2. Il sistema interroga il DBMS richiedendo i contenuti associati all’Utente AFAM.  
+3. Il sistema ordina i dati recuperati in ordine cronologico decrescente (dal più 
+recente al meno recente).  
+4. Il sistema impagina i risultati in blocchi da 15 elementi.  
+5. Il sistema mostra all’Utente AFAM la prima pagina della lista dei contenuti con a 
+fianco ad esso il numero di visualizzazioni.  
+6. L’Utente AFAM preme il pulsante “Mostra contenuto” relativo ad un contenuto  
+7. Il sistema mostra la pagina “Visualizza contenuto” relativa al contenuto 
+selezionato.  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 37 di 113 Sequenze alternative  1.1 Filtraggio Testuale:  
+1. L’Utente AFAM inserisce una stringa nel campo di ricerca.  
+2. Il sistema verifica se l’input corrisponde a keyword speciali (memorizzate a sistema).  
+3. Il sistema applica il filtro (sulla keyword speciale o sul campo "Titolo del contenuto") 
+e aggiorna la lista mostrata a schermo.  
+1.2. Filtraggio Non Testuale:  
+4. L’Utente AFAM seleziona i filtri non testuali dell’interfaccia.  
+5. Il sistema aggiorna i criteri di ricerca.  
+6. Il sistema interroga il DBMS e mostra i contenuti aggiornati.  
+4.1. Paginazione (Scorri lista):  
+1. L’Utente AFAM clicca i pulsanti di navigazione ("Successivo" / "Precedente").  
+2. Il sistema mostra il gruppo di 15 contenuti corrispondente alla pagina richiesta.  
+5.1. Navigazione - Eliminazione:  
+1. L’Utente AFAM preme il pulsante "Elimina" su un contenuto.  
+2. Il sistema mostra la pagina "Elimina contenuto".  
+5.2. Navigazione - Modifica:  
+1. L’Utente AFAM seleziona l’azione "Modifica" su un contenuto.  
+2. Il sistema mostra la pagina "Modifica contenuto".  
+5.3. Azione - Raggruppa:  
+1. L’Utente AFAM seleziona "Raggruppa contenuti".  
+2. Il sistema mostra la pagina "Raggruppa contenuti".  
+5.4. Azione - Inoltra:  
+1. L’Utente AFAM preme il pulsante "Inoltra".  
+2. Il sistema mostra a schermo un banner di conferma/azione.  
+3. L’utente preme il pulsante “ok”.  
+4. Il sistema mostra la pagina “Condividi contenuto”.  
+5.5. Interruzione (Torna Indietro):  
+1. L’Utente AFAM preme il pulsante "Torna indietro".  
+2. Il sistema interrompe l’operazione e mostra la pagina "Home".  
+Postcondizione  7. Il sistema ha mostrato la pagina "Visualizza contenuto".  
+(5.1.)2. Il sistema ha mostrato la pagina "Elimina contenuto".  
+(5.2.)2. Il sistema ha mostrato la pagina "Modifica contenuto".  
+(5.3.)2. Il sistema ha mostrato la pagina "Raggruppa contenuti".  
+(5.4.)4. Il sistema ha mostrato la pagina “Condividi contenuto”.  
+(5.5.)2. Il sistema ha mostrato la pagina “Home”.  
+Requisiti non 
+funzionali  Il sistema confronta eventuali input testuali nel campo di filtraggio con delle keyword 
+memorizzate in un file.  Requirements Analysis Document  Identità digitale AFAM  
+Pagina 38 di 113 Figura 21 — Diagramma di sequenza — Visualizza Lista Contenuti  
+ 
+4.1.8.2 Visualizza_contenuto  
+Nome  VISUALIZZA CONTENUTO  
+ID VISUALIZZA_CONTENUTO  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato la pagina “Visualizza lista contenuto”  
+Flusso degli eventi  1. L’Utente AFAM preme il pulsante “Visualizza contenuto”.  
+2. Il sistema interroga il DBMS richiedendo tutte le informazioni relative al 
+contenuto.  
+3. Il sistema mostra le informazioni relative al contenuto.  
+4. L’utente AFAM preme il pulsante “Torna alla lista dei contenuti”.  
+5. Il sistema mostra la pagina “Visualizza lista contenuti”.  
+Sequenze alternative  3.1. Navigazione - Eliminazione:  
+1. L’Utente AFAM preme il pulsante "Elimina" su un contenuto.  
+2. Il sistema mostra la pagina "Elimina contenuto".  
+3.2. Navigazione - Modifica:  
+1. L’Utente AFAM seleziona l’azione "Modifica" su un contenuto.  
+2. Il sistema mostra la pagina "Modifica contenuto".  
+3.3. Azione - Raggruppa:  
+1. L’Utente AFAM seleziona "Raggruppa contenuti".  
+2. Il sistema mostra la pagina "Raggruppa contenuti".  
+Postcondizione  (3.1.)1. Il sistema ha mostrato la pagina “Elimina contenuto”.  
+(3.2.)2. Il sistema ha mostrato la pagina “Modifica contenuto”.  
+(3.3.)2. Il sistema ha mostrato la pagina “Raggruppa contenuti”.  
+5. Il sistema ha mostrato la pagina “Visualizza lista contenuti”.  
+Note  Alla visualizzazione, il sistema mostra per ogni parte del contenuto la finestra adeguata al 
+tipo di file (ad esempio un video in un player video, un file audio in un player audio).  
+In questo flusso, per “contenuto” intendiamo sia il singolo contenuto sia l’eventuale 
+gruppo.  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 39 di 113  
+4.1.8.3 Modifica Contenuto (da lista)  
+Nome  MODIFICA CONTENUTO  
+ID MODIFICA_CONTENUTO_DA_LISTA  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato la pagina “Visualizza lista contenuti”.  
+Flusso degli eventi  1. L’Utente AFAM preme il pulsante “Modifica contenuti”.  
+2. Il sistema mostra il contenuto.  
+3. L’Utente AFAM inserisce tutte le modifiche per il contenuto.  
+4. L’Utente AFAM preme il pulsante “Procedi”.  
+5. Il sistema controlla le modiche effettuate.  
+6. SE l’Utente AFAM ha applicato una modifica non consentita:  
+6.1. Il sistema scarta la modifica.  
+6.2. Il sistema mostra a schermo il messaggio “Attenzione, modifica non 
+consentita”.  
+6.3. L’utente clicca il pulsante “Ok”.  
+6.4. Il sistema mostra la pagina “Visualizza contenuto”.  
+7. ALTRIMENTI il sistema interroga il DBMS richiedendo di applicare le modifiche 
+inserite dall’Utente AFAM.  
+7.1. Il sistema notifica all’Utente AFAM il messaggio “Contenuto modificato 
+con successo”.  
+7.2. Il sistema clicca il pulsante “Ok”.  
+7.3. Il sistema mostra la pagina “Visualizza contenuto”.  
+Postcondizione  6.4. Il sistema ha mostrato la pagina "Visualizza contenuto”.  
+7.3. Il sistema ha mostrato la pagina "Visualizza contenuto”.  
+Requisiti non 
+funzionali  Il sistema confronta eventuali input obbligatori con quelli inseriti dall’Utente AFAM.  
+Note  Gli input obbligatori sono, per esempio, il titolo del contenuto la presenza di un 
+file/contenuto (per eventuali gruppi, deve essere presente un file/contenuto per ogni 
+contenuto appartenente al gruppo).  
+In questo flusso, per “contenuto” intendiamo sia il singolo contenuto sia l’eventuale 
+gruppo.  
+Nel punto 6 (Inserimento modifiche), Il sistema mostra una casella testuale per inserire i 
+filtri testuali.  
+Nel punto 7 (Pulsanti multi -selezione filtri), Il sistema mostra dei pulsanti per inserire filtri 
+non testuali.  Requirements Analysis Document  Identità digitale AFAM  
+Pagina 40 di 113 Figura 22 — Diagramma di sequenza — Modifica Contenuto da lista  
+ 
+4.1.8.4 Modifica Contenuto (da contenuto)  
+Nome  MODIFICA CONTENUTO  
+ID MODIFICA_CONTENUTO_DA_CONTENUTO  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato la pagina “Visualizza contenuto”.  
+Flusso degli eventi  1. L’Utente AFAM preme il pulsante “Modifica contenuti”.  
+2. L’Utente AFAM inserisce tutte le modifiche per il contenuto.  
+3. L’Utente AFAM preme il pulsante “Procedi”.  
+4. Il sistema controlla le modiche effettuate.  
+5. SE l’Utente AFAM ha applicato una modifica non consentita:  
+5.1. Il sistema scarta la modifica.  
+5.2. Il sistema mostra a schermo il messaggio “Attenzione, modifica non 
+consentita”.  
+5.3. L’Utente AFAM preme il pulsante “Ok”.  
+5.4. Il sistema mostra la pagina “Visualizza contenuto”.  
+6. ALTRIMENTI il sistema interroga il DBMS richiedendo di applicare le modifiche 
+inserite dall’Utente AFAM.  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 41 di 113 6.1. Il sistema mostra il messaggio “Contenuto modificato con successo”.  
+6.2. L’utente AFAM preme il pulsante “Ok”.  
+6.3. Il sistema mostra la pagina “Visualizza contenuto”.  
+Postcondizione  5.4. Il sistema ha mostrato la pagina "Visualizza contenuto”.  
+6.3. Il sistema ha mostrato la pagina "Visualizza contenuto”.  
+Requisiti non 
+funzionali  Il sistema confronta eventuali input obbligatori con quelli inseriti dall’Utente AFAM.  
+Note  Gli input obbligatori sono, per esempio, il titolo del contenuto la presenza di un 
+file/contenuto (per eventuali gruppi, deve essere presente un file/contenuto per ogni 
+contenuto appartenente al gruppo).  
+In questo flusso, per “contenuto” intendiamo sia il singolo contenuto sia l’eventuale 
+gruppo.  
+Nel punto 6 (Inserimento modifiche), Il sistema mostra una casella testuale per inserire i 
+filtri testuali.  
+Nel punto 7 (Pulsanti multi -selezione filtri), Il sistema mostra dei pulsanti per inserire filtri 
+non testuali.  
+Figura 23 — Diagramma di sequenza — Modifica Contenuto da contenuto  
+ 
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 42 di 113 4.1.8.5 Elimina Contenuto (da lista)  
+Nome  ELIMINA CONTENUTO  
+ID ELIMINA_CONTENUTO_DA_LISTA  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato la pagina “Visualizza lista contenuti”  
+Flusso degli eventi  1. L’Utente AFAM clicca il pulsante “Elimina contenuti”.  
+2. Il sistema mostra a schermo il contenuto.  
+3. Il sistema mostra a schermo il messaggio “Vuoi eliminare questo contenuto?”.  
+4. L’Utente AFAM preme il pulsante “Si”:  
+5. Il sistema interroga il DBMS richiedendo l’eliminazione del contenuto e di tutti i 
+suoi riferimenti.  
+6. Il sistema mostra il messaggio “Eliminazione avvenuta con successo”.  
+7. L’Utente AFAM preme il pulsante “Ok”  
+8. Il sistema mostra la pagina “Visualizza lista contenuti”.  
+Sequenze alternative  3.1. Interazione – Negazione eliminazione:  
+1. L’Utente AFAM preme il pulsante “No”:  
+2. Il sistema mostra il messaggio “Eliminazione scartata”.  
+3. L’utente preme il pulsante “Ok”  
+4. Il sistema mostra la pagina “Visualizza lista contenuti”.  
+Postcondizione  8. Il sistema ha mostrato la pagina "Visualizza lista contenuti”.  
+(3.2)4. Il sistema ha mostrato la pagina “Visualizza lista contenuti”.  
+Note  In questo flusso, per “contenuto” intendiamo sia il singolo contenuto sia l’eventuale 
+gruppo.  
+Figura 24 — Diagramma di sequenza — Elimina Contenuto da lista  
+ 
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 43 di 113 4.1.8.6 Elimina Contenuto (da contenuto)  
+Nome  ELIMINA CONTENUTO  
+ID ELIMINA_CONTENUTO_DA_CONTENUTO  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato la pagina “Visualizza contenuto”  
+Flusso degli eventi  1. L’Utente AFAM clicca il pulsante “Elimina contenuto”.  
+2. Il sistema mostra a schermo il messaggio “Vuoi eliminare questo contenuto?”.  
+3. l’Utente AFAM preme il pulsante “Si”:  
+4. Il sistema interroga il DBMS richiedendo l’eliminazione del contenuto e di tutti i 
+suoi riferimenti.  
+5. Il sistema mostra all’Utente AFAM il messaggio “Eliminazione avvenuta con 
+successo”.  
+6. L’utente preme il pulsante “Ok”  
+7. Il sistema mostra la pagina “Visualizza lista contenuti”.  
+Sequenze alternative  3.2. Interazione – Negazione eliminazione:  
+1. L’Utente AFAM clicca il pulsante “No”:  
+2. Il sistema mostra all’Utente AFAM il messaggio “Eliminazione scartata”.  
+3. L’utente preme il pulsante “Ok”  
+4. Il sistema mostra la pagina “Visualizza lista contenuti”.  
+Postcondizione  7. Il sistema ha mostrato la pagina "Visualizza lista contenuti”.  
+(3.2.)4. Il sistema ha mostrato la pagina “Visualizza lista contenuti”.  
+Note  In questo flusso, per “contenuto” intendiamo sia il singolo contenuto sia l’eventuale 
+gruppo.  
+Figura 25 — Diagramma di sequenza — Elimina Contenuto  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 44 di 113  
+4.1.8.7 Raggruppa Contenuti (da lista)  
+Nome  RAGGRUPPA CONTENUTI  
+ID RAGGRUPPA_CONTENUTI_DA_LISTA  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato la pagina “Visualizza lista contenuti”  
+Flusso degli eventi  1. L’Utente AFAM clicca sul pulsante “Raggruppa contenuti”.  
+2. L’Utente AFAM seleziona tutti i contenuti da raggruppare.  
+3. L’Utente AFAM preme il pulsante “Conferma”.  
+4. Il sistema mostra un panel con tutti i gruppi presenti.  
+5. L’Utente AFAM seleziona un gruppo.  
+6. l’Utente AFAM clicca sul pulsante “Applica modifiche”:  
+7. Il sistema interroga il DBMS richiedendo  
+8. L’inserimento dei contenuti selezionati all’interno del gruppo.  
+9. Il sistema notifica all’Utente AFAM il messaggio “Contenuti aggiunti con successo”.  
+10. L’Utente AFAM preme il pulsante “OK”.  
+11. Il sistema mostra a schermo la pagina “Visualizza lista contenuti”.  
+Sequenze alternative  1.1. Interazione – Inserimento filtro testuale:  
+1. L’Utente AFAM scrive nel campo del filtro testuale di ricerca:  
+2. L’Utente AFAM inserisce il filtro.  
+2.1. SE l’Utente AFAM ha inserito una keyword valida seguita dal filtro:  
+2.1.1.  Il sistema filtra i contenuti che rispecchiano i criteri 
+del filtro.  
+2.2. ALTRIMENTI:  
+2.2.1.  Il sistema filtra i contenuti rispetto al campo: “Titolo 
+del contenuto”.  
+3. Il sistema filtra e mostra i contenuti che rispecchiano i criteri del filtro.  
+1.2. Interazione – Inserimento filtro non testuale:  
+1. L’Utente AFAM interagisce con i filtri non testuali:  
+2. L’Utente AFAM inserisce il filtro.  
+3. Il sistema filtra e mostra i contenuti che rispecchiano i criteri del filtro.  
+3.2. Creazione nuovo gruppo:  
+1. L’utente preme il pulsante “Crea gruppo”.  
+2. Il sistema mostra un panel in cui l’utente deve inserire i dati.  
+3. L’utente inserisce i dati relativi al gruppo.  
+4. L’utente preme il pulsante “Crea”.  
+5. SE il sistema rileva il mancato inserimento di dati obbligatori:  
+5.1. Il sistema mostra il messaggio “Uno o più campi obbligatori non 
+rispettati”.  
+5.2. L’utente preme il pulsante “Ok”.  
+6. ALTRIMENTI SE il sistema rileva il mancato inserimento di campi non obbligatori:  
+6.1. Il sistema imposta tali campi con valori di default.  
+7. ALTRIMENTI:  
+7.1. Il sistema interroga il DBMS richiedendo la creazione del gruppo.  
+8. Il flusso prosegue dal punto 3.  
+4.2. Interazione – Eliminazione modifiche:  
+1. l’Utente AFAM clicca sul pulsante “Scarta modifiche”:  
+2. Il sistema scarta eventuali informazioni relative al gruppo.  Requirements Analysis Document  Identità digitale AFAM  
+Pagina 45 di 113 3. Il sistema notifica all’Utente AFAM il messaggio “Gruppo eliminato con 
+successo”.  
+4. L’utente preme il pulsante “Ok”.  
+5. Il sistema mostra la pagina “Visualizza lista contenuti”.  
+Postcondizione  (4.2.)5. Il sistema ha mostrato la pagina "Visualizza lista contenuti”.  
+9. Il sistema ha mostrato la pagina " Visualizza lista contenuti”.  
+Nota  Al click del pulsante “Raggruppa Contenuti” viene data la possibilità all’utente di scegliere 
+mediante checkbox quali contenuti raggruppare.  
+ 
+Figura 26 — Diagramma di sequenza — Raggruppa Contenuti  
+ 
+4.1.8.8 Raggruppa Contenuti (da contenuto)  
+Nome  RAGGRUPPA CONTENUTI  
+ID RAGGRUPPA_CONTENUTI_DA_CONTENUTO  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 46 di 113 Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato la pagina “Visualizza contenuto”.  
+Flusso degli eventi  1. L’Utente AFAM clicca sul pulsante “Aggiungi questo contenuto ad un gruppo”.  
+2. Il sistema interroga il DBMS chiedendo i gruppi creati dall’utente.  
+3. Il sistema mostra a schermo i gruppi disponibili.  
+4. L’Utente AFAM seleziona il gruppo e preme il pulsante “Ok”.  
+5. SE il gruppo selezionato esiste:  
+5.1. Il sistema interroga il DBMS richiedendo l’inserimento del contenuto 
+all’interno del gruppo.  
+5.2. Il sistema mostra il messaggio “Contenuto aggiunto con successo”.  
+5.3. L’utente AFAM preme il pulsante “Ok”.  
+5.4. Il sistema mostra la pagina “Visualizza contenuto”.  
+6. ALTRIMENTI:  
+6.1. Il sistema mostra il messaggio “Errore nel gruppo”.  
+6.2. L’utente AFAM preme il pulsante “Ok”.  
+6.3. Il sistema mostra la pagina “Visualizza contenuto”.  
+Sequenze alternative  3.1. Creazione nuovo gruppo:  
+1. L’utente preme il pulsante “Crea gruppo”.  
+2. Il sistema mostra un panel in cui l’utente deve inserire i dati.  
+3. L’utente inserisce i dati relativi al gruppo.  
+4. L’utente preme il pulsante “Crea”.  
+5. SE il sistema rileva il mancato inserimento di dati obbligatori:  
+5.1. Il sistema mostra il messaggio “Uno o più campi obbligatori non rispettati”.  
+5.2. L’utente preme il pulsante “Ok”.  
+6. ALTRIMENTI SE il sistema rileva il mancato inserimento di campi non obbligatori:  
+6.1. Il sistema imposta tali campi con valori di default.  
+6.2. Il sistema interroga il DBMS chiedendo la creazione del gruppo.  
+7. ALTRIMENTI:  
+7.1. Il sistema interroga il DBMS richiedendo la creazione del gruppo.  
+8. Il flusso prosegue dal punto 2.  
+Postcondizione  5.4 Il sistema ha mostrato la pagina "Visualizza contenuto”.  
+6.3. Il sistema ha mostrato la pagina " Visualizza contenuto”.  
+Note  Nella sequenza alternativa, il punto 8 non è un “GOTO”, bensì indica che il flusso riprende 
+esattamente da dove si era fermato, con la differenza che l’utente vede il gruppo appena 
+creato nel panel mostrato dal sistema.  
+ Requirements Analysis Document  Identità digitale AFAM  
+Pagina 47 di 113  
+Figura 27 — Diagramma di sequenza — Raggruppa Contenuti (da contenuto)  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 48 di 113  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 49 di 113  
+Figura 28 — Diagramma di sequenza — Raggruppa Contenuti (da contenuto) Seq. Alt.  
+ 
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 50 di 113 4.1.9 Macro caso d’uso — Condivisione  
+Il macro caso d’uso Condivisione consente all’Utente AFAM di condividere il proprio profilo o singoli 
+contenuti con soggetti esterni, mediante generazione di link (eventualmente sotto forma di QR code) 
+o condivisione diretta. L’utente può inoltre configura re le impostazioni dei link, consultare i link attivi 
+e disabilitarli, mantenendo il controllo sulla visibilità.  
+ 
+Figura 29 — Diagramma dei casi d’uso — Condivisione  
+4.1.9.1 Genera Link  
+Nome  GENERA LINK  
+ID GENERA_LINK  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato la pagina di condivisione del profilo o di un contenuto.  
+Flusso degli eventi  1. L’Utente AFAM clicca sul pulsante "Genera Link".  
+2. Il sistema crea un token univoco associato al profilo (o al contenuto) dell’Utente 
+AFAM.  
+3. Il sistema interroga il DBMS per salvare il token generato con le relative 
+impostazioni di default.  
+4. Il sistema mostra a schermo il link generato (valido per la condivisione).  
+Postcondizione  4. Il sistema ha mostrato a schermo  il link generato.  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 51 di 113 Extension point  Reindirizzamento alla pagina di errore di connessione in caso di caduta di essa.  
+Requisiti non 
+funzionali  Il link generato deve essere univoco. Il link deve avere una data di scadenza di default 
+configurabile.  
+Note  La copia del link è facoltativa e non costituisce un passo obbligatorio del flusso: dopo la 
+visualizzazione del link l’utente può copiarlo, chiudere il programma o tornare alla home, 
+senza uno step finale obbligatorio.  
+Il link può essere generato a partire dalla pagina del profilo personale oppure da quella di 
+un contenuto, che costituiscono boundary di provenienza distinte.  
+L’errore di salvataggio del token nel DBMS è gestito dal caso d’uso 
+ERRORE_CREAZIONE_LINK.  
+Figura 30 — Diagramma di sequenza — Genera Link (da contenuto)  
+ 
+Figura 31 — Diagramma di sequenza — Genera Link (da profilo)  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 52 di 113  
+ 
+4.1.9.2 Impostazioni Link  
+Nome  IMPOSTAZIONI LINK  
+ID IMPOSTAZIONI_LINK  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato la pagina di condivisione.  
+Flusso degli eventi  1. L’Utente AFAM seleziona un link tra quelli attivi.  
+2. L’Utente AFAM clicca su "Impostazioni Link".  
+3. Il sistema mostra a schermo le opzioni configurabili per il link selezionato (data di 
+scadenza, contenuti inclusi).  
+4. L’Utente AFAM modifica le impostazioni desiderate.  
+5. L’Utente AFAM clicca su "Salva".  
+6. Il sistema invia le nuove impostazioni al DBMS.  
+7. Il sistema mostra a schermo il messaggio "Impostazioni aggiornate con successo".  
+8. L’Utente AFAM clicca il tasto "Ok".  
+9. Il sistema mostra la pagina di condivisione.  
+Postcondizione  Il sistema mostra la pagina di condivisione.  
+Extension point  Reindirizzamento alla pagina di errore di connessione in caso di caduta di essa.  
+Note  Si presuppone che l’utente abbia generato almeno un link per il contenuto selezionato.  Requirements Analysis Document  Identità digitale AFAM  
+Pagina 53 di 113  
+Figura 32 — Diagramma di sequenza — Impostazioni Link  
+ 
+4.1.9.3 Condivisione Diretta  
+Nome  CONDIVISIONE DIRETTA  
+ID CONDIVISIONE_DIRETTA  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato la pagina di condivisione.  
+Flusso degli eventi  1. L’Utente AFAM clicca sul pulsante "Condivisione Diretta".  
+2. Il sistema mostra a schermo un campo testuale per l’inserimento dell’indirizzo 
+email (o username) del destinatario.  
+3. L’Utente AFAM inserisce l’indirizzo email (o username) del destinatario.  
+4. L’Utente AFAM clicca su "Invia".  
+5. Il sistema interroga il DBMS per verificare l’esistenza del destinatario.  
+6. Il sistema invia una notifica (o email) al destinatario con il link al profilo (o 
+contenuto).  
+7. Il sistema mostra a schermo il messaggio "Condivisione avvenuta con successo".  
+8. Il sistema mostra la pagina di condivisione.  
+Sequenze alternative  6. Destinatario non trovato:  
+1. SE il DBMS non trova il destinatario:  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 54 di 113 1.1. Il sistema mostra a schermo il messaggio "Utente non trovato".  
+1.2. L’Utente AFAM preme il pulsante "Ok".  
+1.3. Il sistema mostra a schermo la pagina di condivisione.  
+Postcondizione  8. Il sistema mostra la pagina di condivisione  
+(6.)1.3. Il sistema mostra a schermo la pagina di condivisione.  
+Extension point  Reindirizzamento alla pagina di errore di connessione in caso di caduta di essa.  
+Figura 33 — Diagramma di sequenza — Condivisione Diretta  
+ 
+4.1.9.4 Visualizza Link Attivi  
+Nome  VISUALIZZA LINK ATTIVI  
+ID VISUALIZZA_LINK_ATTIVI  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato la pagina di condivisione del profilo.  
+Flusso degli eventi  1. L’Utente AFAM clicca su "Visualizza Link Attivi".  
+2. Il sistema interroga il DBMS per recuperare la lista dei link attivi associati 
+all’utente.  
+3. Il sistema mostra a schermo la lista dei link attivi con le relative informazioni (URL, 
+data di scadenza, numero di visualizzazioni).  
+Postcondizione  3. Il sistema ha mostrato a schermo la lista dei link attivi con le relative informazioni.  
+Extension point  Reindirizzamento alla pagina di errore di connessione in caso di caduta di essa.  
+Note  Se il DBMS non restituisce link attivi, il sistema mostra il messaggio "Nessun link attivo al 
+momento".  
+Dalla lista dei link attivi l’utente può richiamare i casi d’uso IMPOSTAZIONI_LINK (per 
+modificare le impostazioni di un link) o DISABILITA_LINK (per disabilitarlo).  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 55 di 113  
+Figura 34 — Diagramma di sequenza — Visualizza Link Attivi  
+ 
+4.1.9.5 Disabilita Link  
+Nome  DISABILITA LINK  
+ID DISABILITA_LINK  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato la pagina dei link attivi e l’utente ha selezionato un link da 
+disabilitare.  
+Flusso degli eventi  1. L’Utente AFAM clicca su "Disabilita" in corrispondenza del link che vuole 
+disabilitare.  
+2. Il sistema mostra a schermo un pop -up di conferma "Sei sicuro di voler disabilitare 
+questo link?" con i pulsanti "Conferma" e "Annulla".  
+3. L’Utente AFAM clicca su "Conferma".  
+4. Il sistema interroga il DBMS per aggiornare lo stato del link a "disabilitato".  
+5. Il sistema rimuove il link dalla lista dei link attivi.  
+6. Il sistema mostra a schermo il messaggio "Link disabilitato con successo".  
+7. L’Utente AFAM preme il pulsante "Ok".  
+8. Il sistema mostra a schermo la pagina dei link attivi.  
+Sequenze alternative  3.Annullamento disabilitazione:  
+1. L’utente clicca su "Annulla".  
+2. Il sistema chiude il pop -up. 
+3. Il sistema mostra a schermo la pagina dei link attivi.  
+Postcondizione  8. Il sistema ha mostrato a schermo la pagina dei link attivi.  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 56 di 113 Extension point  Reindirizzamento alla pagina di errore di connessione in caso di caduta di essa.  
+Figura 35 — Diagramma di sequenza — Disabilita Link  
+ 
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 57 di 113 4.1.10 Macro caso d’uso — Ricerca  
+Il macro caso d’uso Ricerca consente di ricercare Utenti AFAM, gruppi, contenuti, autori e collaboratori. 
+La ricerca può essere condotta per nome o per altri campi, restituendo l’elenco dei risultati pertinenti 
+oppure un messaggio di assenza di risultati.  
+Figura 36 — Diagramma dei casi d’uso — Ricerca  
+4.1.10.1 Cerca Utente  
+Nome  CERCA UTENTE  
+ID CERCA_UTENTE  
+Attori  Visualizzatore, DBMS  
+Precondizioni  Il sistema ha mostrato la homepage.  
+Flusso degli eventi  1. Il visualizzatore clicca sulla barra di ricerca.  
+2. Inserisce il filtro “user:” seguito dal nome (o parte di esso) dell’utente che vuole 
+cercare nel campo di ricerca.  
+3. Clicca sul pulsante "Cerca".  
+4. Il sistema invia la richiesta al DBMS.  
+5. Il sistema mostra a schermo la lista degli utenti trovati con le relative informazioni 
+(nome, cognome, username).  
+Postcondizione  5. Il sistema ha mostrato la lista degli utenti trovati.  
+Extension point  Reindirizzamento alla pagina di errore di connessione in caso di caduta di essa.  
+Note  4.  Il DBMS non restituisce risultati, il sistema mostra il messaggio "Nessun utente trovato".  
+4. Il visualizzatore può inoltre selezionare un utente tra i risultati per visualizzarne il profilo, 
+rientrando nel relativo caso d’uso di visualizzazione.  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 58 di 113 Il visualizzatore accede alla homepage dalla pagina di login tramite un pulsante appropriato 
+senza doversi autenticare. Dalla homepage può utilizzare la barra di ricerca per effettuare 
+le ricerche che desidera.  
+5. Nel caso in cui non vengano trovati utenti, allora verrà visualizzato un messaggio di 
+assenza di risultati.  
+ 
+Figura 37 — Diagramma di sequenza — Cerca Utente (rev.)  
+4.1.10.2 Cerca Gruppo  
+Nome  CERCA GRUPPO  
+ID CERCA_GRUPPO  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato la homepage.  
+Flusso degli eventi  1. L’ Utente AFAM clicca sulla barra di ricerca.  
+2. L’ Utente AFAM inserisce il filtro “group:” seguito dal nome (o parte di esso) del 
+gruppo che vuole cercare nel campo di ricerca.  
+3. L’ Utente AFAM clicca sul pulsante "Cerca".  
+4. Il sistema invia la richiesta al DBMS.  
+5. Il sistema mostra a schermo la lista dei gruppi trovati con le relative informazioni 
+(nome del gruppo, numero di contenuti associati).  
+Postcondizione  5. Il sistema ha mostrato la lista dei gruppi trovati.  
+Extension point  Reindirizzamento alla pagina di errore di connessione in caso di caduta di essa.  
+Note  5. Se il DBMS non restituisce risultati, il sistema mostra il messaggio "Nessun gruppo 
+trovato". L’Utente AFAM può inoltre selezionare un gruppo tra i risultati per visualizzarne i 
+dettagli, rientrando nel relativo caso d’uso di visualizzazione.  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 59 di 113  
+Figura 38 — Diagramma di sequenza — Cerca Gruppo  
+ 
+4.1.10.3 Cerca Contenuto  
+Nome  CERCA CONTENUTO  
+ID CERCA_CONTENUTO  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato la homepage.  
+Flusso degli eventi  1. L’Utente AFAM clicca sulla barra di ricerca.  
+2. L’Utente AFAM inserisce una parola chiave (titolo o parte di esso) relativa al 
+contenuto che vuole cercare nel campo di ricerca.  
+3. L’Utente AFAM clicca sul pulsante "Cerca".  
+4. Il sistema invia la richiesta al DBMS.  
+5. Il sistema mostra a schermo la lista dei contenuti trovati con le relative 
+informazioni (titolo, tipo di file, autore).  
+Postcondizione  5. Il sistema ha mostrato la lista dei contenuti trovati  
+Extension point  Reindirizzamento alla pagina di errore di connessione in caso di caduta di essa.  
+Note  Se il DBMS non restituisce risultati, il sistema mostra il messaggio "Nessun contenuto 
+trovato". L’Utente AFAM può inoltre selezionare un contenuto tra i risultati per 
+visualizzarne i dettagli (purché ne abbia i permessi), rientrando nel caso d’uso di 
+visualizzazione del contenuto.  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 60 di 113 Figura 39 — Diagramma di sequenza — Cerca Contenuto  
+ 
+4.1.10.4 Cerca Autore  
+Nome  CERCA AUTORE  
+ID CERCA_AUTORE  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato la homepage.  
+Flusso degli eventi  1. L’Utente AFAM clicca sulla barra di ricerca.  
+2. L’Utente AFAM inserisce il filtro “author:” seguito dal nome (o parte di esso) 
+dell’autore che vuole cercare nel campo di ricerca.  
+3. L’Utente AFAM clicca sul pulsante "Cerca".  
+4. Il sistema invia la richiesta al DBMS.  
+5. Il sistema mostra a schermo la lista degli autori trovati con i relativi contenuti 
+associati.  
+Postcondizione  5. Il sistema ha mostrato la lista degli autori trovati.  
+Extension point  Reindirizzamento alla pagina di errore di connessione in caso di caduta di essa.  
+Note  Se il DBMS non restituisce risultati, il sistema mostra il messaggio "Nessun autore trovato". 
+L’Utente AFAM può inoltre selezionare un autore tra i risultati per visualizzarne i contenuti, 
+rientrando nel relativo caso d’uso di visualizzazione.  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 61 di 113  
+Figura 40 — Diagramma di sequenza — Cerca Autore  
+ 
+4.1.10.5 Cerca Collaboratori  
+Nome  CERCA COLLABORATORI  
+ID CERCA_COLLABORATORI  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato la homepage.  
+Flusso degli eventi  1. L’Utente AFAM clicca sulla barra di ricerca.  
+2. L’Utente AFAM inserisce il nome (o parte di esso) del collaboratore che vuole 
+cercare nel campo di ricerca.  
+3. L’Utente AFAM clicca sul pulsante "Cerca".  
+4. Il sistema invia la richiesta al DBMS.  
+5. Il sistema mostra a schermo la lista dei collaboratori trovati con i relativi contenuti 
+a cui hanno preso parte.  
+Postcondizione  5. Il sistema ha mostrato la lista dei collaboratori trovati  
+Extension point  Reindirizzamento alla pagina di errore di connessione in caso di caduta di essa.  
+Note  Se il DBMS non restituisce risultati, il sistema mostra il messaggio "Nessun collaboratore 
+trovato". L’Utente AFAM può inoltre selezionare un collaboratore tra i risultati per 
+visualizzarne i contenuti, rientrando nel relativo caso d’uso di visualizzazione . 
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 62 di 113 Figura 41 — Diagramma di sequenza — Cerca Collaboratori  
+ 
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 63 di 113 4.1.11 Macro caso d’uso — Visualizza contenuti  
+Il macro caso d’uso Visualizza contenuti permette a un Visualizzatore di consultare i contenuti condivisi 
+da un Utente AFAM, tramite link diretto oppure accedendo al profilo (anche per il tramite della ricerca), 
+nel rispetto delle policy di visibilità defi nite dall’Utente AFAM proprietario del contenuto.  
+Figura 42 — Diagramma dei casi d’uso — Visualizza contenuti  
+4.1.11.1 Visualizza Contenuti  
+Nome  VISUALIZZA CONTENUTI  
+ID VISUALIZZA_CONTENUTI  
+Attori  Visualizzatore, DBMS  
+Precondizioni  Il sistema ha mostrato a schermo la pagina dei contenuti di un Utente AFAM.  
+Flusso degli eventi  1. Visualizzatore preme su un contenuto dell’elenco di contenuti caricati.  
+2. Il sistema interroga il DBMS per verificare se Visualizzatore possiede le 
+autorizzazioni necessarie per visualizzare il contenuto.  
+3. SE: Il sistema riceve esito positivo dal DBMS.  
+3.1. Il DBMS invia un messaggio di incremento di visualizzazione al sistema.  
+3.2. Il sistema mostra a schermo la pagina con il contenuto richiesto.  
+4. ALTRIMENTI:  
+4.1. Il sistema mostra a schermo il messaggio di avviso “Non si dispone 
+dell’autorizzazione necessaria per visualizzare il contenuto.”  
+4.2. Visualizzatore preme il pulsante ‘Ok’.  
+4.3. Il sistema mostra a schermo la pagina di tutti i contenuti caricati 
+dall’Utente AFAM terzo.  
+Sequenze alternative  Il Visualizzatore viene riportato nella pagina di tutti i contenuti caricati  
+dall’Utente AFAM terzo.  
+Caduta connessione: gestita tramite extension point verso il caso d’uso «Comportamento 
+eccezionale — Caduta Connessione».  
+Postcondizione  3.2. Il sistema ha mostrato a schermo la pagina del contenuto premuto.  
+4.3. Il sistema ha mostrato a schermo la pagina con l’elenco dei contenuti caricati.  
+Extension point  Reindirizzamento alla pagina di errore di connessione in caso di errore di connessione.  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 64 di 113 Figura 43 — Diagramma di sequenza — Visualizza Contenuti  
+ 
+4.1.11.2 Visualizza Contenuti Con URL  
+Nome  VISUALIZZA CONTENUTI CON URL  
+ID VISUALIZZA_CONTENUTI_CON_URL  
+Attori  Visualizzatore, DBMS  
+Precondizioni  Il sistema ha inviato il link di accesso alla risorsa alla e -mail del visualizzatore.  
+Flusso degli eventi  1. Visualizzatore preme sul link per la visualizzazione di un contenuto condiviso.  
+2. Il sistema interroga il DBMS sulla validità del link.  
+3. SE: Il sistema riceve esito positivo dal DBMS  
+3.1. Il DBMS invia un messaggio di incremento di visualizzazione al sistema.  
+3.2. Il sistema mostra a schermo la pagina relativa al contenuto legato al 
+link. 
+4. ALTRIMENTI SE: Il sistema riceve esito negativo (data di validità del link 
+superata) dal DBMS.  
+4.1. Il sistema mostra a schermo il messaggio di errore “Error: 401, 
+Unauthorized”.  
+4.2. Visualizzatore preme il pulsante “Ok".  
+4.3. Il sistema mostra la pagina homepage.  
+Sequenze alternative  Caduta connessione: gestita tramite extension point verso il caso d’uso «Comportamento 
+eccezionale — Caduta Connessione».  
+Postcondizione  3.2. Il sistema ha mostrato a schermo la pagina del contenuto legato al link.  
+4.3. Il sistema ha mostrato la homepage.  
+Extension point  Reindirizzamento alla pagina di errore di connessione in caso di errore di connessione.  
+Note  L’accesso al link avviene esternamente al sistema.  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 65 di 113 Figura 44 — Diagramma di sequenza — Visualizza Contenuti Con URL  
+ 
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 66 di 113 4.1.12 Macro caso d’uso — Modifica profilo  
+Il macro caso d’uso Modifica profilo consente all’Utente AFAM di aggiornare le proprie credenziali, la 
+password, i dati anagrafici e le altre informazioni del profilo. Lo username non è modificabile 
+dall’utente, essendo gestito dal server.  
+Figura 45 — Diagramma dei casi d’uso — Modifica profilo  
+4.1.12.1 Modifica Credenziali  
+Nome  MODIFICA CREDENZIALI  
+ID MODIFICA_CREDENZIALI  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato la pagina “Il mio profilo”.  
+Flusso degli eventi  1. L’Utente AFAM preme il pulsante “Modifica credenziali”.  
+2. Il sistema mostra le credenziali dell’utente.  
+3. L’Utente AFAM preme sulla casella e -mail ed inserisce una nuova e -mail.  
+4. Il sistema mostra il messaggio “Reinserisci la email”.  
+5. L’Utente AFAM inserisce nuovamente la e -mail e preme il tasto “Conferma”.  
+6. Il sistema confronta le e -mail inserite.  
+7. SE le e -mail combaciano:  
+7.1. SE le e -mail hanno un formato valido e un dominio valido:  
+7.1.1.  SE l’utente ha il 2 -FA attivo:  
+7.1.1.1.  Il sistema genera un token a 8 cifre.  
+7.1.1.2.  Il sistema richiede al DBMS di salvare il 
+token.  
+7.1.1.3.  Il sistema invia una e -mail all’indirizzo e -
+mail dell’utente (pre -modifica).  
+7.1.1.4.  Il sistema mostra un panel con il messaggio 
+“Inserisci il token. Ti è stato inviata una e -mail 
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 67 di 113 all’indirizzo <indirizzo utente>”, ed un panel con una 
+casella testuale.  
+7.1.1.5.  L’utente inserisce il token ricevuto via e -
+mail.  
+7.1.1.6.  SE: Il token inserito corrisponde a quello 
+salvato:  
+7.1.1.6.1.  Il sistema interroga il DBMS 
+richiedendo la modifica del campo e -mail 
+relativo a quell’utente.  
+7.1.1.6.2.  Il sistema mostra il messaggio 
+“Email modificata con successo”.  
+7.1.1.6.3.  L’utente preme il pulsante “Ok”.  
+7.1.1.6.4.  Il sistema mostra la pagina “Il mio 
+profilo”.  
+7.1.1.7.  ALTRIMENTI:  
+7.1.1.7.1.  Il sistema mostra il messaggio 
+“Errore nel token”.  
+7.1.1.7.2.  L’utente preme il pulsante “Ok”.  
+7.1.1.7.3.  Il sistema mostra la pagina 
+“Home”.  
+7.1.2.  ALTRIMENTI:  
+7.1.2.1.  Il sistema interroga il DBMS richiedendo la 
+modifica del campo e -mail relativo a quell’utente.  
+7.1.2.2.  Il sistema mostra il messaggio “Email 
+modificata con successo”.  
+7.1.2.3.  L’utente preme il pulsante “Ok”.  
+7.1.2.4.  Il sistema mostra la pagina “Il mio profilo”.  
+7.2. ALTRIMENTI:  
+7.2.1.  Il sistema mostra il messaggio “Formato o dominio 
+non valido”.  
+7.2.2.  L’utente preme il pulsante “Ok”.  
+7.2.3.  Il sistema mostra la pagina “Il mio profilo”.  
+8. ALTRIMENTI:  
+8.1. Il sistema mostra il messaggio “Le email non corrispondono”.  
+8.2. L’utente preme il pulsante “Ok”.  
+8.3. Il sistema mostra la pagina “Il mio profilo”.  
+Sequenze alternative  2.1. Modifica Username:  
+1. L’utente preme sulla casella username ed inserisce una nuova username.  
+2. Il sistema mostra il messaggio “Reinserisci l’username”.  
+3. L’utente inserisce nuovamente la username e preme il tasto “Conferma”.  
+4. Il sistema confronta gli username inseriti.  
+5. SE gli username combaciano:  
+5.1. Il sistema interroga il DBMS richiedendo la modifica del campo 
+username relativo a quell’utente.  
+5.2. Il sistema mostra il messaggio “username modificato con successo”.  
+5.3. L’utente preme il pulsante “Ok”.  
+5.4. Il sistema mostra la pagina “Il mio profilo”.  
+6. ALTRIMENTI:  
+6.1. Il sistema mostra il messaggio “Gli username inseriti non 
+corrispondono”.  
+6.2. L’utente preme il pulsante “Ok”.  
+6.3. Il sistema mostra la pagina “Il mio profilo”.  Requirements Analysis Document  Identità digitale AFAM  
+Pagina 68 di 113 Postcondizione  7.1.1.6.4. Il sistema ha mostrato la pagina “Il mio profilo”.  
+7.1.1.7.3. Il sistema ha mostrato la pagina “Home”.  
+7.1.2.4 Il sistema mostra la pagina “Il mio profilo”.  
+7.2.3. Il sistema ha mostrato la pagina “Il mio profilo”.  
+8.3. Il sistema ha mostrato la pagina “Il mio profilo”.  
+(2.1.)5.4. Il sistema ha mostrato la pagina “Il mio profilo”.  
+(2.1.)6.3. Il sistema ha mostrato la pagina “Il mio profilo”.  
+Extension point  Pagina di errore di modifica profilo, in caso di caduta connessione durante la modifica.  
+Note  Quando il sistema mostra le credenziali, la password è nel formato ***** e la e -mail è nel 
+formato abc***@email.com  
+ 
+4.1.12.2 Modifica Password  
+Nome  MODIFICA PASSWORD  
+ID MODIFICA_PASSWORD  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato la pagina “Il mio profilo”.  
+Flusso degli eventi  1. L’Utente AFAM preme il pulsante “Modifica password”.  
+2. L’Utente AFAM preme sulla casella password ed inserisce una nuova password.  
+3. Il sistema mostra il messaggio “Reinserisci la password”.  
+4. L’Utente AFAM inserisce nuovamente la password.  
+5. L’Utente AFAM preme il tasto “Conferma”.  
+6. Il sistema confronta le password inserite.  
+7. SE le password combaciano:  
+7.1. SE le password rispettano gli standard di sicurezza:  
+7.1.1.  SE l’utente ha il 2 -FA attivo:  
+7.1.1.1.  Il sistema genera un token a 8 cifre.  
+7.1.1.2.  Il sistema richiede al DBMS di salvare il 
+token.  
+7.1.1.3.  Il sistema invia una e -mail all’indirizzo e -
+mail dell’utente (pre -modifica).  
+7.1.1.4.  Il sistema mostra un panel con il messaggio 
+“Inserisci il token. Ti è stata inviata una e -mail 
+all’indirizzo <indirizzo utente>”, ed un panel con una 
+casella testuale.  
+7.1.1.5.  L’utente inserisce il token ricevuto via e -
+mail.  
+7.1.1.6.  SE: Il token inserito corrisponde a quello 
+salvato:  
+7.1.1.6.1.  Il sistema esegue l’hashing della 
+password.  
+7.1.1.6.2.  Il sistema interroga il DBMS 
+richiedendo la modifica del campo 
+password relativo a quell’utente.  
+7.1.1.6.3.  Il sistema mostra il messaggio 
+“Password modificata con successo”.  
+7.1.1.6.4.  L’utente preme il pulsante “Ok”.  
+7.1.1.6.5.  Il sistema mostra la pagina “Il mio 
+profilo”.  
+7.1.1.7.  ALTRIMENTI:  Requirements Analysis Document  Identità digitale AFAM  
+Pagina 69 di 113 7.1.1.7.1.  Il sistema mostra il messaggio 
+“Errore nel token”.  
+7.1.1.7.2.  L’utente preme il pulsante “Ok”.  
+7.1.1.7.3.  Il sistema mostra la pagina 
+“Home”.  
+7.1.2.  ALTRIMENTI:  
+7.1.2.1.  Il sistema interroga il DBMS richiedendo la 
+modifica del campo e -mail relativo a quell’utente.  
+7.1.2.2.  Il sistema mostra il messaggio “Password 
+modificata con successo”.  
+7.1.2.3.  L’utente preme il pulsante “Ok”.  
+7.1.2.4.  Il sistema mostra la pagina “Il mio profilo”.  
+7.2. ALTRIMENTI:  
+7.2.1.  Il sistema mostra il messaggio “Formato non valido”.  
+7.2.2.  L’utente preme il pulsante “Ok”.  
+7.2.3.  Il sistema mostra la pagina “Il mio profilo”.  
+8. ALTRIMENTI:  
+8.1. Il sistema mostra il messaggio “Le Password non corrispondono”.  
+8.2. L’utente preme il pulsante “Ok”.  
+8.3. Il sistema mostra la pagina “Il mio profilo”.  
+Postcondizione  7.1.1.6.5. Il sistema ha mostrato la pagina “Il mio profilo”.  
+7.1.1.7.3. Il sistema ha mostrato la pagina “Home”.  
+7.1.2.4 Il sistema mostra la pagina “Il mio profilo”.  
+7.2.3. Il sistema ha mostrato la pagina “Il mio profilo”.  
+8.3. Il sistema ha mostrato la pagina “Il mio profilo”.  
+Extension point  Pagina di errore di modifica profilo, in caso di caduta connessione durante la modifica.  
+ Requirements Analysis Document  Identità digitale AFAM  
+Pagina 70 di 113  
+ 
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 71 di 113 4.1.12.3 Modifica Anagrafica  
+Nome  MODIFICA ANAGRAFICA  
+ID MODIFICA_ANAGRAFICA  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato la pagina “Il mio profilo”.  
+Flusso degli eventi  1. L’Utente AFAM preme il pulsante “Modifica anagrafica”.  
+2. L’Utente AFAM preme sul pulsante “Modifica città”.  
+3. Il sistema mostra la lista delle città disponibili.  
+4. L’Utente AFAM seleziona una città tra quelle disponibili.  
+5. L’Utente AFAM preme il pulsante “Conferma”.  
+6. Il sistema richiede al DBMS di modificare il campo città relativo a quell’utente.  
+7. Il sistema mostra il messaggio “Modifica avvenuta con successo”.  
+8. L’Utente AFAM preme il pulsante “Ok”.  
+9. Il sistema mostra la pagina “Il mio profilo”.  
+Sequenze alternative  2.1. Modifica Indirizzo di residenza:  
+1. L’utente preme sul pulsante “Modifica Indirizzo”.  
+2. L’utente inserisce nel campo “Indirizzo” un nuovo indirizzo.  
+3. L’utente preme il pulsante “Conferma”.  
+4. Il sistema richiede al DBMS di modificare il campo indirizzo relativo a 
+quell’utente.  
+5. Il sistema mostra il messaggio “Modifica avvenuta con successo”.  
+6. L’utente preme il pulsante “Ok”.  
+7. Il sistema mostra la pagina “Il mio profilo”.  
+2.2. Modifica Data di nascita:  
+1. L’utente preme sul pulsante “Modifica data di nascita”.  
+2. L’utente inserisce nel campo “Data di nascita” una nuova data.  
+3. L’utente preme il pulsante “Conferma”.  
+4. Il sistema ricalcola il codice fiscale.  
+5. Il sistema richiede al DBMS di modificare i campi “data di nascita” e “Codice 
+fiscale” relativo a quell’utente.  
+6. Il sistema mostra il messaggio “Modifica avvenuta con successo”.  
+7. L’utente preme il pulsante “Ok”.  
+8. Il sistema mostra la pagina “Il mio profilo”.  
+2.3. Modifica Codice fiscale:  
+1. L’utente preme sul pulsante “Modifica CF”.  
+2. L’utente inserisce nel campo “Codice fiscale” un nuovo CF.  
+3. L’utente preme il pulsante “Conferma”.  
+4. Il sistema estrapola la data di nascita corretta dal CF.  
+5. Il sistema estrapola la città di nascita corretta dal CF.  
+6. Il sistema richiede al DBMS di modificare i campi "Codice fiscale”, “data di 
+nascita” e “Città di nascita” relativo a quell’utente.  
+7. Il sistema mostra il messaggio “Modifica avvenuta con successo”.  
+8. L’utente preme il pulsante “Ok”.  
+9. Il sistema mostra la pagina “Il mio profilo”.  
+2.4. Modifica Numero di telefono:  
+1. L’utente preme sul pulsante “Modifica numero di telefono”.  
+2. L’utente inserisce nel campo “Telefono” un nuovo numero di telefono.  
+3. L’utente preme il pulsante “Conferma”.  
+4. Il sistema richiede al DBMS di modificare il campo “numero di telefono” relativo 
+a quell’utente.  Requirements Analysis Document  Identità digitale AFAM  
+Pagina 72 di 113 5. Il sistema mostra il messaggio “Modifica avvenuta con successo”.  
+6. L’utente preme il pulsante “Ok”.  
+7. Il sistema mostra la pagina “Il mio profilo”.  
+Postcondizione  9. Il sistema mostra la pagina “Il mio profilo”.  
+(2.1.)7. Il sistema ha mostrato la pagina “Il mio profilo”.  
+(2.2.)8. Il sistema ha mostrato la pagina “Il mio profilo”.  
+(2.3.)9. Il sistema ha mostrato la pagina “Il mio profilo”.  
+(2.4.)7. Il sistema ha mostrato la pagina “Il mio profilo”.  
+Extension point  Pagina di errore di modifica profilo, in caso di caduta connessione durante la modifica.  
+ 
+Figura 46 — Diagramma di sequenza — Modifica Anagrafica  
+ 
+4.1.12.4 Altre Modifiche  
+Nome  ALTRE MODIFICHE  
+ID ALTRE_MODIFICHE  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 73 di 113 Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha mostrato la pagina “Il mio profilo”.  
+Flusso degli eventi  1. L’Utente AFAM preme il pulsante “Altre modifiche”.  
+2. L’Utente AFAM preme sul pulsante “Modifica privacy”.  
+3. Il sistema mostra un panel con le privacy selezionate e quelle selezionabili.  
+4. L’Utente AFAM spunta le check -box delle privacy che vuole abilitare o disabilitare.  
+5. L’Utente AFAM preme il pulsante “Conferma”.  
+6. Il sistema richiede al DBMS di modificare il campo privacy relativo a quell’utente.  
+7. Il sistema mostra il messaggio “Modifica avvenuta con successo”.  
+8. L’Utente AFAM preme il pulsante “Ok”.  
+9. Il sistema mostra la pagina “Il mio profilo”.  
+Sequenze alternative  2.1. Modifica Descrizione:  
+1. L’Utente AFAM preme sul pulsante “Modifica descrizione”.  
+2. L’Utente AFAM inserisce nel campo “Descrizione” una nuova descrizione.  
+3. L’Utente AFAM preme il pulsante “Conferma”.  
+4. Il sistema richiede al DBMS di modificare il campo descrizione relativo a 
+quell’utente.  
+5. Il sistema mostra il messaggio “Modifica avvenuta con successo”.  
+6. L’utente preme il pulsante “Ok”.  
+7. Il sistema mostra la pagina “Il mio profilo”.  
+2.2. Modifica Hobby:  
+1. L’utente preme sul pulsante “Modifica Hobby”.  
+2. L’utente modifica il contenuto del campo “Hobby”.  
+3. L’utente preme il pulsante “Conferma”.  
+4. Il sistema chiede al DBMS di modificare il campo “Hobby” relativo all’utente.  
+5. Il sistema mostra il messaggio “Modifica avvenuta con successo”.  
+6. L’utente preme il pulsante “Ok”.  
+7. Il sistema mostra la pagina “Il mio profilo”.  
+2.3. Modifica Skills:  
+1. L’utente preme sul pulsante “Modifica Skills”.  
+2. L’utente modifica le proprie skill inserite nel sistema.  
+3. L’utente preme il pulsante “Conferma”.  
+4. Il sistema richiede al DBMS di modificare il campo “Skills”, relativo all’utente.  
+5. Il sistema mostra il messaggio “Modifica avvenuta con successo”.  
+6. L’utente preme il pulsante “Ok”.  
+7. Il sistema mostra la pagina “Il mio profilo”.  
+Postcondizione  9. Il sistema ha mostrato la pagina “Il mio profilo”.  
+(2.1.)7. Il sistema ha mostrato la pagina “Il mio profilo”.  
+(2.2.)7. Il sistema ha mostrato la pagina “Il mio profilo”.  
+(2.3.)7. Il sistema ha mostrato la pagina “Il mio profilo”.  
+Extension point  Pagina di errore di modifica profilo, in caso di caduta connessione durante la modifica.  
+ Requirements Analysis Document  Identità digitale AFAM  
+Pagina 74 di 113 4.1.13 Macro caso d’uso — Gestione errori  
+Il macro caso d’uso Gestione errori raccoglie i casi d’uso dedicati alla gestione delle condizioni di errore 
+che possono verificarsi durante le operazioni di ricerca, condivisione, generazione link, modifica del 
+profilo e apertura dei link, garantendo all’ utente un riscontro chiaro e il ritorno a uno stato valido del 
+sistema.  
+ 
+Figura 47 — Diagramma dei casi d’uso — Gestione errori  
+4.1.13.1 Errore Ricerca  
+Nome  ERRORE RICERCA  
+ID ERRORE_RICERCA  
+Attori  Visualizzatore, DBMS  
+Precondizioni  Il sistema ha ricevuto una richiesta di ricerca dall’utente e ha riscontrato un errore durante 
+la comunicazione con il DBMS.  
+Flusso degli eventi  1. Visualizzatore effettua una ricerca.  
+2. Il sistema invia la richiesta di ricerca al DBMS.  
+3. SE il sistema riceve una risposta di errore dal DBMS:  
+3.1. Il sistema avvia il caso d’uso “ERRORE DI CONNESSIONE”  
+3.2. SE la connessione viene ripristinata:  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 75 di 113 3.2.1.  Il sistema mostra a schermo il messaggio 
+"Connessione ripristinata".  
+3.2.2.  Visualizzatore preme il pulsante "Ok".  
+3.2.3.  Il sistema ricarica la pagina di ricerca.  
+4. ALTRIMENTI:  
+4.1. Il sistema mostra a schermo il messaggio "Problema risolto".  
+4.2. Visualizzatore preme il pulsante "Ok".  
+4.3. Il sistema ricarica la pagina di ricerca.  
+Postcondizione  3.2.3./4.3. Il sistema ha reindirizzato l’utente alla pagina di ricerca mostrando il relativo 
+messaggio di errore.  
+Extension point  Caso d’uso di caduta connessione.  
+Note  3.2. Non vi è un altrimenti, visto che il caso d’uso “Errore di connessione” prevede il blocco 
+del sistema, qualora questo non riesca ad instaurare una connessione col DBMS dopo i 
+tentativi effettuati.  
+ 
+Figura 48 — Diagramma di sequenza — Errore Ricerca  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 76 di 113  
+ 
+4.1.13.2 Errore Condivisione  
+Nome  ERRORE CONDIVISIONE  
+ID ERRORE_CONDIVISIONE  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha tentato di eseguire un’operazione di condivisione richiesta dall'Utente AFAM 
+(condivisione diretta o generazione link) e ha riscontrato un errore.  
+Flusso degli eventi  1. Il sistema mostra a schermo il messaggio "Si è verificato un errore durante la 
+condivisione. Riprovare più tardi.".  
+2. L’Utente AFAM preme il pulsante “Ok”.  
+3. Il sistema avvia il caso d’uso “Errore di connessione”.  
+4. SE il caso d’uso torna una risposta di avvenuta connessione col DBMS:  
+4.1. Il sistema ritenta la creazione del link.  
+4.2. Il sistema interroga il DBMS chiedendo l’inserimento del link.  
+4.3. Il sistema mostra il messaggio “Contenuto condiviso con successo” 
+allegando il link generato.  
+4.4. L’Utente AFAM preme “Ok”.  
+4.5. Il sistema riporta l’Utente AFAM alla pagina di condivisione.  
+Postcondizione  4.5. il sistema ha mostrato la pagina di condivisione.  
+Extension point  Caso d’uso di caduta connessione.  
+Note  3. Viene avviato il caso d’uso mantenendo tutte le informazioni necessarie di questo caso 
+d’uso.  
+4. Non vi è un altrimenti, visto che il caso d’uso “Errore di connessione” prevede il blocco 
+del sistema, qualora questo non riesca ad instaurare una connessione col DBMS dopo i 
+tentativi effettuati.  
+ 
+4.1.13.3 Errore Creazione Link  
+Nome  ERRORE CREAZIONE LINK  
+ID ERRORE_CREAZIONE_LINK  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha ricevuto dall’utente una richiesta di generazione di un link e ha riscontrato un 
+errore durante il salvataggio nel DBMS.  
+Flusso degli eventi  1. Il sistema mostra a schermo il messaggio "Si è verificato un errore durante la 
+creazione del link. Riprovare più tardi."  
+2. L’Utente AFAM preme il pulsante “Ok”.  
+3. Il sistema avvia il caso d’uso “Errore di connessione”.  
+4. SE il caso d’uso torna una risposta di avvenuta connessione col DBMS:  
+4.1. Il sistema ritenta la creazione del link.  
+4.2. Il sistema interroga il DBMS chiedendo l’inserimento del link.  
+4.3. Il sistema mostra il messaggio “Link creato con successo” allegando il 
+link generato.  
+4.4. L’Utente AFAM preme “Ok”.  
+4.5. Il sistema riporta l’Utente AFAM alla pagina di condivisione.  
+Postcondizione  4.5. il sistema ha mostrato la pagina di condivisione.  Requirements Analysis Document  Identità digitale AFAM  
+Pagina 77 di 113 Extension point  Caso d’uso di caduta connessione.  
+Requisiti non 
+funzionali  3. Viene avviato il caso d’uso mantenendo tutte le informazioni necessarie di questo caso 
+d’uso.  
+4. Non vi è un altrimenti, visto che il caso d’uso “Errore di connessione” prevede il blocco 
+del sistema, qualora questo non riesca ad instaurare una connessione col DBMS dopo i 
+tentativi effettuati.  
+ 
+4.1.13.4 Errore Modifica Profilo  
+Nome  ERRORE MODIFICA PROFILO  
+ID ERRORE_MODIFICA_PROFILO  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha rilevato un errore durante la modifica del profilo.  
+Flusso degli eventi  1. Il sistema notifica all’utente il messaggio di errore “Errore durante la fase di 
+modifica”.  
+2. L’Utente AFAM preme il pulsante “Ok”.  
+3. Il sistema verifica nuovamente la correttezza dei dati inseriti dall’Utente AFAM.  
+4. SE i dati sono coerenti con quelli definiti per il caso d’uso che ha originato 
+l’errore:  
+4.1. Il sistema avvia il caso d’uso “Errore caduta connessione”.  
+4.2. SE il sistema rileva che la connessione col DBMS è presente:  
+4.2.1.  Il sistema interroga il DBMS richiedendo le 
+informazioni dell’Utente AFAM.  
+4.2.2.  Il sistema confronta i campi inseriti dall’Utente AFAM 
+con quelli ottenuti dal DBMS.  
+4.2.3.  SE le informazioni sono identiche:  
+4.2.3.1.  Il sistema mostra il messaggio “Errore 
+risolto: modifiche già applicate”.  
+4.2.3.2.  L’Utente AFAM preme il pulsante “Ok”.  
+4.2.3.3.  Il sistema ricarica il caso d’uso che ha 
+generato l’errore.  
+4.2.4.  ALTRIMENTI:  
+4.2.4.1.  Il sistema chiede al DBMS di applicare le 
+modifiche richieste dall’utente.  
+4.2.4.2.  Il sistema mostra il messaggio ”Errore 
+risolto: modifiche applicate con successo”.  
+4.2.4.3.  L’Utente AFAM preme il pulsante “Ok”.  
+4.2.4.4.  Il sistema ricarica il caso d’uso che ha 
+generato l’errore.  
+4.3. ALTRIMENTI:  
+4.3.1.  Il sistema avvia il caso d’uso “ERRORE CADUTA 
+CONNESSIONE”.  
+4.3.2.  SE il sistema ripristina la connessione col DBMS:  
+4.3.2.1.  Il sistema rilancia questo caso d’uso.  
+5. ALTRIMENTI:  
+5.1. Il sistema mostra il messaggio “Errore nell’inserimento dei dati”.  
+5.2. L’utente preme il pulsante “Ok”.  
+5.3. Il sistema ricarica il caso d’uso che ha generato l’errore.  
+Postcondizione  4.2.3.3. Il sistema ha ricaricato il caso d’uso che ha generato l’errore.  
+4.2.4.4. Il sistema ha ricaricato il caso d’uso che ha generato l’errore.  Requirements Analysis Document  Identità digitale AFAM  
+Pagina 78 di 113 4.3.2.1. Il sistema ha ricaricato questo caso d’uso.  
+5.3. Il sistema ha ricaricato il caso d’uso che ha generato l’errore.  
+Extension point  Caso d’uso di caduta connessione.  
+Note  3. Gestito tramite extension point verso il caso d’uso di caduta connessione.  
+4.3.1. Il sistema, dopo aver avviato il caso d’uso ERRORE DI CONNESSIONE, attende il 
+risultato. Tale caso d’uso torna una risposta negativa, se la connessione col DBMS è attiva 
+o si riesce a ripristinare, altrimenti, il sistema procede al riavvio. Per tal motivo non è 
+presente, nel punto 4.3.2 un ALTRIMENTI.  
+ 
+ 
+4.1.13.5 Errore Apertura Link  
+Nome  ERRORE APERTURA LINK  
+ID ERRORE_APERTURA_LINK  
+Attori  Visualizzatore, DBMS  
+Precondizioni  Il sistema ha rilevato un errore durante l’apertura di un link.  
+Flusso degli eventi  1. Il sistema notifica all’utente il messaggio di errore “Errore durante l’apertura del 
+link”.  
+2. Visualizzatore preme il pulsante “Ok”.  
+3. SE il sistema rileva che la connessione col DBMS è presente:  
+3.1. Il sistema contatta il DBMS richiedendo lo stato per il link.  
+3.2. SE il sistema rileva che il link è corretto:  
+3.2.1.  Il sistema prova ad aprire il link.  
+3.2.2.  SE l’apertura del link va a buon fine:  
+3.2.2.1.  Il sistema mostra a schermo il messaggio 
+“Link correttamente funzionante”  
+3.2.2.2.  Visualizzatore preme il pulsante “Ok”.  
+3.2.2.3.  Il sistema mostra la pagina “Vedi 
+contenuto”.  
+3.2.3.  ALTRIMENTI SE il link è ancora attivo:  
+3.2.3.1.  Il sistema genera un nuovo link.  
+3.2.3.2.  Il sistema contatta il DBMS chiedendo di 
+modificare il link immesso dall’utente con quello 
+generato. Il DBMS provvede a modificare 
+contestualmente le referenze del link verso l’utente 
+che lo ha generato.  
+3.2.3.3.  Il sistema genera una e -mail allegando il link 
+generato e la invia al visualizzatore.  
+3.2.3.4.  Il sistema mostra la pagina “Vedi 
+contenuto” rispetto al link generato.  
+3.2.4.  ALTRIMENTI:  
+3.2.4.1.  Il sistema mostra il messaggio “Il link è 
+scaduto oppure è stato disabilitato dal creatore”.  
+3.2.4.2.  Visualizzatore clicca il pulsante “Ok”.  
+3.2.4.3.  Il sistema mostra la pagina di “login”.  
+3.3. ALTRIMENTI:  
+3.3.1.  Il sistema mostra il messaggio “Link non trovato”.  
+3.3.2.  Visualizzatore preme il pulsante “Ok”.  
+3.3.3.  Il sistema mostra la pagina di “login”.  
+4. ALTRIMENTI:  Requirements Analysis Document  Identità digitale AFAM  
+Pagina 79 di 113 4.1. Il sistema avvia il caso d’uso “Errore caduta connessione”.  
+4.2. SE la connessione viene ripristinata:  
+4.2.1.  Il sistema avvia nuovamente questo caso d’uso.  
+Postcondizione  3.2.2.3. Il sistema ha mostrato la pagina "Vedi contenuto”.  
+3.2.3.4 Il sistema ha mostrato la pagina "Vedi contenuto”.  
+3.2.4.3. Il sistema ha mostrato la pagina "Login”.  
+4.2.1. Il sistema ha avviato il caso d’uso “Errore apertura link”.  
+Extension point  Caso d’uso di caduta connessione.  
+Note  3. Il sistema si limita ad effettuare un “ping” al DBMS.  
+3.2. Il sistema rileva il link “corretto” mediante l’URL e il token posto nell’header HTTP, 
+inoltre, il token viene verificato con quello trovato nel database (se il DBMS torna una 
+risposta vuota, allora il link non esiste e non può ricondurre ad alcun ele mento del sistema).  
+3.2.3.2. Il DBMS si occupa di modificare tutte le occorrenze di quel link, mantenendo 
+comunque tutte le caratteristiche fornite dall’utente.  
+3.2.4.3/3.3.3. Poiché visualizzatore non è registrato, il sistema fornisce una delle uniche 
+pagine visibili anche agli utenti privi di account.  
+4. Non vi è una condizione di “altrimenti” visto che il caso d’uso “Errore di connessione” 
+prevede il “freeze” del sistema.  
+4.2.1. Il sistema ricarica il caso d’uso per cercare di verificare ed eventualmente correggere 
+il link.  
+ 
+4.1.13.6 Errore Caduta Di Connessione  
+Nome  ERRORE CADUTA DI CONNESSIONE  
+ID ERRORE_CADUTA_CONNESSIONE  
+Attori  Utente AFAM, DBMS  
+Precondizioni  Il sistema ha rilevato un errore di connessione.  
+Flusso degli eventi  1. Il sistema notifica all’Utente AFAM il messaggio di errore “Errore di 
+connessione”.  
+2. L’Utente AFAM preme il pulsante “Ok”.  
+3. FINCHE’ Il DBMS non fornisce risposta positiva, per un numero massimo di 
+cinque tentativi:  
+3.1. Il sistema contatta il DBMS verificando lo stato del Database.  
+3.2. SE il sistema non ottiene risposta:  
+3.2.1.  Il sistema incrementa il numero di tentativi rimasti.  
+3.2.2.  Il sistema attende un tempo casuale quadratico 
+prima di ritentare la connessione.  
+3.3. ALTRIMENTI:  
+3.3.1.  Il sistema interrompe la verifica della connessione.  
+4. Il sistema verifica il numero di tentativi.  
+5. SE il numero di tentativi di riconnessione è cinque:  
+5.1. Il sistema mostra all’Utente AFAM il messaggio “Errore di sistema 
+durante la connessione”.  
+5.2. Il sistema procede al riavvio.  
+6. ALTRIMENTI:  
+6.1. Il sistema mostra il messaggio “Connessione ripristinata”.  
+6.2. L’Utente AFAM preme il pulsante “Ok”.  
+6.3. Il sistema ricarica il caso d’uso che ha generato l’errore.  
+Postcondizione  5.3. Il sistema ha ricaricato il caso d’uso che ha generato l’errore.  Requirements Analysis Document  Identità digitale AFAM  
+Pagina 80 di 113 6.3. Il sistema ha ricaricato il caso d’uso che ha generato l’errore.  
+Note  3.2.2. Il tempo atteso dal sistema segue l’andamento della funzione; il valore di base ‘x’ 
+viene generato alla prima iterazione. Questo tipo di approccio cerca di diluire la possibilità 
+di tentativi di connessione successivi con tempo troppo breve: è impro babile che un 
+sistema offline riesca a tornare online in pochi secondi.  
+5.2. La notifica ai “tecnici” non è da intendere come “notifica ad un attore tecnico”, poiché 
+questo non è stato previsto, bensì come tentativo ultimo da parte del sistema di richiedere 
+il riavvio della propria infrastruttura.  
+3.3.1. L’affermazione “Il sistema interrompe” è svolta mediante l’ausilio della keyword 
+“break”, adattata al linguaggio di programmazione scelto. Non è da intendersi come 
+“goto”.  
+5.2. L’affermazione “il sistema procede al riavvio” è stata pensata per tentare un riavvio 
+pulito e un reset delle connessioni. Poichè l’applicazione è stata progettata con modello 
+client -server, è evidente che, qualora il sistema non riesca a connettersi al DBMS, ciò si 
+ripercuote su tutti i client collegati al server, in quel dato momento, rendendo impossibile 
+lo svolgimento delle normali operazioni del sistema.  
+4.2.1. L’utente non può eseguire nessuna azione: l’unico messaggio che vede è “Errore di 
+sistema durante la connessione”, esso non può interagire visto che il sistema esegue un 
+riavvio. Altresì questo punto non ha post condizione a causa della necessità di  
+manutenzione.  
+4.3./5.3. Il sistema ha come post condizione il “ritorno al caso d’uso originale”, s’intende 
+che il sistema esegue questo flusso come se fosse una funzione, per tanto con un valore di 
+ritorno. In tal senso, il caso d’uso chiamante riesce ad operare coerent emente rispetto 
+all’errore di connessione.  
+NB: il caso d’uso chiamante è sempre un caso d’uso “ERRORE”.  
+4.1.13.7 Errore Visualizza Contenuti  
+Nome  ERRORE VISUALIZZA CONTENUTI  
+ID VISUALIZZA_CONTENUTI_ERROR  
+Attori  Visualizzatore, DBMS  
+Precondizioni  Visualizzatore ha richiesto l’accesso a una sezione di contenuti (es. tramite lista contenuti 
+di un profilo o tramite link condiviso).  
+Flusso degli eventi  1. Il sistema invia una richiesta al DBMS per recuperare i dati dei contenuti 
+richiesti.  
+2. SE Il sistema riceve una risposta di errore dal DBMS (ad esempio se il DB è 
+irraggiungibile):  
+2.1. Il sistema esegue il caso d’uso “ERRORE DI CONNESSIONE”.  
+2.2. SE la connessione viene ripristinata:  
+2.2.1.  Il sistema mostra a schermo il messaggio 
+“connessione ripristinata con successo”.  
+2.2.2.  Visualizzatore preme “OK”.  
+2.2.3.  Il sistema mostra la pagina homepage.  
+3. ALTRIMENTI SE: Il sistema riceve una risposta di errore dal Server.  
+3.1. Il sistema mostra a schermo il messaggio di errore “Si è verificato un 
+errore tecnico. Riprovare più tardi”  
+3.2. Visualizzatore preme “OK”.  
+3.3. Il sistema mostra la pagina homepage.  
+Sequenze alternative  Caduta connessione: gestita tramite extension point verso il caso d’uso «Comportamento 
+eccezionale — Caduta Connessione».  
+Postcondizione  2.2.3 / 3.3 Il sistema ha mostrato la pagina homepage.  Requirements Analysis Document  Identità digitale AFAM  
+Pagina 81 di 113 Note  2.2. Il sistema, dopo aver avviato il caso d’uso ERRORE DI CONNESSIONE, attende il 
+risultato. Tale caso d’uso torna una risposta negativa, se la connessione col DBMS è attiva 
+o si riesce a ripristinare, altrimenti, il sistema procede al riavvio. Per tal mo tivo non è 
+presente, nel punto 2.2 un ALTRIMENTI.  
+ Requirements Analysis Document  Identità digitale AFAM  
+Pagina 82 di 113 4.2 Modello degli oggetti  
+Il modello degli oggetti descrive le classi entità individuate a partire dall’analisi dei casi d’uso e dei 
+diagrammi di sequenza, con i relativi attributi e metodi. Oltre alla classe Utente AFAM, l’applicazione 
+dell’euristica di Abbott ai flussi degli even ti ha portato a reificare come classi entità anche Contenuto, 
+Gruppo, Link e Token. Di seguito si riportano le schede delle singole classi, le relazioni tra di esse e una 
+nota di sintesi sugli oggetti boundary e control.  
+4.2.1 Classi Utente AFAM e Profilo  
+L’identità digitale dell’Utente AFAM è modellata separando l’account, che raccoglie le informazioni di 
+autenticazione, dalla classe Profilo, che rappresenta l’identità rappresentativa dello studente (dati anagrafici e 
+accademici, presentazione, portfolio) ed è la risorsa soggetta a controllo di visibilità e a condivisione. Le due classi 
+sono legate da una relazione uno -a-uno. 
+UTENTE AFAM  
+Attributi  
+UUID, username, email, password, has2FA (B), 2FAMethod, 
+registrationWithIdentityProvider (B), identityProvider  
+Metodi  
+registration(), login(), logout(), validateCredential(), generateAccessToken(), 
+modifyUserCredential(), recoveryPassword(), recoveryEmail()  
+PROFILO  
+Attributi  
+ID, Utente AFAM, nome, cognome, dataNascita, codiceFiscale, citta, indirizzo, 
+telefono, istituzione, dominioIstituzionale, matricola, corsoDiStudi, 
+annoAccademico, descrizione, interessi (lista), competenze (lista), policyVisibilita 
+(Tutti/Privato/categori a), fotoProfilo  
+Metodi  
+getProfilo(), modifyAnagrafica(), modifyDatiAccademici(), modifyAltreInformazioni(), 
+aggiornaVisibilitaProfilo(), calculateCF(), validateBirthday()  
+Nota: la notazione (B) indica un attributo di tipo booleano; la notazione « value object » indica un oggetto -valore privo di 
+identità propria, contenuto nel Profilo.  
+4.2.2 Classe Contenuto  
+CONTENUTO  
+Attributi  
+id, titolo, allegati (collezione di percorsi/file),  
+tipo (audio/video/immagine/elaborato/curriculum),  
+autori (lista), collaboratori (lista), descrizione,  
+policyVisibilita (Tutti/Privato/Nessuno/categoria), numeroVisualizzazioni, 
+linkAssociati, visualizzazioni  
+Metodi  
+caricaContenuto(), modificaContenuto(), eliminaContenuto(),  
+aggiungiAutore(), aggiungiCollaboratore(), rimuoviAllegato(),  
+aggiornaVisibilita(), getAnteprima(), checkFormato(),  
+getNumeroVisualizzazioni(), getLink(), setLink()  Requirements Analysis Document  Identità digitale AFAM  
+Pagina 83 di 113 Nota: linkAssociati è implementato mediante struttura dati adeguata, poiché un contenuto può essere condiviso più volte. 
+getLink() e setLink() provvedono a ottenere tutti i link associati a quel contenuto e ad aggiungere un nuovo link per il 
+contenuto.  
+4.2.3 Classe Gruppo  
+GRUPPO  
+Attributi  
+id, nome, listaContenuti, linkAssociati  
+Metodi  
+creaGruppo(), aggiungiContenuto(), rimuoviContenuto(), groupExist(), getContenuti(), 
+eliminaGruppo(), getLink(), setLink()  
+Nota: linkAssociati è implementato mediante struttura dati adeguata, poiché un contenuto può essere condiviso più volte. 
+getLink() e setLink() provvedono a ottenere tutti i link associati a quel contenuto e ad aggiungere un nuovo link per il 
+contenuto. Ino ltre, listaContenuti indica un insieme di contenuti che afferiscono al gruppo. Quando l’utente condivide un 
+gruppo, deve essere comunque aggiunto il link (setLink()) relativo al gruppo, per ogni contenuto associato.  
+4.2.4 Classe Link  
+LINK  
+Attributi  
+identificatoreLink (identificatore univoco), dataScadenza,  
+risorsaAssociata (Profilo/Contenuto/Gruppo),  
+stato (attivo/disabilitato), impostazioni, numeroVisualizzazioni  
+Metodi  
+generaLink(), disabilitaLink(), modificaImpostazioni(),  
+checkLink(), isAttivo(), incrementaVisualizzazioni()  
+4.2.5 Classe Token  
+TOKEN  
+Attributi  
+valore, scadenza, tipo (registrazione/2FA/recuperoPassword)  
+Metodi  
+generaToken(), checkToken(), isScaduto(), inviaViaMail()  
+4.2.6 Relazioni tra le classi  
+La tabella seguente riepiloga le relazioni tra le classi entità individuate, con le relative cardinalità.  
+Relazione  Cardinalità  Origine  
+Utente AFAM — Profilo  1 .. 1  Ogni account possiede un’unica identità 
+(profilo).  
+Profilo — Contenuto  1 .. *  Il profilo raccoglie i contenuti (portfolio) 
+dell’identità.  
+Profilo — Gruppo  1 .. *  I gruppi sono creati nell’ambito del profilo.  
+Gruppo — Contenuto  * .. * Un gruppo aggrega due o più contenuti.  
+Profilo / Contenuto / Gruppo — Link 1 .. *  Una risorsa condivisibile può avere più link di 
+condivisione.  Requirements Analysis Document  Identità digitale AFAM  
+Pagina 84 di 113 Utente AFAM — Token  1 .. *  Token per registrazione, 2FA e recupero 
+credenziali.  
+ 
+4.2.7 Oggetti boundary e control  
+Coerentemente con il pattern Boundary -Control -Entity adottato nei diagrammi di sequenza, alle classi 
+entità si affiancano gli oggetti control individuati (ContentControl, searchControl, authControl, 
+RecuperoControl, registrationControl, ViewControl) e i re lativi oggetti boundary.  
+4.2.8 Diagrammi delle classi  
+Per ogni macro -area si riporta il diagramma delle classi che integra, secondo il pattern Boundary -
+Control -Entity, gli oggetti boundary e control individuati nei diagrammi di sequenza con le classi 
+entità descritte nei paragrafi precedenti. La classe DBMSBo undary rappresenta lo strato di 
+persistenza condiviso; le boundary di messaggistica transitoria (MessageBoundary, 
+ErrorPopupBoundary, SuccessPopupBoundary) sono specializzazioni semantiche del medesimo 
+concetto. Il primo diagramma riporta le sole classi en tità con le relative relazioni.  
+4.2.8.1 Entità  
+Diagramma delle classi entità con i relativi attributi, metodi e cardinalità.  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 85 di 113 4.2.8.2 Gestione Account - Registrazione  
+ 
+Classi boundary, control ed entità dei casi d’uso di registrazione  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 86 di 113 4.2.8.3 Gestione Account – Accesso  
+ 
+Classi boundary, control ed entità dei casi d’uso di autenticazione  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 87 di 113 4.2.8.4 Gestione Account – Logout  
+ 
+Classi boundary, control ed entità dei casi d’uso di logout  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 88 di 113 4.2.8.5 Gestione Account – Recupero Password  
+ 
+Classi boundary, control ed entità dei casi d’uso di recupero credenziali  
+ 
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 89 di 113 4.2.8.6 Gestione Profilo  
+ 
+Classi coinvolte nella modifica di credenziali, password, dati anagrafici e altri dati del profilo.  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 90 di 113 4.2.8.7 Caricamento Contenuti  
+ 
+Classi coinvolte nel caricamento di un nuovo contenuto, nell’inserimento dei dati e nell’aggiunta di autori e collaboratori.  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 91 di 113 4.2.8.8 Gestione Contenuti  
+ 
+Classi coinvolte nella modifica, eliminazione, rimozione allegati, aggiornamento visibilità e raggruppamento dei contenuti.  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 92 di 113 4.2.8.9 Visualizzazione  
+ 
+Classi coinvolte nella visualizzazione dei contenuti da parte del Visualizzatore.  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 93 di 113 4.2.8.10 Ricerca  
+ 
+Classi coinvolte nella ricerca di utenti e contenuti.  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 94 di 113 4.2.8.11 Condivisione  
+ 
+Classi coinvolte nella generazione, impostazione, visualizzazione, disabilitazione dei link e nella condivisione diretta.  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 95 di 113 4.2.8.12 Comportamento eccezionale  
+ 
+Classi coinvolte nella gestione degli errori (ricerca, condivisione, creazione/apertura link, profilo) e nella caduta di 
+connessione  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 96 di 113 MOCKUP  
+HOMEPAGE  
+ 
+Nota: questa è la schermata di default del sito, se l’utente ha effettuato il login, la schermata non 
+mostrerà “login”, “accedi” e “registrati”; inoltre, vi saranno testi, immagini e funzionalità 
+parzialmente diverse.  
+ 
+ 
+ 
+ 
+ 
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 97 di 113  
+LOGIN  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+REGISTRAZIONE  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 98 di 113 OTP -2FA 
+ 
+ 
+ 
+RECUPERO CREDENZIALI  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 99 di 113 PROFILO  
+ 
+ 
+ 
+MODIFICA PASSWORD  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 100 di 113 MODIFICA CREDENZIALI  
+ 
+ 
+ 
+MODIFICA ANAGRAFICA  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 101 di 113 LISTA CONTENUTI  
+ 
+ 
+CONTENUTI AGGREGA  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 102 di 113  
+CARICA CONTENUTO  
+ 
+DETTAGLI CONTENUTO  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 103 di 113  
+CONTENUTO PUBBLICO  
+ 
+ 
+ 
+PROFILO PUBBLICO  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 104 di 113 CONDIVISIONE LINK  
+ 
+ 
+ 
+RICERCA RISULTATI  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 105 di 113 LISTA GRUPPI  
+ 
+ 
+DETTAGLIO GRUPPO  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 106 di 113 LINK ATTIVI  
+ 
+ 
+ 
+ERRORE 404  
+Requirements Analysis Document  Identità digitale AFAM  
+Pagina 107 di 113 ERRORE SERVER  
+ 

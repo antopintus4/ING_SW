@@ -1,6 +1,7 @@
 package com.afam.identity.entity;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -38,9 +39,11 @@ public class Profilo {
     @Column(name = "foto_profilo")
     private String fotoProfilo;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "profilo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Contenuto> contenuti;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "profilo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Gruppo> gruppi;
 

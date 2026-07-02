@@ -23,6 +23,11 @@ export class EditPasswordBoundaryComponent {
   constructor(private profileService: ProfileService, private router: Router) {}
 
   save() {
+    if (this.passwords.newPassword.length < 12) {
+      this.errorMessage = 'La password deve contenere almeno 12 caratteri.';
+      return;
+    }
+
     if (this.passwords.newPassword !== this.passwords.confirmPassword) {
       this.errorMessage = 'La nuova password e la conferma non coincidono.';
       return;

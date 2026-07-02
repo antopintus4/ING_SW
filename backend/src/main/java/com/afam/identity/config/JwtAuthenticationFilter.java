@@ -44,7 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         jwt = authHeader.substring(7);
         
         // Verifica Blacklist
-        if (tokenDBMSBoundary.findByValore(jwt).isPresent()) {
+        if (tokenDBMSBoundary.findByValoreAndTipo(jwt, "JWT_BLACKLIST").isPresent()) {
             filterChain.doFilter(request, response);
             return;
         }

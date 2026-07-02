@@ -11,7 +11,7 @@ public class Token {
     @GeneratedValue(strategy = GenerationType.UUID)
     private java.util.UUID id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String valore;
 
     @Column(nullable = false)

@@ -1,6 +1,7 @@
 package com.afam.identity.entity;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "allegato")
@@ -13,6 +14,7 @@ public class Allegato {
     @Column(name = "url_file", nullable = false)
     private String urlFile;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "contenuto_id", nullable = false)
     private Contenuto contenuto;
