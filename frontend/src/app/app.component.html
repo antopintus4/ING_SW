@@ -1,0 +1,55 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+  <div class="container">
+    <a class="navbar-brand" routerLink="/">Identità Digitale AFAM</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/">Home</a>
+        </li>
+        <li class="nav-item" *ngIf="isAuthenticated">
+          <a class="nav-link" routerLink="/profile">Profilo</a>
+        </li>
+        <li class="nav-item" *ngIf="isAuthenticated">
+          <a class="nav-link" routerLink="/content">Contenuti</a>
+        </li>
+        <li class="nav-item" *ngIf="isAuthenticated">
+          <a class="nav-link" routerLink="/groups">Gruppi</a>
+        </li>
+        <li class="nav-item" *ngIf="isAuthenticated">
+          <a class="nav-link" routerLink="/links">Condivisione</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav">
+        <ng-container *ngIf="isAuthenticated">
+          <li class="nav-item me-3 d-flex align-items-center">
+            <form class="d-flex" (submit)="onSearch($event)">
+              <input class="form-control form-control-sm me-2" type="search" name="q" placeholder="Cerca utenti, file..." aria-label="Search" minlength="2">
+              <button class="btn btn-sm btn-outline-light" type="submit">Cerca</button>
+            </form>
+          </li>
+        </ng-container>
+
+        <ng-container *ngIf="!isAuthenticated">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/login">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link btn btn-outline-light" routerLink="/register">Registrati</a>
+          </li>
+        </ng-container>
+        <ng-container *ngIf="isAuthenticated">
+          <li class="nav-item">
+            <button class="btn btn-outline-danger" (click)="logout()">Logout</button>
+          </li>
+        </ng-container>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main class="container">
+  <router-outlet></router-outlet>
+</main>

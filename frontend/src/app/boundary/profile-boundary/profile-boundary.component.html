@@ -1,0 +1,89 @@
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Il tuo Profilo</h2>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+  <div class="row">
+    <!-- Colonna Sinistra: Dati -->
+    <div class="col-md-8">
+      <div class="card shadow-sm mb-4" *ngIf="profilo">
+        <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Dati Personali</h5>
+          <a routerLink="/profile/edit-anagrafica" class="btn btn-sm btn-light">Modifica Anagrafica</a>
+        </div>
+        <div class="card-body">
+          <div class="row mb-2">
+            <div class="col-sm-4 text-muted">Nome e Cognome</div>
+            <div class="col-sm-8 fw-bold">{{ profilo.nome }} {{ profilo.cognome }}</div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-sm-4 text-muted">Data di Nascita</div>
+            <div class="col-sm-8">{{ profilo.dataNascita || 'Non specificata' }}</div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-sm-4 text-muted">Codice Fiscale</div>
+            <div class="col-sm-8">{{ profilo.codiceFiscale || 'Non specificato' }}</div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-sm-4 text-muted">Città</div>
+            <div class="col-sm-8">{{ profilo.citta || 'Non specificata' }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow-sm" *ngIf="profilo?.utenteAfam">
+        <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Credenziali e Accesso</h5>
+          <div>
+            <a routerLink="/profile/edit-credentials" class="btn btn-sm btn-dark me-2">Modifica Credenziali</a>
+            <a routerLink="/profile/edit-password" class="btn btn-sm btn-danger">Cambia Password</a>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row mb-2">
+            <div class="col-sm-4 text-muted">Username</div>
+            <div class="col-sm-8 fw-bold">{{ profilo.utenteAfam.username }}</div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-sm-4 text-muted">Email</div>
+            <div class="col-sm-8">{{ profilo.utenteAfam.email }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Colonna Destra: Sicurezza e 2FA -->
+    <div class="col-md-4">
+      <div class="card shadow-sm border-success">
+        <div class="card-body">
+          <h5 class="card-title">Impostazioni Sicurezza</h5>
+          <p class="card-text">Abilita l'Autenticazione a Due Fattori (2FA) via Email per proteggere ulteriormente il
+            tuo account.</p>
+
+          <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+          <!-- Step 1: Pulsante Attiva -->
+          <div *ngIf="setupStep === 'idle'">
+            <button class="btn btn-warning" (click)="onSetup2fa()">Configura 2FA</button>
+          </div>
+
+          <!-- Step 2: Inserimento OTP -->
+          <div *ngIf="setupStep === 'awaiting_otp'" class="mt-3 p-3 bg-light rounded">
+            <p>Abbiamo inviato un PIN di verifica al tuo indirizzo email. Inseriscilo qui sotto per confermare
+              l'attivazione.</p>
+            <div class="d-flex w-50">
+              <input type="text" class="form-control me-2" [(ngModel)]="otpCode" placeholder="123456" maxlength="6">
+              <button class="btn btn-primary" (click)="onConfirm2fa()">Conferma OTP</button>
+            </div>
+          </div>
+
+          <!-- Step 3: Successo -->
+          <div *ngIf="setupStep === 'success'" class="alert alert-success mt-3">
+            La verifica in due passaggi (2FA) è stata abilitata con successo per questo account!
+          </div>
+
+        </div>
+      </div>
+    </div>

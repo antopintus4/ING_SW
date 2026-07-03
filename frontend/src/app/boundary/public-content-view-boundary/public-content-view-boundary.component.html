@@ -1,0 +1,83 @@
+<div class="container mt-5">
+  <div *ngIf="errorMessage" class="alert alert-danger text-center shadow-sm">
+    <i class="bi bi-exclamation-triangle-fill fs-4 d-block mb-2"></i>
+    {{ errorMessage }}
+    <div class="mt-3">
+      <a routerLink="/search" class="btn btn-outline-danger btn-sm">Torna alla Ricerca</a>
+    </div>
+  </div>
+
+  <div *ngIf="contenuto" class="card shadow">
+    <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+      <h4 class="mb-0"><i class="bi bi-file-earmark-text me-2"></i>{{ contenuto.titolo }}</h4>
+      <span class="badge bg-light text-dark">{{ contenuto.tipo }}</span>
+    </div>
+    <div class="card-body p-4">
+      <div class="mb-4">
+        <h5>Descrizione</h5>
+        <p class="text-muted">{{ contenuto.descrizione || 'Nessuna descrizione.' }}</p>
+      </div>
+
+      <div class="row mt-3 mb-3 border-start border-4 border-success ps-3">
+        <div class="col-md-4">
+          <p class="mb-1"><i class="bi bi-people me-2 text-success"></i><strong>Autori:</strong><br> <span class="text-muted">{{ contenuto.autori || 'Nessuno specificato' }}</span></p>
+        </div>
+        <div class="col-md-4">
+          <p class="mb-1"><i class="bi bi-person-badge me-2 text-success"></i><strong>Collaboratori:</strong><br> <span class="text-muted">{{ contenuto.collaboratori || 'Nessuno specificato' }}</span></p>
+        </div>
+        <div class="col-md-4">
+          <p class="mb-1"><i class="bi bi-eye me-2 text-success"></i><strong>Visualizzazioni:</strong><br> <span class="text-muted">{{ contenuto.numeroVisualizzazioni || 0 }}</span></p>
+        </div>
+      </div>
+
+      <div *ngIf="mediaUrl" class="mt-4 text-center bg-light p-3 rounded mb-4">
+        <ng-container [ngSwitch]="true">
+          <!-- Image -->
+          <img *ngSwitchCase="mediaType.startsWith('image/')" [src]="mediaUrl" class="img-fluid rounded" style="max-height: 500px;" alt="Anteprima">
+          
+          <!-- Video -->
+          <video *ngSwitchCase="mediaType.startsWith('video/')" [src]="mediaUrl" controls class="w-100 rounded" style="max-height: 500px;">
+            Il tuo browser non supporta il tag video.
+          </video>
+          
+          <!-- Audio -->
+          <audio *ngSwitchCase="mediaType.startsWith('audio/')" [src]="mediaUrl" controls class="w-100">
+            Il tuo browser non supporta il tag audio.
+          </audio>
+          
+          <!-- PDF -->
+          <object *ngSwitchCase="mediaType === 'application/pdf'" [data]="mediaUrl" type="application/pdf" class="w-100 rounded" style="height: 600px;">
+            <p>Il tuo browser non ha un plugin PDF. <a [href]="mediaUrl">Clicca qui per scaricare il PDF.</a></p>
+          </object>
+          
+          <!-- Default -->
+          <div *ngSwitchDefault class="alert alert-info mb-0">
+            <i class="bi bi-file-earmark me-2"></i> L'anteprima per questo tipo di file ({{ mediaType }}) non è supportata nativamente. Utilizza il tasto "Scarica".
+          </div>
+        </ng-container>
+      </div>
+
+      <hr>
+      <h5>Allegati</h5>
+      <div *ngIf="!contenuto.allegati || contenuto.allegati.length === 0" class="text-muted small">
+        Nessun allegato presente.
+      </div>
+      <ul class="list-group mt-2" *ngIf="contenuto.allegati && contenuto.allegati.length > 0">
+        <li *ngFor="let a of contenuto.allegati" class="list-group-item d-flex justify-content-between align-items-center">
+          <span><i class="bi bi-paperclip me-2"></i>{{ a.urlFile }}</span>
+          <div>
+            <button class="btn btn-sm btn-info text-white me-2" (click)="view(a.id)">
+              <i class="bi bi-eye"></i> Visualizza
+            </button>
+            <button class="btn btn-sm btn-primary" (click)="download(a.id, a.urlFile)">
+              <i class="bi bi-download"></i> Scarica
+            </button>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="card-footer bg-light text-end">
+      <a routerLink="/search" class="btn btn-outline-secondary">Torna indietro</a>
+    </div>
+  </div>
+</div>

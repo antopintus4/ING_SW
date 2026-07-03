@@ -1,0 +1,72 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0">Modifica Dati Anagrafici</h4>
+        </div>
+        <div class="card-body">
+          <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+          <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+
+          <form (ngSubmit)="save()">
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label">Nome *</label>
+                <input type="text" class="form-control" name="nome" [(ngModel)]="anagrafica.nome" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Cognome *</label>
+                <input type="text" class="form-control" name="cognome" [(ngModel)]="anagrafica.cognome" required>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-4">
+                <label class="form-label">Sesso *</label>
+                <select class="form-select" name="sesso" [(ngModel)]="sesso">
+                  <option value="" disabled selected>Seleziona</option>
+                  <option value="M">Maschio</option>
+                  <option value="F">Femmina</option>
+                </select>
+                <small class="text-muted" style="font-size: 0.75rem;">(Richiesto solo per ricalcolo CF)</small>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Data di Nascita</label>
+                <input type="date" class="form-control" name="dataNascita" [(ngModel)]="anagrafica.dataNascita">
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Codice Fiscale</label>
+                <div class="input-group">
+                  <input type="text" class="form-control" name="codiceFiscale" [(ngModel)]="anagrafica.codiceFiscale">
+                  <button class="btn btn-outline-secondary" type="button" (click)="generaCF()">Genera CF</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label">Città</label>
+                <input type="text" class="form-control" name="citta" [(ngModel)]="anagrafica.citta">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Telefono</label>
+                <input type="text" class="form-control" name="telefono" [(ngModel)]="anagrafica.telefono">
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label">Indirizzo di Residenza</label>
+              <input type="text" class="form-control" name="indirizzo" [(ngModel)]="anagrafica.indirizzo">
+            </div>
+
+            <div class="d-flex justify-content-end">
+              <a routerLink="/profile" class="btn btn-secondary me-2">Annulla</a>
+              <button type="submit" class="btn btn-primary" [disabled]="!anagrafica.nome || !anagrafica.cognome">Salva Modifiche</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

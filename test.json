@@ -1,0 +1,11 @@
+{
+  "username": "curltest",
+  "email": "curl@test.com",
+  "password": "Password123!",
+  "nome": "Mario",
+  "cognome": "Rossi",
+  "sesso": "M",
+  "dataNascita": "1990-10-10",
+  "cittaNascita": "ROMA",
+  "codiceFiscale": "RSSMRA90R10H501F"
+}
