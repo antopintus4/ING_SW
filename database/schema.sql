@@ -15,7 +15,7 @@ CREATE TABLE utente_afam (
 -- Collegata 1 a N con l'Utente (un utente può avere più token attivi/scaduti).
 CREATE TABLE token (
     id UUID PRIMARY KEY,
-    valore VARCHAR(255) NOT NULL UNIQUE,
+    valore VARCHAR(1024) NOT NULL UNIQUE,
     scadenza TIMESTAMP NOT NULL,
     tipo VARCHAR(50) NOT NULL,
     utente_uuid UUID NOT NULL, -- Allineato a UUID per la Foreign Key

@@ -55,6 +55,14 @@ public class AuthControl {
         Optional<UtenteAfam> utenteOpt = utenteAfamDBMSBoundary.findByUsername(request.getUsername());
         if (utenteOpt.isPresent()) {
             UtenteAfam utente = utenteOpt.get();
+            
+            // Verifica se l'account ha un token di registrazione attivo (non verificato)
+            List<Token> regTokens = tokenDBMSBoundary.findByUtenteAfamAndTipo(utente, "registrazione");
+            boolean isUnverified = regTokens.stream().anyMatch(t -> t.getScadenza().isAfter(LocalDateTime.now()));
+            if (isUnverified) {
+                return ResponseEntity.status(401).body("Account non verificato. Completa la registrazione con l'OTP inviato via email.");
+            }
+
             if (Boolean.TRUE.equals(utente.getHas2fa())) {
                 // Genera OTP e invia via email
                 String otp = emailService.generateOtp();

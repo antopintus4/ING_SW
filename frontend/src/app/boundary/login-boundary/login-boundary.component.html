@@ -28,8 +28,12 @@
               </div>
             </div>
             
-            <button type="submit" class="btn btn-primary w-100 mb-3" [disabled]="loginForm.invalid">
+            <button type="submit" class="btn btn-primary w-100 mb-2" [disabled]="loginForm.invalid">
               Accedi
+            </button>
+            
+            <button type="button" class="btn btn-outline-primary w-100 mb-3" disabled>
+              <i class="bi bi-shield-lock me-2"></i> Accedi con Digital ID Provider (SPID / CIE)
             </button>
             
             <hr class="my-4">

@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import CodiceFiscale from 'codice-fiscale-js';
+import { AppComponent } from '../../app.component';
 
 @Component({
   selector: 'app-registration-boundary',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './registration-boundary.component.html',
   styleUrl: './registration-boundary.component.css'
 })
@@ -20,12 +21,15 @@ export class RegistrationBoundaryComponent implements OnInit {
   comuni: any[] = [];
   comuniFiltrati: any[] = [];
   currentStep: number = 1;
+  otpCode: string = '';
+  registeredUsername: string = '';
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private appComponent: AppComponent
   ) {
     this.registerForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(4)]],
@@ -97,22 +101,55 @@ export class RegistrationBoundaryComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.currentStep !== 3 || this.registerForm.invalid) {
-      this.errorMessage = 'Compila tutti i campi prima di confermare.';
+    if (this.currentStep !== 3) {
+      return;
+    }
+
+    this.errorMessage = '';
+    this.successMessage = '';
+    const username = this.registerForm.get('username')?.value;
+
+    this.authService.register(this.registerForm.value).subscribe({
+      next: (res) => {
+        this.registeredUsername = username;
+        this.appComponent.messageBoundary.sendMessage(
+          "Registrazione profilo avvenuta con successo. Controllare la mail per confermare l'account.",
+          () => {
+            this.currentStep = 4;
+          }
+        );
+      },
+      error: (err) => {
+        this.errorMessage = err.error || 'Errore durante la registrazione. Riprova.';
+      }
+    });
+  }
+
+  onVerifyOtp() {
+    if (!this.otpCode || !this.otpCode.match('^[0-9]{6}$')) {
+      this.errorMessage = 'Inserisci un codice OTP valido di 6 cifre.';
       return;
     }
 
     this.errorMessage = '';
     this.successMessage = '';
 
-    this.authService.register(this.registerForm.value).subscribe({
-      next: (res) => {
-        this.successMessage = res || 'Registrazione completata! Ora puoi effettuare il login.';
-        this.registerForm.reset();
-        setTimeout(() => this.router.navigate(['/login']), 2000);
+    this.authService.verifyRegistrationOtp(this.registeredUsername, this.otpCode).subscribe({
+      next: (res: any) => {
+        const msg = res.message || 'Registrazione completata e verificata con successo! Ora puoi effettuare il login.';
+        this.appComponent.messageBoundary.sendMessage(
+          msg,
+          () => {
+            this.registerForm.reset();
+            this.otpCode = '';
+            this.router.navigate(['/login']);
+          }
+        );
       },
       error: (err) => {
-        this.errorMessage = err.error || 'Errore durante la registrazione. Riprova.';
+        this.appComponent.messageBoundary.sendMessage(
+          err.error || 'Codice OTP errato o scaduto. Riprova.'
+        );
       }
     });
   }

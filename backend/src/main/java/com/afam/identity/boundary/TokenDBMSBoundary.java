@@ -13,4 +13,5 @@ public interface TokenDBMSBoundary extends JpaRepository<Token, java.util.UUID> 
     Optional<Token> findByValore(String valore);
     Optional<Token> findByValoreAndTipo(String valore, String tipo);
     List<Token> findByUtenteAfamAndTipoAndValore(UtenteAfam utenteAfam, String tipo, String valore);
+    List<Token> findByUtenteAfamAndTipo(UtenteAfam utenteAfam, String tipo);
 }

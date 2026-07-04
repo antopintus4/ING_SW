@@ -1,16 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { RouterOutlet, RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from './services/auth.service';
+import { MessageBoundaryComponent } from './boundary/message-boundary/message-boundary.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterModule, CommonModule],
+  imports: [RouterOutlet, RouterModule, CommonModule, MessageBoundaryComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
+  @ViewChild('messageBoundary') messageBoundary!: MessageBoundaryComponent;
   title = 'frontend';
   isAuthenticated = false;
 
@@ -25,9 +27,20 @@ export class AppComponent implements OnInit {
   }
 
   logout() {
-    this.authService.logout().subscribe(() => {
-      this.router.navigate(['/login']);
-    });
+    this.messageBoundary.showConfirmMessage(
+      "Sei sicuro di voler confermare l'uscita dall'account?",
+      () => {
+        this.authService.logout().subscribe({
+          next: () => {
+            this.router.navigate(['/login']);
+          },
+          error: () => {
+            this.authService.clearSession();
+            this.router.navigate(['/login']);
+          }
+        });
+      }
+    );
   }
 
   onSearch(event: any) {

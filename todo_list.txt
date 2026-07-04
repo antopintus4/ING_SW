@@ -1,0 +1,111 @@
+================================================================================
+          TO-DO LIST DI IMPLEMENTAZIONE - IDENTITÀ DIGITALE AFAM
+================================================================================
+Basato sull'analisi del Requirements Analysis Document (RAD), del System Design
+Document (SDD) e dell'Object Design Document (ODD) del progetto attuale.
+================================================================================
+
+[x] 1. PROCESSO DI REGISTRAZIONE E CONFERMA IDENTITÀ CON OTP (RAD 4.1.4.4)
+    [x] 1.1 [Backend] Modificare il flusso di registrazione in `RegistrationControl.java`:
+            - Invece di registrare l'utente come attivo, generare un token temporaneo (tipo "registrazione" in ODD) con scadenza a 10 minuti.
+            - Salvare il token nel DB e inviarlo via e-mail all'utente tramite `EmailService`.
+            - Creare l'endpoint `POST /api/registration/verify-otp` per convalidare il token, attivare l'utente e il suo profilo solo in caso di successo.
+    [x] 1.2 [Frontend] Aggiornare `RegistrationBoundaryComponent`:
+            - Aggiungere lo step finale (Step 4) per l'inserimento dell'OTP di conferma.
+            - Mostrare il form OTP e chiamare il nuovo endpoint di validazione prima di indirizzare l'utente alla schermata di Login.
+
+[x] 2. LOGIN CON DIGITAL ID PROVIDER (SPID / CIE) (RAD 4.1.4.2) [Pulsante Segnaposto inserito]
+    [x] 2.1 [Backend] Non richiesto dal professore (funzione esclusa).
+    [x] 2.2 [Frontend] Aggiungere il pulsante disabilitato di accesso tramite Digital ID Provider nella schermata di login principale.
+
+[ ] 3. MODIFICA CREDENZIALI E PASSWORD CON VERIFICA 2FA (RAD 4.1.12.1 / 4.1.12.2)
+    [ ] 3.1 [Backend] Aggiornare `ProfileControl.java` (`updateCredentials` e `updatePassword`):
+            - Se l'utente ha abilitato la 2FA, non applicare le modifiche direttamente.
+            - Generare un token a 8 cifre temporaneo (tipo "OTP_2FA" come previsto nell'ODD), salvarlo nel DB e inviarlo tramite e-mail al vecchio indirizzo dell'utente.
+            - Creare/gestire la conferma di tale token prima di applicare le modifiche su database.
+    [ ] 3.2 [Frontend] Aggiornare `EditCredentialsBoundaryComponent` ed `EditPasswordBoundaryComponent`:
+            - Aggiungere il pannello di inserimento del token a 8 cifre che viene mostrato solo se l'utente ha la 2FA attiva.
+
+[ ] 4. GESTIONE AVANZATA DEL PORTFOLIO E CARICAMENTO FILE (RAD 4.1.7)
+    [ ] 4.1 [Backend] Modificare l'endpoint `/api/contenuti/upload` in `UploadControl.java`:
+            - Modificare l'endpoint per accettare una lista/array di file (`MultipartFile[] files`) per supportare il caricamento simultaneo di più allegati per uno stesso contenuto (RAD 4.1.7.1).
+    [ ] 4.2 [Frontend] Aggiornare `UploadContentBoundaryComponent`:
+            - Abilitare la selezione e la visualizzazione in anteprima di più file contemporaneamente per uno stesso contenuto.
+            - Rilassare il vincolo sul file di descrizione (`selectedDescrizioneFile` non deve essere obbligatorio per abilitare l'invio del form).
+    [ ] 4.3 [Backend/Frontend] Vincolo di presenza file in Modifica Contenuto (RAD 4.1.7.3 / 4.1.8.3):
+            - Impedire in `EditContentBoundaryComponent` l'eliminazione dell'ultimo allegato di un contenuto se non ne viene contestualmente caricato un altro, garantendo la presenza di almeno un file/contenuto per ogni elemento.
+
+[ ] 5. FUNZIONALITÀ DI RAGGRUPPAMENTO MASSIVO (RAD 4.1.8.7)
+    [ ] 5.1 [Backend] Aggiungere un endpoint per l'aggregazione massiva in `ContentControl.java`:
+            - Permettere di ricevere una lista di ID contenuto ed associarli ad un gruppo in un'unica richiesta.
+    [ ] 5.2 [Frontend] Aggiornare `ContentManagementBoundaryComponent`:
+            - Integrare la selezione dei contenuti tramite checkbox nella lista.
+            - Aggiungere il pulsante "Raggruppa Contenuti" che consente di associare tutti gli elementi selezionati ad un gruppo esistente o di crearne uno nuovo (mostrando il relativo modal di creazione gruppo con i relativi campi).
+
+[ ] 6. SHARING E GESTIONE DELLE IMPOSTAZIONI DEI LINK CONDIVISI (RAD 4.1.9)
+    [ ] 6.1 [Backend] Estendere le impostazioni dei link in `ShareControl.java`:
+            - Consentire di salvare quali contenuti specifici del profilo o del gruppo includere nel link condiviso (salvando questa informazione nel campo `impostazioni` o tramite tabella di associazione).
+            - Creare l'endpoint `PUT /api/links/{identificatore}` per aggiornare le impostazioni del link (data scadenza, risorse incluse) dopo la sua generazione.
+    [ ] 6.2 [Frontend] Completare il componente `LinkSettingsBoundaryComponent`:
+            - Sviluppare la maschera grafica per la modifica della data di scadenza e la selezione/deselezione dei contenuti abilitati per lo specifico link.
+            - Collegare questo componente tramite un pulsante "Impostazioni" presente a fianco di ciascun link attivo in `ActiveLinksBoundaryComponent`.
+    [ ] 6.3 [Backend/Frontend] Allineare la Condivisione Diretta (RAD 4.1.9.3):
+            - [Backend] Modificare l'endpoint in `ShareControl.java` per accettare l'email o l'username del destinatario, verificare l'esistenza del destinatario nel DBMS ed inviare l'email con il link di condivisione solo se l'utente esiste. Altrimenti restituire errore 404 ("Destinatario non trovato").
+            - [Frontend] Aggiornare la maschera di condivisione per gestire l'inserimento di email o username e visualizzare i messaggi di conferma ed errore tramite `MessageBoundaryComponent`.
+
+[ ] 7. INCREMENTO DUALE DEL CONTATORE DI VISUALIZZAZIONE (RAD 4.1.11.2)
+    [ ] 7.1 [Backend] Aggiornare l'endpoint `/api/links/shared/{identificatore}` in `ShareControl.java`:
+            - Quando un link viene visualizzato con successo, oltre ad incrementare `link.numeroVisualizzazioni`, incrementare e salvare anche il contatore `numeroVisualizzazioni` sull'entità `Contenuto` collegata.
+
+[ ] 8. ORDINAMENTO CRONOLOGICO E DATA DI CARICAMENTO (RAD 4.1.8.1)
+    [ ] 8.1 [Database] Modificare la tabella `contenuto` in `schema.sql`:
+            - Aggiungere una colonna `data_caricamento` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP.
+    [ ] 8.2 [Backend] Aggiornare l'entità `Contenuto.java`:
+            - Aggiungere l'attributo `dataCaricamento` (LocalDateTime) con mapping JPA appropriato per consentire il corretto allineamento e ordinamento delle tabelle.
+            - Aggiornare `ContenutoDBMSBoundary` per recuperare i contenuti ordinati (`orderByDataCaricamentoDesc`).
+    [ ] 8.3 [Frontend] Aggiornare `ContentManagementBoundaryComponent`:
+            - Gestire la visualizzazione e l'ordinamento cronologico decrescente dei contenuti ricevuti.
+
+[ ] 9. PAGINAZIONE E FILTRAGGIO AVANZATO (RAD 4.1.8.1)
+    [ ] 9.1 [Backend] Predisporre la paginazione e il filtraggio in `ContentControl.java`:
+            - Aggiungere parametri di paginazione (page, size) all'endpoint `/api/contenuti`.
+            - Implementare il filtraggio per keyword caricando l'elenco delle parole chiave memorizzate in un file sul server come richiesto dai requisiti non funzionali.
+    [ ] 9.2 [Frontend] Aggiornare `ContentManagementBoundaryComponent`:
+            - Implementare la paginazione della lista in blocchi da 15 elementi (pulsanti Successivo/Precedente).
+            - Aggiungere la barra di ricerca testuale per keyword e i pulsanti per i filtri non testuali.
+
+[ ] 10. RICERCA CON PREFISSI E RICERCHE SPECIFICHE (RAD 4.1.10)
+    [ ] 10.1 [Backend] Estendere l'endpoint `/api/search` (corrispondente a `ricercaGlobale(q)` in ODD) in `SearchControl.java`:
+             - Rilevare la presenza di prefissi speciali nella query:
+               * `user:` -> ricerca specifica di un utente per nome/cognome/username (RAD 4.1.10.1).
+               * `group:` -> ricerca specifica di un gruppo per nome (RAD 4.1.10.2).
+               * `author:` -> ricerca specifica di contenuti per nome dell'autore (RAD 4.1.10.4).
+               * `collab:` (o `collaborator:`) -> ricerca specifica per collaboratore (RAD 4.1.10.5).
+             - Implementare la logica di ricerca specifica per i collaboratori (`Cerca Collaboratori`).
+    [ ] 10.2 [Frontend] Aggiornare la logica di invio query nella barra di ricerca:
+             - Riconoscere ed inviare correttamente i prefissi di ricerca specifici al backend.
+
+[ ] 11. ANAGRAFICA: RICALCOLO E ESTRAPOLAZIONE DATI DA CODICE FISCALE (RAD 4.1.12.3)
+    [ ] 11.1 [Backend] Aggiornare `ProfileControl.java` (`updateAnagrafica`):
+             - Se viene modificata la data di nascita o la città di nascita, ricalcolare automaticamente il Codice Fiscale dell'utente.
+             - Se viene modificato direttamente il Codice Fiscale, estrapolare la data di nascita corretta e la città di nascita corretta dal nuovo codice fiscale e aggiornare i relativi campi del profilo.
+
+[ ] 12. COMPLETAMENTO COMPONENTI ESTETICI E DI INTERFACCIA (RAD MOCKUPS)
+    [ ] 12.1 [Frontend] Implementare la Homepage (`HomeBoundaryComponent`):
+             - Creare l'intera interfaccia grafica definita nel mockup (hero section, spiegazione passo-passo del funzionamento, cards descrittive e inviti all'azione per AFAM e Visualizzatore).
+    [ ] 12.2 [Frontend] Completare `PreviewBoundaryComponent` e `MessageBoundaryComponent`:
+             - Fornire le interfacce per la visualizzazione dell'anteprima del contenuto e i popup per i messaggi di conferma/successo.
+    [ ] 12.3 [Backend/Frontend] Gestione Hobby e Skills:
+             - Allineare l'endpoint `/api/profile/other` e il componente `OtherEditsBoundaryComponent` per gestire correttamente il recupero e la memorizzazione persistente della lista di interessi (hobby) e competenze (skills).
+
+[ ] 13. GESTIONE CADUTA DI CONNESSIONE CON RETRY QUADRATICO (RAD 4.1.13.6)
+    [ ] 13.1 [Frontend] Implementare la logica in `errorInterceptor` e `ErrorMessageBoundaryComponent`:
+             - All'intercettazione di un errore di rete (status 0), congelare l'interfaccia utente (impedire la navigazione diretta).
+             - Avviare tentativi di riconnessione automatica in background ad intervalli di tempo casuali quadratici (generando un valore base compreso tra 200 e 5000 ms alla prima iterazione).
+             - In caso di riconnessione riuscita, ripristinare lo stato delle informazioni e reindirizzare automaticamente l'utente alla pagina in cui si trovava.
+    [ ] 13.2 [Backend] Gestire l'eccezione di caduta di connessione lato server:
+             - Annullare le operazioni pendenti su DB in caso di disconnessione improvvisa del DBMS ed eseguire un riavvio pulito delle connessioni se la connettività fallisce dopo 5 tentativi consecutivi.
+================================================================================
+
+
+Ricordandoti di rimanere allineato al 100% a RAD SDD e ODD, sequence diagram, flussi degli eventi come ti ho detto prima, affrontiamo il punto X della to-do list.

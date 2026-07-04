@@ -105,4 +105,8 @@ export class AuthService {
       localStorage.setItem('token', newToken);
     }
   }
+
+  verifyRegistrationOtp(username: string, otp: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/registration/verify-otp`, { username, otp });
+  }
 }

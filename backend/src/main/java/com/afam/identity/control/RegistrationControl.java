@@ -5,7 +5,13 @@ import com.afam.identity.entity.UtenteAfam;
 import com.afam.identity.entity.Profilo;
 import com.afam.identity.boundary.UtenteAfamDBMSBoundary;
 import com.afam.identity.boundary.ProfiloDBMSBoundary;
+import com.afam.identity.boundary.TokenDBMSBoundary;
+import com.afam.identity.entity.Token;
+import com.afam.identity.service.EmailService;
+import com.afam.identity.dto.OtpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,6 +38,12 @@ public class RegistrationControl {
 
     @Autowired
     private CodiceFiscaleValidator cfValidator;
+
+    @Autowired
+    private TokenDBMSBoundary tokenDBMSBoundary;
+
+    @Autowired
+    private EmailService emailService;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegistrationRequest request) {
@@ -99,6 +111,34 @@ public class RegistrationControl {
 
         profiloDBMSBoundary.save(p);
 
-        return ResponseEntity.ok(java.util.Collections.singletonMap("message", "Registrazione completata con successo"));
+        // Genera OTP e salva come token di attivazione
+        String otp = emailService.generateOtp();
+        Token regToken = new Token();
+        regToken.setValore(otp);
+        regToken.setScadenza(LocalDateTime.now().plusMinutes(10));
+        regToken.setTipo("registrazione");
+        regToken.setUtenteAfam(savedUtente);
+        tokenDBMSBoundary.save(regToken);
+
+        emailService.sendRegistrationOtpEmail(savedUtente.getEmail(), otp);
+
+        return ResponseEntity.ok(java.util.Collections.singletonMap("message", "Registrazione profilo avvenuta con successo. Controllare la mail per confermare l'account."));
+    }
+
+    @PostMapping("/verify-otp")
+    public ResponseEntity<?> verifyOtp(@RequestBody OtpRequest request) {
+        Optional<UtenteAfam> utenteOpt = utenteAfamDBMSBoundary.findByUsername(request.getUsername());
+        if (utenteOpt.isPresent()) {
+            UtenteAfam utente = utenteOpt.get();
+            List<Token> tokens = tokenDBMSBoundary.findByUtenteAfamAndTipoAndValore(utente, "registrazione", request.getOtp());
+            
+            for (Token t : tokens) {
+                if (t.getScadenza().isAfter(LocalDateTime.now())) {
+                    tokenDBMSBoundary.delete(t); // Consuma il token
+                    return ResponseEntity.ok(java.util.Collections.singletonMap("message", "Registrazione completata e verificata con successo."));
+                }
+            }
+        }
+        return ResponseEntity.status(400).body("Codice di verifica non valido o scaduto.");
     }
 }

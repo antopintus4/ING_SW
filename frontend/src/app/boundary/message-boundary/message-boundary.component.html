@@ -1,1 +1,21 @@
-<p>message-boundary works!</p>
+<div class="modal fade" id="messageBoundaryModal" tabindex="-1" aria-labelledby="messageBoundaryModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="messageBoundaryModalLabel">{{ title }}</h5>
+      </div>
+      <div class="modal-body text-center p-4">
+        <p class="fs-5 mb-0">{{ message }}</p>
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <ng-container *ngIf="type === 'confirm'">
+          <button type="button" class="btn btn-primary px-4 me-2" (click)="clickSi()">Sì</button>
+          <button type="button" class="btn btn-secondary px-4" (click)="clickNo()">No</button>
+        </ng-container>
+        <ng-container *ngIf="type === 'message'">
+          <button type="button" class="btn btn-primary px-5" (click)="clickOk()">Ok</button>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

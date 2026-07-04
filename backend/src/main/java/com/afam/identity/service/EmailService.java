@@ -49,4 +49,12 @@ public class EmailService {
         message.setText("Un utente ha condiviso la seguente risorsa con te: " + risorsa + "\nPuoi visualizzarla a questo link:\n" + linkCondivisione);
         mailSender.send(message);
     }
+
+    public void sendRegistrationOtpEmail(String toEmail, String otp) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(toEmail);
+        message.setSubject("Conferma Registrazione - AFAM Identity");
+        message.setText("Benvenuto in AFAM Identity. Il tuo codice di verifica per attivare l'account è: " + otp);
+        mailSender.send(message);
+    }
 }
