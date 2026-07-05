@@ -1,7 +1,12 @@
 <div class="container mt-5">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>I Tuoi Contenuti</h2>
-    <a routerLink="/content/upload" class="btn btn-primary">Carica Nuovo</a>
+    <div>
+      <button class="btn btn-outline-info me-2" (click)="openGroupModal()" [disabled]="selectedContentIds.size === 0">
+        <i class="bi bi-folder-plus me-1"></i> Raggruppa Contenuti
+      </button>
+      <a routerLink="/content/upload" class="btn btn-primary">Carica Nuovo</a>
+    </div>
   </div>
 
   <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
@@ -14,6 +19,9 @@
     <table class="table table-striped table-hover align-middle">
       <thead class="table-dark">
         <tr>
+          <th style="width: 45px;">
+            <input type="checkbox" class="form-check-input" (change)="toggleAll($event)" [checked]="isAllSelected()">
+          </th>
           <th>ID</th>
           <th>Titolo</th>
           <th>Tipo File</th>
@@ -23,33 +31,39 @@
       </thead>
       <tbody>
         <tr *ngFor="let c of contents">
+          <td>
+            <input type="checkbox" class="form-check-input" (change)="toggleSelection(c.id)"
+              [checked]="isSelected(c.id)">
+          </td>
           <td>{{ c.id }}</td>
           <td>{{ c.titolo }}</td>
           <td>{{ c.tipo }}</td>
           <td>
             <span class="badge bg-secondary">{{ c.policyVisibilita }}</span>
+            <span *ngIf="c.allegati && c.allegati.length > 1" class="badge bg-info ms-2"
+              title="Questo contenuto ha allegati multipli">
+              +{{ c.allegati.length - 1 }} File
+            </span>
           </td>
           <td class="text-end">
             <a [routerLink]="['/content/view', c.id]" class="btn btn-sm btn-outline-info me-2">Visualizza</a>
-            
-            <button class="btn btn-sm btn-outline-primary me-2" 
-                    *ngIf="c.allegati && c.allegati.length > 0" 
-                    (click)="view(c.allegati[0].id)">
+
+            <button class="btn btn-sm btn-outline-primary me-2" *ngIf="c.allegati && c.allegati.length > 0"
+              (click)="view(c.allegati[0].id)">
               Anteprima File
             </button>
-            <button class="btn btn-sm btn-outline-success me-2" 
-                    *ngIf="c.allegati && c.allegati.length > 0" 
-                    (click)="download(c.allegati[0].id, c.titolo)">
+            <button class="btn btn-sm btn-outline-success me-2" *ngIf="c.allegati && c.allegati.length > 0"
+              (click)="download(c.allegati[0].id, c.titolo)">
               Scarica
             </button>
-            
+
             <!-- Bottone Modifica -->
             <a [routerLink]="['/content/edit', c.id]" class="btn btn-sm btn-outline-secondary me-2">Modifica</a>
-            
+
             <button class="btn btn-sm btn-outline-info me-2" (click)="openGroupModal(c.id)">Aggrega</button>
-            
+
             <button class="btn btn-sm btn-outline-warning me-2" (click)="share(c.id)">Condividi</button>
-            
+
             <button class="btn btn-sm btn-outline-danger" (click)="delete(c.id)">Elimina</button>
           </td>
         </tr>
@@ -67,20 +81,39 @@
         <button type="button" class="btn-close" (click)="closeGroupModal()" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div *ngIf="groups.length === 0" class="alert alert-warning">
-          Non hai ancora creato nessun gruppo. Vai alla sezione "Gruppi" per crearne uno.
+        <div class="mb-3 form-check">
+          <input type="checkbox" class="form-check-input" id="createNewGroupCheck" [(ngModel)]="isCreatingNewGroup">
+          <label class="form-check-label fw-bold" for="createNewGroupCheck">Crea nuovo gruppo per questi
+            contenuti</label>
         </div>
-        <div class="mb-3" *ngIf="groups.length > 0">
-          <label for="groupSelect" class="form-label">Scegli il gruppo di destinazione:</label>
-          <select id="groupSelect" class="form-select" [(ngModel)]="selectedGroupId">
-            <option [ngValue]="null" disabled>Seleziona un gruppo...</option>
-            <option *ngFor="let g of groups" [ngValue]="g.id">{{ g.nome }}</option>
-          </select>
+
+        <!-- Inserimento dati nuovo gruppo -->
+        <div class="mb-3" *ngIf="isCreatingNewGroup">
+          <label for="newGroupNameInput" class="form-label">Nome del nuovo gruppo *</label>
+          <input type="text" class="form-control" id="newGroupNameInput" [(ngModel)]="newGroupName"
+            placeholder="Inserisci il nome del gruppo">
+        </div>
+
+        <!-- Selezione gruppo esistente -->
+        <div class="mb-3" *ngIf="!isCreatingNewGroup">
+          <div *ngIf="groups.length === 0" class="alert alert-warning">
+            Non hai ancora creato nessun gruppo. Spunta la casella in alto per crearne uno!
+          </div>
+          <div *ngIf="groups.length > 0">
+            <label for="groupSelect" class="form-label">Scegli il gruppo di destinazione:</label>
+            <select id="groupSelect" class="form-select" [(ngModel)]="selectedGroupId">
+              <option [ngValue]="null" disabled>Seleziona un gruppo...</option>
+              <option *ngFor="let g of groups" [ngValue]="g.id">{{ g.nome }}</option>
+            </select>
+          </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="closeGroupModal()">Annulla</button>
-        <button type="button" class="btn btn-info" [disabled]="!selectedGroupId" (click)="confirmGroupAggregation()">Conferma</button>
+        <button type="button" class="btn btn-secondary" (click)="closeGroupModal()">Scarta modifiche</button>
+        <button type="button" class="btn btn-info" [disabled]="isCreatingNewGroup ? !newGroupName : !selectedGroupId"
+          (click)="confirmGroupAggregation()">
+          {{ isCreatingNewGroup ? 'Crea' : 'Applica modifiche' }}
+        </button>
       </div>
     </div>
   </div>
@@ -103,10 +136,11 @@
             <input type="number" id="scadenza" class="form-control" [(ngModel)]="scadenzaGiorni" min="1" max="365">
           </div>
           <button class="btn btn-primary btn-sm mb-2" (click)="generateLink()">Genera Link</button>
-          
+
           <div *ngIf="generatedLink" class="input-group mt-2">
             <input type="text" class="form-control" [value]="generatedLink" readonly>
-            <button class="btn btn-outline-secondary" type="button" (click)="copyLink()"><i class="bi bi-clipboard"></i> Copia</button>
+            <button class="btn btn-outline-secondary" type="button" (click)="copyLink()"><i class="bi bi-clipboard"></i>
+              Copia</button>
           </div>
         </div>
 
@@ -118,9 +152,11 @@
           <p class="small text-muted">Invia un link di accesso direttamente alla mail del destinatario.</p>
           <div class="mb-2">
             <label for="destinatario" class="form-label">E-mail Destinatario:</label>
-            <input type="email" id="destinatario" class="form-control" [(ngModel)]="shareEmail" placeholder="mario.rossi@example.com">
+            <input type="email" id="destinatario" class="form-control" [(ngModel)]="shareEmail"
+              placeholder="mario.rossi@example.com">
           </div>
-          <button class="btn btn-success btn-sm" [disabled]="!shareEmail || !generatedLink" (click)="sendEmail()">Invia Link</button>
+          <button class="btn btn-success btn-sm" [disabled]="!shareEmail || !generatedLink" (click)="sendEmail()">Invia
+            Link</button>
           <div *ngIf="emailSuccessMessage" class="text-success small mt-2">{{ emailSuccessMessage }}</div>
           <div *ngIf="emailErrorMessage" class="text-danger small mt-2">{{ emailErrorMessage }}</div>
         </div>
@@ -132,3 +168,5 @@
     </div>
   </div>
 </div>
+
+<app-message-boundary #messageBoundary></app-message-boundary>

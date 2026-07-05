@@ -47,7 +47,8 @@ public class ContentControl {
 
     private Optional<Profilo> getProfiloAttuale() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null) return Optional.empty();
+        if (authentication == null)
+            return Optional.empty();
         String username = authentication.getName();
         Optional<UtenteAfam> utenteOpt = utenteAfamDBMSBoundary.findByUsername(username);
         if (utenteOpt.isPresent()) {
@@ -71,27 +72,34 @@ public class ContentControl {
     }
 
     @PutMapping("/api/contenuti/{id}")
-    public ResponseEntity<?> aggiornaContenuto(@PathVariable java.util.UUID id, @RequestBody com.afam.identity.dto.ContentUpdateRequest request) {
+    public ResponseEntity<?> aggiornaContenuto(@PathVariable java.util.UUID id,
+            @RequestBody com.afam.identity.dto.ContentUpdateRequest request) {
         Optional<Profilo> pOpt = getProfiloAttuale();
-        if (pOpt.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (pOpt.isEmpty())
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         Optional<Contenuto> contenutoOpt = contenutoDBMSBoundary.findById(id);
-        if (contenutoOpt.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Contenuto non trovato");
+        if (contenutoOpt.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Contenuto non trovato");
 
         Contenuto c = contenutoOpt.get();
-        if (!c.getProfilo().getId().equals(pOpt.get().getId())) return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Accesso negato");
+        if (!c.getProfilo().getId().equals(pOpt.get().getId()))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Accesso negato");
 
         c.setTitolo(Validator.sanitize(request.getTitolo(), false));
         c.setPolicyVisibilita(Validator.sanitize(request.getPolicyVisibilita(), false));
-        
+
         if (request.getAutori() != null && !request.getAutori().trim().isEmpty()) {
-            c.setAutori(new java.util.ArrayList<>(java.util.List.of(Validator.sanitize(request.getAutori(), false).split(","))));
+            c.setAutori(new java.util.ArrayList<>(
+                    java.util.List.of(Validator.sanitize(request.getAutori(), false).split(","))));
         } else {
-            c.setAutori(new java.util.ArrayList<>(java.util.List.of(pOpt.get().getNome() + " " + pOpt.get().getCognome())));
+            c.setAutori(
+                    new java.util.ArrayList<>(java.util.List.of(pOpt.get().getNome() + " " + pOpt.get().getCognome())));
         }
 
         if (request.getCollaboratori() != null && !request.getCollaboratori().trim().isEmpty()) {
-            c.setCollaboratori(new java.util.ArrayList<>(java.util.List.of(Validator.sanitize(request.getCollaboratori(), false).split(","))));
+            c.setCollaboratori(new java.util.ArrayList<>(
+                    java.util.List.of(Validator.sanitize(request.getCollaboratori(), false).split(","))));
         } else {
             c.setCollaboratori(new java.util.ArrayList<>());
         }
@@ -112,15 +120,19 @@ public class ContentControl {
     }
 
     @PostMapping("/api/contenuti/{id}/allegati")
-    public ResponseEntity<?> aggiungiAllegato(@PathVariable java.util.UUID id, @RequestParam("file") org.springframework.web.multipart.MultipartFile file) {
+    public ResponseEntity<?> aggiungiAllegato(@PathVariable java.util.UUID id,
+            @RequestParam("file") org.springframework.web.multipart.MultipartFile file) {
         Optional<Profilo> pOpt = getProfiloAttuale();
-        if (pOpt.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (pOpt.isEmpty())
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         Optional<Contenuto> contenutoOpt = contenutoDBMSBoundary.findById(id);
-        if (contenutoOpt.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Contenuto non trovato");
+        if (contenutoOpt.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Contenuto non trovato");
 
         Contenuto c = contenutoOpt.get();
-        if (!c.getProfilo().getId().equals(pOpt.get().getId())) return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Accesso negato");
+        if (!c.getProfilo().getId().equals(pOpt.get().getId()))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Accesso negato");
 
         try {
             java.nio.file.Path userUploadPath = Paths.get(UPLOAD_DIR, pOpt.get().getUtenteAfam().getUuid().toString());
@@ -152,23 +164,31 @@ public class ContentControl {
     @DeleteMapping("/api/contenuti/{id}/allegati/{allegatoId}")
     public ResponseEntity<?> eliminaAllegato(@PathVariable java.util.UUID id, @PathVariable java.util.UUID allegatoId) {
         Optional<Profilo> pOpt = getProfiloAttuale();
-        if (pOpt.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (pOpt.isEmpty())
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         Optional<Contenuto> contenutoOpt = contenutoDBMSBoundary.findById(id);
-        if (contenutoOpt.isEmpty()) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Contenuto non trovato");
+        if (contenutoOpt.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Contenuto non trovato");
 
         Contenuto c = contenutoOpt.get();
-        if (!c.getProfilo().getId().equals(pOpt.get().getId())) return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Accesso negato");
+        if (!c.getProfilo().getId().equals(pOpt.get().getId()))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Accesso negato");
 
         Optional<Allegato> allegatoOpt = allegatoDBMSBoundary.findById(allegatoId);
         if (allegatoOpt.isEmpty() || !allegatoOpt.get().getContenuto().getId().equals(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Allegato non trovato in questo contenuto");
         }
 
+        if (c.getAllegati() != null && c.getAllegati().size() <= 1) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Impossibile eliminare l'ultimo allegato del contenuto.");
+        }
+
         String uuid = pOpt.get().getUtenteAfam().getUuid().toString();
         try {
             Files.deleteIfExists(Paths.get(UPLOAD_DIR, uuid, allegatoOpt.get().getUrlFile()));
-        } catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -194,12 +214,12 @@ public class ContentControl {
         // Cancellazione fisica file
         String uuid = pOpt.get().getUtenteAfam().getUuid().toString();
         if (contenutoOpt.get().getAllegati() != null) {
-            for(Allegato a : contenutoOpt.get().getAllegati()) {
-                 try {
-                     Files.deleteIfExists(Paths.get(UPLOAD_DIR, uuid, a.getUrlFile()));
-                 } catch(IOException e) {
-                     e.printStackTrace();
-                 }
+            for (Allegato a : contenutoOpt.get().getAllegati()) {
+                try {
+                    Files.deleteIfExists(Paths.get(UPLOAD_DIR, uuid, a.getUrlFile()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -214,7 +234,8 @@ public class ContentControl {
     @PostMapping("/api/gruppi")
     public ResponseEntity<?> creaGruppo(@RequestBody Gruppo gruppo) {
         Optional<Profilo> profiloOpt = getProfiloAttuale();
-        if (profiloOpt.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (profiloOpt.isEmpty())
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         gruppo.setProfilo(profiloOpt.get());
         Gruppo saved = gruppoDBMSBoundary.save(gruppo);
@@ -224,7 +245,8 @@ public class ContentControl {
     @GetMapping("/api/gruppi")
     public ResponseEntity<List<Gruppo>> getMieiGruppi() {
         Optional<Profilo> profiloOpt = getProfiloAttuale();
-        if (profiloOpt.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (profiloOpt.isEmpty())
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         List<Gruppo> gruppi = gruppoDBMSBoundary.findByProfiloId(profiloOpt.get().getId());
         return ResponseEntity.ok(gruppi);
@@ -233,26 +255,30 @@ public class ContentControl {
     @GetMapping("/api/gruppi/{id}")
     public ResponseEntity<Gruppo> getDettaglioGruppo(@PathVariable java.util.UUID id) {
         Optional<Profilo> profiloOpt = getProfiloAttuale();
-        if (profiloOpt.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (profiloOpt.isEmpty())
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         Optional<Gruppo> opt = gruppoDBMSBoundary.findById(id);
-        if (opt.isEmpty()) return ResponseEntity.notFound().build();
-        
+        if (opt.isEmpty())
+            return ResponseEntity.notFound().build();
+
         Gruppo g = opt.get();
         if (!g.getProfilo().getId().equals(profiloOpt.get().getId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        
+
         return ResponseEntity.ok(g);
     }
 
     @PutMapping("/api/gruppi/{id}")
     public ResponseEntity<?> aggiornaGruppo(@PathVariable java.util.UUID id, @RequestBody Gruppo gruppoModificato) {
         Optional<Profilo> profiloOpt = getProfiloAttuale();
-        if (profiloOpt.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (profiloOpt.isEmpty())
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         Optional<Gruppo> opt = gruppoDBMSBoundary.findById(id);
-        if (opt.isEmpty()) return ResponseEntity.notFound().build();
+        if (opt.isEmpty())
+            return ResponseEntity.notFound().build();
 
         Gruppo g = opt.get();
         if (!g.getProfilo().getId().equals(profiloOpt.get().getId())) {
@@ -265,15 +291,17 @@ public class ContentControl {
     }
 
     @PostMapping("/api/gruppi/{gruppoId}/contenuti/{contenutoId}")
-    public ResponseEntity<?> aggregaContenuto(@PathVariable java.util.UUID gruppoId, 
-                                              @PathVariable java.util.UUID contenutoId) {
+    public ResponseEntity<?> aggregaContenuto(@PathVariable java.util.UUID gruppoId,
+            @PathVariable java.util.UUID contenutoId) {
         Optional<Profilo> profiloOpt = getProfiloAttuale();
-        if (profiloOpt.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (profiloOpt.isEmpty())
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         Optional<Gruppo> optG = gruppoDBMSBoundary.findById(gruppoId);
         Optional<Contenuto> optC = contenutoDBMSBoundary.findById(contenutoId);
 
-        if (optG.isEmpty() || optC.isEmpty()) return ResponseEntity.notFound().build();
+        if (optG.isEmpty() || optC.isEmpty())
+            return ResponseEntity.notFound().build();
 
         Gruppo g = optG.get();
         Contenuto c = optC.get();
@@ -281,9 +309,10 @@ public class ContentControl {
         if (!g.getProfilo().getId().equals(profiloOpt.get().getId())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        
+
         // Verifica se il contenuto non sia già presente
-        if (g.getListaContenuti() != null && g.getListaContenuti().stream().anyMatch(cont -> cont.getId().equals(c.getId()))) {
+        if (g.getListaContenuti() != null
+                && g.getListaContenuti().stream().anyMatch(cont -> cont.getId().equals(c.getId()))) {
             return ResponseEntity.badRequest().body("Contenuto già aggregato al gruppo.");
         }
 
@@ -297,14 +326,50 @@ public class ContentControl {
         return ResponseEntity.ok(g);
     }
 
-    @DeleteMapping("/api/gruppi/{gruppoId}/contenuti/{contenutoId}")
-    public ResponseEntity<?> rimuoviContenutoDaGruppo(@PathVariable java.util.UUID gruppoId, 
-                                                      @PathVariable java.util.UUID contenutoId) {
+    @PostMapping("/api/gruppi/{gruppoId}/contenuti/mass-aggregation")
+    public ResponseEntity<?> aggregaContenutiMassivo(@PathVariable java.util.UUID gruppoId,
+            @RequestBody java.util.List<java.util.UUID> contenutoIds) {
         Optional<Profilo> profiloOpt = getProfiloAttuale();
-        if (profiloOpt.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (profiloOpt.isEmpty())
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         Optional<Gruppo> optG = gruppoDBMSBoundary.findById(gruppoId);
-        if (optG.isEmpty()) return ResponseEntity.notFound().build();
+        if (optG.isEmpty())
+            return ResponseEntity.notFound().build();
+
+        Gruppo g = optG.get();
+        if (!g.getProfilo().getId().equals(profiloOpt.get().getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        if (g.getListaContenuti() == null) {
+            g.setListaContenuti(new java.util.ArrayList<>());
+        }
+
+        for (java.util.UUID cId : contenutoIds) {
+            Optional<Contenuto> optC = contenutoDBMSBoundary.findById(cId);
+            if (optC.isPresent()) {
+                Contenuto c = optC.get();
+                if (g.getListaContenuti().stream().noneMatch(cont -> cont.getId().equals(c.getId()))) {
+                    g.getListaContenuti().add(c);
+                }
+            }
+        }
+
+        gruppoDBMSBoundary.save(g);
+        return ResponseEntity.ok(g);
+    }
+
+    @DeleteMapping("/api/gruppi/{gruppoId}/contenuti/{contenutoId}")
+    public ResponseEntity<?> rimuoviContenutoDaGruppo(@PathVariable java.util.UUID gruppoId,
+            @PathVariable java.util.UUID contenutoId) {
+        Optional<Profilo> profiloOpt = getProfiloAttuale();
+        if (profiloOpt.isEmpty())
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+
+        Optional<Gruppo> optG = gruppoDBMSBoundary.findById(gruppoId);
+        if (optG.isEmpty())
+            return ResponseEntity.notFound().build();
 
         Gruppo g = optG.get();
         if (!g.getProfilo().getId().equals(profiloOpt.get().getId())) {
@@ -323,10 +388,12 @@ public class ContentControl {
     @DeleteMapping("/api/gruppi/{id}")
     public ResponseEntity<?> eliminaGruppo(@PathVariable java.util.UUID id) {
         Optional<Profilo> profiloOpt = getProfiloAttuale();
-        if (profiloOpt.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (profiloOpt.isEmpty())
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         Optional<Gruppo> optG = gruppoDBMSBoundary.findById(id);
-        if (optG.isEmpty()) return ResponseEntity.notFound().build();
+        if (optG.isEmpty())
+            return ResponseEntity.notFound().build();
 
         Gruppo g = optG.get();
         if (!g.getProfilo().getId().equals(profiloOpt.get().getId())) {

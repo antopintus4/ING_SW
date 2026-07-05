@@ -45,7 +45,7 @@ public class UploadControl {
 
     @PostMapping("/api/contenuti/upload")
     public ResponseEntity<?> uploadContenuto(
-            @RequestParam("file") MultipartFile file,
+            @RequestParam("file") MultipartFile[] files,
             @RequestParam("titolo") String titolo,
             @RequestParam(value = "descrizioneFile", required = false) MultipartFile descrizioneFile,
             @RequestParam("policyVisibilita") String policyVisibilita,
@@ -85,17 +85,16 @@ public class UploadControl {
                 Files.createDirectories(userUploadPath);
             }
 
-            // 2. Salva il file
-            String filename = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-            Path filePath = userUploadPath.resolve(filename);
-            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            if (files == null || files.length == 0) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Nessun file selezionato");
+            }
 
-            // 3. Salva nel DB (Contenuto e Allegato)
+            // 3. Salva nel DB (Contenuto e Allegati)
             Contenuto contenuto = new Contenuto();
             contenuto.setTitolo(com.afam.identity.middleware.Validator.sanitize(titolo, false));
             contenuto.setDescrizione(com.afam.identity.middleware.Validator.sanitize(descrizione, false));
             contenuto.setPolicyVisibilita(com.afam.identity.middleware.Validator.sanitize(policyVisibilita, false));
-            contenuto.setTipo(file.getContentType());
+            contenuto.setTipo(files[0].getContentType());
             contenuto.setProfilo(profilo);
 
             if (autori != null && !autori.trim().isEmpty()) {
@@ -108,18 +107,23 @@ public class UploadControl {
             }
 
             Contenuto savedContenuto = contenutoDBMSBoundary.save(contenuto);
+            savedContenuto.setAllegati(new ArrayList<>());
 
-            Allegato allegato = new Allegato();
-            // Come da RAD, usiamo url_file. Non essendoci un attributo per il nome file, 
-            // memorizziamo il nome file fisico in urlFile.
-            allegato.setUrlFile(filename); 
-            allegato.setContenuto(savedContenuto);
-            allegatoDBMSBoundary.save(allegato);
+            for (MultipartFile file : files) {
+                if (file.isEmpty()) continue;
 
-            if (savedContenuto.getAllegati() == null) {
-                savedContenuto.setAllegati(new ArrayList<>());
+                // Salva il file
+                String filename = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+                Path filePath = userUploadPath.resolve(filename);
+                Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+                Allegato allegato = new Allegato();
+                allegato.setUrlFile(filename); 
+                allegato.setContenuto(savedContenuto);
+                allegatoDBMSBoundary.save(allegato);
+
+                savedContenuto.getAllegati().add(allegato);
             }
-            savedContenuto.getAllegati().add(allegato);
 
             return ResponseEntity.ok("Contenuto caricato con successo con ID: " + savedContenuto.getId());
 

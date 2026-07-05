@@ -43,11 +43,11 @@
 
             <div class="mb-4">
               <label for="fileUpload" class="form-label">File (Max 10MB)</label>
-              <input type="file" class="form-control" id="fileUpload" (change)="onFileSelected($event)">
-              <div class="form-text">Puoi caricare file immagine, PDF, video o archivi.</div>
+              <input type="file" class="form-control" id="fileUpload" (change)="onFileSelected($event)" multiple>
+              <div class="form-text">Puoi caricare uno o più file (immagine, PDF, video o archivi).</div>
             </div>
 
-            <button type="submit" class="btn btn-primary w-100" [disabled]="uploadForm.invalid || !selectedFile || !selectedDescrizioneFile">
+            <button type="submit" class="btn btn-primary w-100" [disabled]="uploadForm.invalid || selectedFiles.length === 0">
               Carica Contenuto
             </button>
           </form>

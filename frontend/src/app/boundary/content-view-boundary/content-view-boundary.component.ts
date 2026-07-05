@@ -34,6 +34,8 @@ export class ContentViewBoundaryComponent implements OnInit {
   emailSuccessMessage: string = '';
   emailErrorMessage: string = '';
 
+  selectedAllegatoIndex: number = 0;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -55,21 +57,7 @@ export class ContentViewBoundaryComponent implements OnInit {
       next: (data) => {
         this.contenuto = data;
         if (this.contenuto && this.contenuto.allegati && this.contenuto.allegati.length > 0) {
-          const allegatoId = this.contenuto.allegati[0].id;
-          this.contentService.downloadContent(allegatoId).subscribe((blob) => {
-            const file = new Blob([blob], { type: blob.type });
-            const objectUrl = URL.createObjectURL(file);
-            this.mediaUrl = this.sanitizer.bypassSecurityTrustResourceUrl(objectUrl);
-            this.mediaType = blob.type;
-            
-            const fileName = this.contenuto.allegati[0].urlFile.toLowerCase();
-            if (!this.mediaType || this.mediaType === 'application/octet-stream') {
-              if (fileName.endsWith('.pdf')) this.mediaType = 'application/pdf';
-              else if (fileName.match(/\.(png|jpg|jpeg|gif)$/)) this.mediaType = 'image/jpeg';
-              else if (fileName.match(/\.(mp4|webm)$/)) this.mediaType = 'video/mp4';
-              else if (fileName.match(/\.(mp3|wav)$/)) this.mediaType = 'audio/mpeg';
-            }
-          });
+          this.selectAllegato(0);
         }
       },
       error: () => {
@@ -78,14 +66,38 @@ export class ContentViewBoundaryComponent implements OnInit {
     });
   }
 
+  selectAllegato(index: number) {
+    this.selectedAllegatoIndex = index;
+    this.mediaUrl = null;
+    this.mediaType = '';
+
+    if (this.contenuto && this.contenuto.allegati && this.contenuto.allegati.length > index) {
+      const allegato = this.contenuto.allegati[index];
+      this.contentService.downloadContent(allegato.id).subscribe((blob) => {
+        const file = new Blob([blob], { type: blob.type });
+        const objectUrl = URL.createObjectURL(file);
+        this.mediaUrl = this.sanitizer.bypassSecurityTrustResourceUrl(objectUrl);
+        this.mediaType = blob.type;
+        
+        const fileName = allegato.urlFile.toLowerCase();
+        if (!this.mediaType || this.mediaType === 'application/octet-stream') {
+          if (fileName.endsWith('.pdf')) this.mediaType = 'application/pdf';
+          else if (fileName.match(/\.(png|jpg|jpeg|gif)$/)) this.mediaType = 'image/jpeg';
+          else if (fileName.match(/\.(mp4|webm)$/)) this.mediaType = 'video/mp4';
+          else if (fileName.match(/\.(mp3|wav)$/)) this.mediaType = 'audio/mpeg';
+        }
+      });
+    }
+  }
+
   download() {
-    if (this.contenuto && this.contenuto.allegati && this.contenuto.allegati.length > 0) {
-      const allegatoId = this.contenuto.allegati[0].id;
-      this.contentService.downloadContent(allegatoId).subscribe((blob) => {
+    if (this.contenuto && this.contenuto.allegati && this.contenuto.allegati.length > this.selectedAllegatoIndex) {
+      const allegato = this.contenuto.allegati[this.selectedAllegatoIndex];
+      this.contentService.downloadContent(allegato.id).subscribe((blob) => {
         const a = document.createElement('a');
         const objectUrl = URL.createObjectURL(blob);
         a.href = objectUrl;
-        a.download = this.contenuto.titolo;
+        a.download = allegato.urlFile;
         a.click();
         URL.revokeObjectURL(objectUrl);
       });
@@ -93,10 +105,9 @@ export class ContentViewBoundaryComponent implements OnInit {
   }
 
   view() {
-    if (this.contenuto && this.contenuto.allegati && this.contenuto.allegati.length > 0) {
-      const allegatoId = this.contenuto.allegati[0].id;
-      this.contentService.downloadContent(allegatoId).subscribe((blob) => {
-        // Create a blob with the actual mime type determined by the backend
+    if (this.contenuto && this.contenuto.allegati && this.contenuto.allegati.length > this.selectedAllegatoIndex) {
+      const allegato = this.contenuto.allegati[this.selectedAllegatoIndex];
+      this.contentService.downloadContent(allegato.id).subscribe((blob) => {
         const file = new Blob([blob], { type: blob.type });
         const objectUrl = URL.createObjectURL(file);
         window.open(objectUrl, '_blank');

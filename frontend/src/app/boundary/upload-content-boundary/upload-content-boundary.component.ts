@@ -12,7 +12,7 @@ import { ContentService } from '../../services/content.service';
 })
 export class UploadContentBoundaryComponent {
   uploadForm: FormGroup;
-  selectedFile: File | null = null;
+  selectedFiles: File[] = [];
   selectedDescrizioneFile: File | null = null;
   errorMessage: string = '';
   successMessage: string = '';
@@ -27,14 +27,19 @@ export class UploadContentBoundaryComponent {
   }
 
   onFileSelected(event: any) {
-    const file: File = event.target.files[0];
-    if (file) {
-      if (file.size > 10 * 1024 * 1024) { // 10MB limit check client side
-        this.errorMessage = 'Il file supera i 10MB consentiti.';
-        this.selectedFile = null;
-      } else {
-        this.selectedFile = file;
-        this.errorMessage = '';
+    const files: FileList = event.target.files;
+    this.selectedFiles = [];
+    this.errorMessage = '';
+
+    if (files) {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (file.size > 10 * 1024 * 1024) { // 10MB limit check client side
+          this.errorMessage = `Il file ${file.name} supera i 10MB consentiti.`;
+          this.selectedFiles = [];
+          return;
+        }
+        this.selectedFiles.push(file);
       }
     }
   }
@@ -53,8 +58,8 @@ export class UploadContentBoundaryComponent {
   }
 
   onSubmit() {
-    if (this.uploadForm.invalid || !this.selectedFile) {
-      this.errorMessage = 'Compila tutti i campi obbligatori e seleziona il file principale.';
+    if (this.uploadForm.invalid || this.selectedFiles.length === 0) {
+      this.errorMessage = 'Compila tutti i campi obbligatori e seleziona almeno un file principale.';
       return;
     }
 
@@ -64,7 +69,7 @@ export class UploadContentBoundaryComponent {
     const { titolo, policyVisibilita, autori, collaboratori } = this.uploadForm.value;
 
     this.contentService.uploadContent(
-      this.selectedFile,
+      this.selectedFiles,
       this.selectedDescrizioneFile,
       titolo,
       policyVisibilita,
@@ -74,7 +79,7 @@ export class UploadContentBoundaryComponent {
       next: (res) => {
         this.successMessage = 'Contenuto caricato con successo!';
         this.uploadForm.reset({ policyVisibilita: 'Pubblico' });
-        this.selectedFile = null;
+        this.selectedFiles = [];
         this.selectedDescrizioneFile = null;
       },
       error: (err) => {

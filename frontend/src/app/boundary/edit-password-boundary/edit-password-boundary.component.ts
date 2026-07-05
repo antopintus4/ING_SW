@@ -19,6 +19,8 @@ export class EditPasswordBoundaryComponent {
   };
   errorMessage: string = '';
   successMessage: string = '';
+  showOtpPanel: boolean = false;
+  otpCode: string = '';
 
   constructor(private profileService: ProfileService, private router: Router) {}
 
@@ -33,15 +35,34 @@ export class EditPasswordBoundaryComponent {
       return;
     }
 
-    this.profileService.updatePassword(this.passwords).subscribe({
-      next: () => {
-        this.successMessage = 'Password aggiornata con successo!';
-        this.errorMessage = '';
-        setTimeout(() => this.router.navigate(['/profile']), 2000);
+    const payload = {
+      currentPassword: this.passwords.currentPassword,
+      newPassword: this.passwords.newPassword,
+      otp: this.otpCode
+    };
+
+    this.profileService.updatePassword(payload).subscribe({
+      next: (res: any) => {
+        if (res && res.status === '2FA_REQUIRED') {
+          this.showOtpPanel = true;
+          this.successMessage = res.message;
+          this.errorMessage = '';
+        } else {
+          this.successMessage = 'Password aggiornata con successo!';
+          this.errorMessage = '';
+          this.showOtpPanel = false;
+          setTimeout(() => this.router.navigate(['/profile']), 2000);
+        }
       },
       error: (err) => {
-        this.errorMessage = err.error || 'Errore durante l\'aggiornamento della password.';
-        this.successMessage = '';
+        if (err.status === 400 && err.error === 'Errore nel token') {
+          alert('Errore nel token');
+          this.router.navigate(['/']);
+        } else {
+          // Gestisce sia risposte map {error: ...} sia stringhe di errore semplici
+          this.errorMessage = err.error?.error || err.error || 'Errore durante l\'aggiornamento della password.';
+          this.successMessage = '';
+        }
       }
     });
   }

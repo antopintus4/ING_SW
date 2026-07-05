@@ -3,6 +3,7 @@ package com.afam.identity.control;
 import com.afam.identity.boundary.ContenutoDBMSBoundary;
 import com.afam.identity.boundary.ProfiloDBMSBoundary;
 import com.afam.identity.boundary.UtenteAfamDBMSBoundary;
+import com.afam.identity.boundary.TokenDBMSBoundary;
 import com.afam.identity.dto.AnagraficaDTO;
 import com.afam.identity.dto.AuthResponse;
 import com.afam.identity.dto.CredentialsDTO;
@@ -11,8 +12,10 @@ import com.afam.identity.dto.OtherEditsDTO;
 import com.afam.identity.entity.Contenuto;
 import com.afam.identity.entity.Profilo;
 import com.afam.identity.entity.UtenteAfam;
+import com.afam.identity.entity.Token;
 import com.afam.identity.middleware.Validator;
 import com.afam.identity.service.JwtService;
+import com.afam.identity.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,10 +47,16 @@ public class ProfileControl {
     private ContenutoDBMSBoundary contenutoDBMSBoundary;
 
     @Autowired
+    private TokenDBMSBoundary tokenDBMSBoundary;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private EmailService emailService;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -160,6 +169,43 @@ public class ProfileControl {
             return ResponseEntity.badRequest().body("Email già in uso");
         }
 
+        if (Boolean.TRUE.equals(utente.getHas2fa())) {
+            if (request.getOtp() == null || request.getOtp().isEmpty()) {
+                // Genera OTP a 8 cifre
+                java.util.Random random = new java.util.Random();
+                int otpNum = 10000000 + random.nextInt(90000000);
+                String otp = String.valueOf(otpNum);
+
+                Token otpToken = new Token();
+                otpToken.setValore(otp);
+                otpToken.setScadenza(java.time.LocalDateTime.now().plusMinutes(10));
+                otpToken.setTipo("OTP_2FA");
+                otpToken.setUtenteAfam(utente);
+                tokenDBMSBoundary.save(otpToken);
+
+                // Invia a email pre-modifica
+                emailService.sendOtpEmail(utente.getEmail(), otp);
+
+                Map<String, String> response = new HashMap<>();
+                response.put("status", "2FA_REQUIRED");
+                response.put("message", "Inserisci il token. Ti è stata inviata una e-mail all'indirizzo " + utente.getEmail());
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+            } else {
+                List<Token> tokens = tokenDBMSBoundary.findByUtenteAfamAndTipoAndValore(utente, "OTP_2FA", request.getOtp());
+                boolean valid = false;
+                for (Token t : tokens) {
+                    if (!t.isScaduto() && t.checkToken(request.getOtp())) {
+                        tokenDBMSBoundary.delete(t);
+                        valid = true;
+                        break;
+                    }
+                }
+                if (!valid) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Errore nel token");
+                }
+            }
+        }
+
         utente.setUsername(request.getUsername());
         utente.setEmail(request.getEmail());
         utenteAfamDBMSBoundary.save(utente);
@@ -184,10 +230,46 @@ public class ProfileControl {
             return ResponseEntity.badRequest().body(java.util.Collections.singletonMap("error", "La password attuale non è corretta"));
         }
 
+        if (Boolean.TRUE.equals(utente.getHas2fa())) {
+            if (request.getOtp() == null || request.getOtp().isEmpty()) {
+                // Genera OTP a 8 cifre
+                java.util.Random random = new java.util.Random();
+                int otpNum = 10000000 + random.nextInt(90000000);
+                String otp = String.valueOf(otpNum);
+
+                Token otpToken = new Token();
+                otpToken.setValore(otp);
+                otpToken.setScadenza(java.time.LocalDateTime.now().plusMinutes(10));
+                otpToken.setTipo("OTP_2FA");
+                otpToken.setUtenteAfam(utente);
+                tokenDBMSBoundary.save(otpToken);
+
+                // Invia a email pre-modifica
+                emailService.sendOtpEmail(utente.getEmail(), otp);
+
+                Map<String, String> response = new HashMap<>();
+                response.put("status", "2FA_REQUIRED");
+                response.put("message", "Inserisci il token. Ti è stata inviata una e-mail all'indirizzo " + utente.getEmail());
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
+            } else {
+                List<Token> tokens = tokenDBMSBoundary.findByUtenteAfamAndTipoAndValore(utente, "OTP_2FA", request.getOtp());
+                boolean valid = false;
+                for (Token t : tokens) {
+                    if (!t.isScaduto() && t.checkToken(request.getOtp())) {
+                        tokenDBMSBoundary.delete(t);
+                        valid = true;
+                        break;
+                    }
+                }
+                if (!valid) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Errore nel token");
+                }
+            }
+        }
+
         utente.setPassword(passwordEncoder.encode(request.getNewPassword()));
         utenteAfamDBMSBoundary.save(utente);
 
-        
         return ResponseEntity.ok(java.util.Collections.singletonMap("message", "Credenziali aggiornate con successo. Effettua nuovamente il login."));
     }
 

@@ -1,17 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ContentService } from '../../services/content.service';
+import { MessageBoundaryComponent } from '../message-boundary/message-boundary.component';
 
 @Component({
   selector: 'app-edit-content-boundary',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, MessageBoundaryComponent],
   templateUrl: './edit-content-boundary.component.html',
   styleUrl: './edit-content-boundary.component.css'
 })
 export class EditContentBoundaryComponent implements OnInit {
+  @ViewChild('messageBoundary') messageBoundary!: MessageBoundaryComponent;
   editForm: FormGroup;
   contentId: string | null = null;
   content: any = null;
@@ -106,16 +108,27 @@ export class EditContentBoundaryComponent implements OnInit {
 
   deleteAllegato(allegatoId: string) {
     if (!this.contentId) return;
-    if (confirm('Sei sicuro di voler eliminare questo allegato?')) {
-      this.contentService.deleteAllegato(this.contentId, allegatoId).subscribe({
-        next: () => {
-          this.successMessage = 'Allegato eliminato.';
-          this.loadContent();
-        },
-        error: () => {
-          this.errorMessage = 'Errore durante l\'eliminazione dell\'allegato.';
-        }
-      });
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    if (this.content && this.content.allegati && this.content.allegati.length <= 1) {
+      this.errorMessage = "Non è consentito eliminare l'ultimo allegato del contenuto.";
+      return;
     }
+
+    this.messageBoundary.showConfirmMessage(
+      "Sei sicuro di voler eliminare questo allegato?",
+      () => {
+        this.contentService.deleteAllegato(this.contentId!, allegatoId).subscribe({
+          next: () => {
+            this.successMessage = 'Allegato eliminato.';
+            this.loadContent();
+          },
+          error: (err) => {
+            this.errorMessage = err.error || 'Errore durante l\'eliminazione dell\'allegato.';
+          }
+        });
+      }
+    );
   }
 }

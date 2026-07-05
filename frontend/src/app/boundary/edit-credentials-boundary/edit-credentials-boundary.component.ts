@@ -19,6 +19,8 @@ export class EditCredentialsBoundaryComponent implements OnInit {
   };
   errorMessage: string = '';
   successMessage: string = '';
+  showOtpPanel: boolean = false;
+  otpCode: string = '';
 
   constructor(
     private profileService: ProfileService, 
@@ -39,16 +41,36 @@ export class EditCredentialsBoundaryComponent implements OnInit {
   }
 
   save() {
-    this.profileService.updateCredentials(this.credentials).subscribe({
-      next: (res) => {
-        if (res && res.token) {
-          this.authService.updateToken(res.token); // Rimpiazza il JWT con quello nuovo
+    const payload = {
+      username: this.credentials.username,
+      email: this.credentials.email,
+      otp: this.otpCode
+    };
+
+    this.profileService.updateCredentials(payload).subscribe({
+      next: (res: any) => {
+        if (res && res.status === '2FA_REQUIRED') {
+          this.showOtpPanel = true;
+          this.successMessage = res.message;
+          this.errorMessage = '';
+        } else {
+          if (res && res.token) {
+            this.authService.updateToken(res.token); // Rimpiazza il JWT con quello nuovo
+          }
+          this.successMessage = 'Credenziali aggiornate con successo!';
+          this.errorMessage = '';
+          this.showOtpPanel = false;
+          setTimeout(() => this.router.navigate(['/profile']), 2000);
         }
-        this.successMessage = 'Credenziali aggiornate con successo!';
-        setTimeout(() => this.router.navigate(['/profile']), 2000);
       },
       error: (err) => {
-        this.errorMessage = err.error || 'Errore durante l\'aggiornamento delle credenziali.';
+        if (err.status === 400 && err.error === 'Errore nel token') {
+          alert('Errore nel token');
+          this.router.navigate(['/']);
+        } else {
+          this.errorMessage = err.error || 'Errore durante l\'aggiornamento delle credenziali.';
+          this.successMessage = '';
+        }
       }
     });
   }

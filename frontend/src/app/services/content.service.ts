@@ -10,9 +10,11 @@ export class ContentService {
 
   constructor(private http: HttpClient) {}
 
-  uploadContent(file: File, descrizioneFile: File | null, titolo: string, policyVisibilita: string, autori?: string, collaboratori?: string): Observable<any> {
+  uploadContent(files: File[], descrizioneFile: File | null, titolo: string, policyVisibilita: string, autori?: string, collaboratori?: string): Observable<any> {
     const formData = new FormData();
-    formData.append('file', file);
+    files.forEach(file => {
+      formData.append('file', file);
+    });
     if (descrizioneFile) {
       formData.append('descrizioneFile', descrizioneFile);
     }

@@ -1,4 +1,4 @@
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, Inject, PLATFORM_ID, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 
 declare var bootstrap: any;
@@ -11,9 +11,12 @@ declare var bootstrap: any;
   styleUrl: './message-boundary.component.css'
 })
 export class MessageBoundaryComponent {
+  @ViewChild('modalEl') modalEl!: ElementRef;
   title: string = '';
   message: string = '';
   type: 'confirm' | 'message' = 'message';
+  confirmBtnLabel: string = 'Sì';
+  cancelBtnLabel: string = 'No';
   
   private onConfirmCallback?: () => void;
   private onCancelCallback?: () => void;
@@ -22,12 +25,14 @@ export class MessageBoundaryComponent {
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
-  showConfirmMessage(message: string, onConfirm: () => void, onCancel?: () => void) {
+  showConfirmMessage(message: string, onConfirm: () => void, onCancel?: () => void, confirmLabel: string = 'Sì', cancelLabel: string = 'No') {
     this.title = 'Conferma';
     this.message = message;
     this.type = 'confirm';
     this.onConfirmCallback = onConfirm;
     this.onCancelCallback = onCancel;
+    this.confirmBtnLabel = confirmLabel;
+    this.cancelBtnLabel = cancelLabel;
     this.openModal();
   }
 
@@ -66,9 +71,8 @@ export class MessageBoundaryComponent {
 
   private openModal() {
     if (isPlatformBrowser(this.platformId)) {
-      const modalEl = document.getElementById('messageBoundaryModal');
-      if (modalEl) {
-        this.modalInstance = new bootstrap.Modal(modalEl, {
+      if (this.modalEl && this.modalEl.nativeElement) {
+        this.modalInstance = new bootstrap.Modal(this.modalEl.nativeElement, {
           backdrop: 'static',
           keyboard: false
         });

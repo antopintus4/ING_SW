@@ -64,24 +64,32 @@
 
           <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
-          <!-- Step 1: Pulsante Attiva -->
-          <div *ngIf="setupStep === 'idle'">
-            <button class="btn btn-warning" (click)="onSetup2fa()">Configura 2FA</button>
+          <!-- Se la 2FA è già attiva -->
+          <div *ngIf="profilo?.utenteAfam?.has2fa" class="alert alert-success mt-3">
+            La verifica in due passaggi (2FA) è attiva per questo account.
           </div>
 
-          <!-- Step 2: Inserimento OTP -->
-          <div *ngIf="setupStep === 'awaiting_otp'" class="mt-3 p-3 bg-light rounded">
-            <p>Abbiamo inviato un PIN di verifica al tuo indirizzo email. Inseriscilo qui sotto per confermare
-              l'attivazione.</p>
-            <div class="d-flex w-50">
-              <input type="text" class="form-control me-2" [(ngModel)]="otpCode" placeholder="123456" maxlength="6">
-              <button class="btn btn-primary" (click)="onConfirm2fa()">Conferma OTP</button>
+          <!-- Altrimenti gestiamo gli step di configurazione -->
+          <div *ngIf="!profilo?.utenteAfam?.has2fa">
+            <!-- Step 1: Pulsante Attiva -->
+            <div *ngIf="setupStep === 'idle'">
+              <button class="btn btn-warning" (click)="onSetup2fa()">Configura 2FA</button>
             </div>
-          </div>
 
-          <!-- Step 3: Successo -->
-          <div *ngIf="setupStep === 'success'" class="alert alert-success mt-3">
-            La verifica in due passaggi (2FA) è stata abilitata con successo per questo account!
+            <!-- Step 2: Inserimento OTP -->
+            <div *ngIf="setupStep === 'awaiting_otp'" class="mt-3 p-3 bg-light rounded">
+              <p>Abbiamo inviato un PIN di verifica al tuo indirizzo email. Inseriscilo qui sotto per confermare
+                l'attivazione.</p>
+              <div class="d-flex w-50">
+                <input type="text" class="form-control me-2" [(ngModel)]="otpCode" placeholder="123456" maxlength="6">
+                <button class="btn btn-primary" (click)="onConfirm2fa()">Conferma OTP</button>
+              </div>
+            </div>
+
+            <!-- Step 3: Successo -->
+            <div *ngIf="setupStep === 'success'" class="alert alert-success mt-3">
+              La verifica in due passaggi (2FA) è stata abilitata con successo per questo account!
+            </div>
           </div>
 
         </div>

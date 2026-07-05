@@ -18,46 +18,46 @@ Document (SDD) e dell'Object Design Document (ODD) del progetto attuale.
     [x] 2.1 [Backend] Non richiesto dal professore (funzione esclusa).
     [x] 2.2 [Frontend] Aggiungere il pulsante disabilitato di accesso tramite Digital ID Provider nella schermata di login principale.
 
-[ ] 3. MODIFICA CREDENZIALI E PASSWORD CON VERIFICA 2FA (RAD 4.1.12.1 / 4.1.12.2)
-    [ ] 3.1 [Backend] Aggiornare `ProfileControl.java` (`updateCredentials` e `updatePassword`):
+[x] 3. MODIFICA CREDENZIALI E PASSWORD CON VERIFICA 2FA (RAD 4.1.12.1 / 4.1.12.2)
+    [x] 3.1 [Backend] Aggiornare `ProfileControl.java` (`updateCredentials` e `updatePassword`):
             - Se l'utente ha abilitato la 2FA, non applicare le modifiche direttamente.
             - Generare un token a 8 cifre temporaneo (tipo "OTP_2FA" come previsto nell'ODD), salvarlo nel DB e inviarlo tramite e-mail al vecchio indirizzo dell'utente.
             - Creare/gestire la conferma di tale token prima di applicare le modifiche su database.
-    [ ] 3.2 [Frontend] Aggiornare `EditCredentialsBoundaryComponent` ed `EditPasswordBoundaryComponent`:
+    [x] 3.2 [Frontend] Aggiornare `EditCredentialsBoundaryComponent` ed `EditPasswordBoundaryComponent`:
             - Aggiungere il pannello di inserimento del token a 8 cifre che viene mostrato solo se l'utente ha la 2FA attiva.
-    [ ] 3.3 [Frontend] Disabilitare/nascondere la configurazione della 2FA se è già attiva:
+    [x] 3.3 [Frontend] Disabilitare/nascondere la configurazione della 2FA se è già attiva:
             - Modificare `ProfileBoundaryComponent` (`profile-boundary.component.html`) per verificare lo stato di `profilo.utenteAfam.has2fa`.
             - Se la 2FA è già abilitata, nascondere il pulsante "Configura 2FA" e mostrare un messaggio informativo (es. "La verifica in due passaggi (2FA) è attiva per questo account").
 
-[ ] 4. GESTIONE AVANZATA DEL PORTFOLIO E CARICAMENTO FILE (RAD 4.1.7)
-    [ ] 4.1 [Backend] Modificare l'endpoint `/api/contenuti/upload` in `UploadControl.java`:
+[x] 4. GESTIONE AVANZATA DEL PORTFOLIO E CARICAMENTO FILE (RAD 4.1.7)
+    [x] 4.1 [Backend] Modificare l'endpoint `/api/contenuti/upload` in `UploadControl.java`:
             - Modificare l'endpoint per accettare una lista/array di file (`MultipartFile[] files`) per supportare il caricamento simultaneo di più allegati per uno stesso contenuto (RAD 4.1.7.1).
-    [ ] 4.2 [Frontend] Aggiornare `UploadContentBoundaryComponent`:
+    [x] 4.2 [Frontend] Aggiornare `UploadContentBoundaryComponent`:
             - Abilitare la selezione e la visualizzazione in anteprima di più file contemporaneamente per uno stesso contenuto.
             - Rilassare il vincolo sul file di descrizione (`selectedDescrizioneFile` non deve essere obbligatorio per abilitare l'invio del form).
-    [ ] 4.3 [Backend/Frontend] Vincolo di presenza file in Modifica Contenuto (RAD 4.1.7.3 / 4.1.8.3):
+    [x] 4.3 [Backend/Frontend] Vincolo di presenza file in Modifica Contenuto (RAD 4.1.7.3 / 4.1.8.3):
             - Impedire in `EditContentBoundaryComponent` l'eliminazione dell'ultimo allegato di un contenuto se non ne viene contestualmente caricato un altro, garantendo la presenza di almeno un file/contenuto per ogni elemento.
 
-[ ] 5. FUNZIONALITÀ DI RAGGRUPPAMENTO MASSIVO (RAD 4.1.8.7)
-    [ ] 5.1 [Backend] Aggiungere un endpoint per l'aggregazione massiva in `ContentControl.java`:
+[x] 5. FUNZIONALITÀ DI RAGGRUPPAMENTO MASSIVO (RAD 4.1.8.7)
+    [x] 5.1 [Backend] Aggiungere un endpoint per l'aggregazione massiva in `ContentControl.java`:
             - Permettere di ricevere una lista di ID contenuto ed associarli ad un gruppo in un'unica richiesta.
-    [ ] 5.2 [Frontend] Aggiornare `ContentManagementBoundaryComponent`:
+    [x] 5.2 [Frontend] Aggiornare `ContentManagementBoundaryComponent`:
             - Integrare la selezione dei contenuti tramite checkbox nella lista.
             - Aggiungere il pulsante "Raggruppa Contenuti" che consente di associare tutti gli elementi selezionati ad un gruppo esistente o di crearne uno nuovo (mostrando il relativo modal di creazione gruppo con i relativi campi).
 
-[ ] 6. SHARING E GESTIONE DELLE IMPOSTAZIONI DEI LINK CONDIVISI (RAD 4.1.9)
-    [ ] 6.1 [Backend] Estendere le impostazioni dei link in `ShareControl.java`:
+[x] 6. SHARING E GESTIONE DELLE IMPOSTAZIONI DEI LINK CONDIVISI (RAD 4.1.9)
+    [x] 6.1 [Backend] Estendere le impostazioni dei link in `ShareControl.java`:
             - Consentire di salvare quali contenuti specifici del profilo o del gruppo includere nel link condiviso (salvando questa informazione nel campo `impostazioni` o tramite tabella di associazione).
             - Creare l'endpoint `PUT /api/links/{identificatore}` per aggiornare le impostazioni del link (data scadenza, risorse incluse) dopo la sua generazione.
-    [ ] 6.2 [Frontend] Completare il componente `LinkSettingsBoundaryComponent`:
+    [x] 6.2 [Frontend] Completare il componente `LinkSettingsBoundaryComponent`:
             - Sviluppare la maschera grafica per la modifica della data di scadenza e la selezione/deselezione dei contenuti abilitati per lo specifico link.
             - Collegare questo componente tramite un pulsante "Impostazioni" presente a fianco di ciascun link attivo in `ActiveLinksBoundaryComponent`.
-    [ ] 6.3 [Backend/Frontend] Allineare la Condivisione Diretta (RAD 4.1.9.3):
+    [x] 6.3 [Backend/Frontend] Allineare la Condivisione Diretta (RAD 4.1.9.3):
             - [Backend] Modificare l'endpoint in `ShareControl.java` per accettare l'email o l'username del destinatario, verificare l'esistenza del destinatario nel DBMS ed inviare l'email con il link di condivisione solo se l'utente esiste. Altrimenti restituire errore 404 ("Destinatario non trovato").
             - [Frontend] Aggiornare la maschera di condivisione per gestire l'inserimento di email o username e visualizzare i messaggi di conferma ed errore tramite `MessageBoundaryComponent`.
 
-[ ] 7. INCREMENTO DUALE DEL CONTATORE DI VISUALIZZAZIONE (RAD 4.1.11.2)
-    [ ] 7.1 [Backend] Aggiornare l'endpoint `/api/links/shared/{identificatore}` in `ShareControl.java`:
+[x] 7. INCREMENTO DUALE DEL CONTATORE DI VISUALIZZAZIONE (RAD 4.1.11.2)
+    [x] 7.1 [Backend] Aggiornare l'endpoint `/api/links/shared/{identificatore}` in `ShareControl.java`:
             - Quando un link viene visualizzato con successo, oltre ad incrementare `link.numeroVisualizzazioni`, incrementare e salvare anche il contatore `numeroVisualizzazioni` sull'entità `Contenuto` collegata.
 
 [ ] 8. ORDINAMENTO CRONOLOGICO E DATA DI CARICAMENTO (RAD 4.1.8.1)
@@ -87,6 +87,8 @@ Document (SDD) e dell'Object Design Document (ODD) del progetto attuale.
              - Implementare la logica di ricerca specifica per i collaboratori (`Cerca Collaboratori`).
     [ ] 10.2 [Frontend] Aggiornare la logica di invio query nella barra di ricerca:
              - Riconoscere ed inviare correttamente i prefissi di ricerca specifici al backend.
+    [ ] 10.3 [Frontend] Invertire la logica di visibilità della barra di ricerca nella navbar (`app.component.html`):
+             - Modificare la condizione del form di ricerca in modo che sia visibile solo per l'utente non loggato (`*ngIf="!isAuthenticated"`), coerentemente con il ruolo dell'attore Visualizzatore definito nel RAD.
 
 [ ] 11. ANAGRAFICA: RICALCOLO E ESTRAPOLAZIONE DATI DA CODICE FISCALE (RAD 4.1.12.3)
     [ ] 11.1 [Backend] Aggiornare `ProfileControl.java` (`updateAnagrafica`):

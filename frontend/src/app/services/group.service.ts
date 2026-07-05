@@ -30,6 +30,10 @@ export class GroupService {
     return this.http.post<any>(`${this.apiUrl}/${groupId}/contenuti/${contentId}`, {});
   }
 
+  addContentsToGroupMassive(groupId: string, contentIds: string[]): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/${groupId}/contenuti/mass-aggregation`, contentIds);
+  }
+
   removeContentFromGroup(groupId: string, contentId: string): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${groupId}/contenuti/${contentId}`);
   }

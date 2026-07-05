@@ -26,11 +26,22 @@ export class LinkService {
     return this.http.get<any>(`${this.apiUrl}/shared/${identificatore}`);
   }
 
-  downloadPublicFile(identificatore: string): Observable<Blob> {
-    return this.http.get(`${this.apiUrl}/shared/${identificatore}/download`, { responseType: 'blob' });
+  downloadPublicFile(identificatore: string, allegatoId?: string): Observable<Blob> {
+    const url = allegatoId 
+      ? `${this.apiUrl}/shared/${identificatore}/download?allegatoId=${allegatoId}`
+      : `${this.apiUrl}/shared/${identificatore}/download`;
+    return this.http.get(url, { responseType: 'blob' });
   }
 
   sendLinkViaEmail(email: string, identificatore: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/send`, { email, identificatore });
+  }
+
+  getLinkDetails(identificatore: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${identificatore}`);
+  }
+
+  updateLinkSettings(identificatore: string, dataScadenza: string, risorseIncluse: string[]): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${identificatore}`, { dataScadenza, risorseIncluse });
   }
 }

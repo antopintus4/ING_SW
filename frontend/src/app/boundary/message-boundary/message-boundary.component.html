@@ -1,4 +1,4 @@
-<div class="modal fade" id="messageBoundaryModal" tabindex="-1" aria-labelledby="messageBoundaryModalLabel" aria-hidden="true">
+<div #modalEl class="modal fade" id="messageBoundaryModal" tabindex="-1" aria-labelledby="messageBoundaryModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -9,8 +9,8 @@
       </div>
       <div class="modal-footer d-flex justify-content-center">
         <ng-container *ngIf="type === 'confirm'">
-          <button type="button" class="btn btn-primary px-4 me-2" (click)="clickSi()">Sì</button>
-          <button type="button" class="btn btn-secondary px-4" (click)="clickNo()">No</button>
+          <button type="button" class="btn btn-primary px-4 me-2" (click)="clickSi()">{{ confirmBtnLabel }}</button>
+          <button type="button" class="btn btn-secondary px-4" (click)="clickNo()">{{ cancelBtnLabel }}</button>
         </ng-container>
         <ng-container *ngIf="type === 'message'">
           <button type="button" class="btn btn-primary px-5" (click)="clickOk()">Ok</button>

@@ -50,6 +50,9 @@ export class ProfileBoundaryComponent implements OnInit {
     this.authService.confirm2fa(this.otpCode).subscribe({
       next: () => {
         this.setupStep = 'success';
+        if (this.profilo && this.profilo.utenteAfam) {
+          this.profilo.utenteAfam.has2fa = true;
+        }
       },
       error: () => {
         this.errorMessage = 'Codice errato o scaduto. Riprova.';
