@@ -67,9 +67,9 @@ if not exist "%FRONTEND_DIR%" (
 
 cd /d "%FRONTEND_DIR%"
 echo Controllo e installazione dipendenze Angular in corso...
-call npm install
+call npm install --ignore-scripts
 
-start "AFAM Frontend" cmd /k "npm start"
+start "AFAM Frontend" cmd /k "npx ng serve --proxy-config proxy.conf.json"
 
 echo --------------------------------------------------------
 echo Backend e Frontend avviati con successo in finestre separate!

@@ -21,14 +21,16 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${EMAIL_USER:default@gmail.com}
-    password: ${PASSWORD_EMAIL:defaultpass}
+    username: pwm.support.test@gmail.com
+    password: sdrphbwhkbvrevoz
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
+          ssl:
+            trust: smtp.gmail.com
 
 server:
   port: 8080
