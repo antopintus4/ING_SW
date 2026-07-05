@@ -1,45 +1,127 @@
 <div class="container mt-5">
   <div class="row justify-content-center">
     <div class="col-md-8">
-      <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-          <h4 class="mb-0">Altre Modifiche</h4>
+      
+      <!-- Sezione Successo: Modale / Card Overlay (Passi 7 & 8 del RAD) -->
+      <div *ngIf="showSuccessModal" class="card border-success shadow-lg mb-4 text-center">
+        <div class="card-body py-5">
+          <i class="bi bi-check-circle-fill text-success" style="font-size: 4.5rem;"></i>
+          <h3 class="card-title text-success fw-bold mt-3">{{ successMessage }}</h3>
+          <p class="text-muted">Il tuo profilo artistico è stato aggiornato correttamente.</p>
+          <div class="mt-4">
+            <button (click)="confermaOk()" class="btn btn-success btn-lg px-5 shadow-sm">
+              Ok
+            </button>
+          </div>
         </div>
-        <div class="card-body">
-          <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
-          <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+      </div>
 
-          <form (ngSubmit)="save()">
-            <div class="mb-3">
-              <label class="form-label">Privacy (Visibilità del Profilo)</label>
-              <select class="form-select" name="policyVisibilita" [(ngModel)]="otherEdits.policyVisibilita">
-                <option value="Pubblico">Pubblico</option>
-                <option value="Privato">Privato</option>
-              </select>
+      <!-- Card Principale "Altre Modifiche" (Solo se non stiamo mostrando la modale di successo) -->
+      <div *ngIf="!showSuccessModal" class="card shadow-sm border-0 rounded-3">
+        <div class="card-header bg-dark text-white p-3 d-flex justify-content-between align-items-center">
+          <h4 class="mb-0 fw-bold">Altre Modifiche</h4>
+          <a routerLink="/profile" class="btn btn-sm btn-outline-light">Annulla</a>
+        </div>
+        <div class="card-body p-4">
+          <div *ngIf="errorMessage" class="alert alert-danger mb-4">{{ errorMessage }}</div>
+
+          <!-- Pulsanti per avviare ciascuna modifica (Passo 2 del RAD) -->
+          <div class="d-flex flex-wrap gap-2 justify-content-center mb-4">
+            <button (click)="selectSection('privacy')" 
+                    [ngClass]="activeSection === 'privacy' ? 'btn-success' : 'btn-outline-success'" 
+                    class="btn px-3 py-2 fw-semibold shadow-sm">
+              <i class="bi bi-shield-lock me-1"></i> Modifica privacy
+            </button>
+            <button (click)="selectSection('descrizione')" 
+                    [ngClass]="activeSection === 'descrizione' ? 'btn-primary' : 'btn-outline-primary'" 
+                    class="btn px-3 py-2 fw-semibold shadow-sm">
+              <i class="bi bi-card-text me-1"></i> Modifica descrizione
+            </button>
+            <button (click)="selectSection('hobby')" 
+                    [ngClass]="activeSection === 'hobby' ? 'btn-info text-white' : 'btn-outline-info'" 
+                    class="btn px-3 py-2 fw-semibold shadow-sm">
+              <i class="bi bi-heart me-1"></i> Modifica Hobby
+            </button>
+            <button (click)="selectSection('skills')" 
+                    [ngClass]="activeSection === 'skills' ? 'btn-dark' : 'btn-outline-dark'" 
+                    class="btn px-3 py-2 fw-semibold shadow-sm">
+              <i class="bi bi-tools me-1"></i> Modifica Skills
+            </button>
+          </div>
+
+          <!-- Stato Iniziale: Seleziona una modifica -->
+          <div *ngIf="!activeSection" class="text-center py-5 bg-light rounded-3 border border-dashed">
+            <i class="bi bi-arrow-up-circle text-muted" style="font-size: 3rem;"></i>
+            <h5 class="text-muted mt-2">Seleziona quale aspetto del profilo desideri modificare dai pulsanti sopra.</h5>
+          </div>
+
+          <!-- PANELS DI MODIFICA SPECIFICI -->
+          <form *ngIf="activeSection" (ngSubmit)="confermaModifica()">
+            
+            <!-- 1. Pannello Privacy (Passi 3 & 4 del RAD) -->
+            <div *ngIf="activeSection === 'privacy'" class="p-4 bg-light rounded-3 border border-success border-opacity-25 mb-4 animate__animated animate__fadeIn">
+              <h5 class="fw-bold text-success mb-3"><i class="bi bi-shield-lock me-2"></i>Impostazioni sulla Privacy</h5>
+              <p class="text-muted small">Regola la visibilità del tuo account all'esterno e tra gli iscritti al sistema.</p>
+              
+              <div class="form-check form-switch mb-3">
+                <input class="form-check-input" type="checkbox" id="checkPublic" name="isPublic" [(ngModel)]="isPublic">
+                <label class="form-check-label fw-semibold" for="checkPublic">Rendi il profilo visibile pubblicamente (Pubblico)</label>
+                <div class="form-text">Se disattivato, il tuo profilo rimarrà visibile come "Privato" solo agli iscritti autorizzati.</div>
+              </div>
+
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="checkContacts" name="isContactsVisible" [(ngModel)]="isContactsVisible">
+                <label class="form-check-label fw-semibold" for="checkContacts">Mostra indirizzo e telefono sul profilo pubblico</label>
+                <div class="form-text">Permette di mostrare recapiti diretti sulla scheda pubblica.</div>
+              </div>
             </div>
 
-            <div class="mb-3">
-              <label class="form-label">Descrizione</label>
-              <textarea class="form-control" name="descrizione" [(ngModel)]="otherEdits.descrizione" rows="4" placeholder="Parlaci di te..."></textarea>
+            <!-- 2. Pannello Descrizione (F.A. 2.1) -->
+            <div *ngIf="activeSection === 'descrizione'" class="p-4 bg-light rounded-3 border border-primary border-opacity-25 mb-4 animate__animated animate__fadeIn">
+              <h5 class="fw-bold text-primary mb-3"><i class="bi bi-card-text me-2"></i>Descrizione Profilo Artistico</h5>
+              
+              <div class="mb-3">
+                <label class="form-label fw-semibold" for="descText">Biografia / Presentazione</label>
+                <textarea class="form-control" id="descText" name="descrizione" [(ngModel)]="otherEdits.descrizione" rows="6" placeholder="Inserisci una descrizione che ti presenti artisticamente..."></textarea>
+              </div>
             </div>
 
-            <div class="mb-3">
-              <label class="form-label">Hobby (Interessi)</label>
-              <input type="text" class="form-control" name="interessi" [(ngModel)]="interessiStr" placeholder="Es. Pittura, Chitarra, Lettura (separati da virgola)">
+            <!-- 3. Pannello Hobby / Interessi (F.A. 2.2) -->
+            <div *ngIf="activeSection === 'hobby'" class="p-4 bg-light rounded-3 border border-info border-opacity-25 mb-4 animate__animated animate__fadeIn">
+              <h5 class="fw-bold text-info mb-3"><i class="bi bi-heart me-2"></i>Hobby e Interessi</h5>
+              
+              <div class="mb-3">
+                <label class="form-label fw-semibold" for="hobbyInput">I tuoi Interessi</label>
+                <input type="text" class="form-control" id="hobbyInput" name="interessi" [(ngModel)]="interessiStr" placeholder="Es. Pittura, Chitarra classica, Lettura (separati da virgola)">
+                <div class="form-text">Fornisci una lista di interessi o hobby separati da una virgola.</div>
+              </div>
             </div>
 
-            <div class="mb-4">
-              <label class="form-label">Skills (Competenze)</label>
-              <input type="text" class="form-control" name="competenze" [(ngModel)]="competenzeStr" placeholder="Es. Composizione, Editing Audio (separate da virgola)">
+            <!-- 4. Pannello Skills / Competenze (F.A. 2.3) -->
+            <div *ngIf="activeSection === 'skills'" class="p-4 bg-light rounded-3 border border-dark border-opacity-25 mb-4 animate__animated animate__fadeIn">
+              <h5 class="fw-bold text-dark mb-3"><i class="bi bi-tools me-2"></i>Skills e Competenze Tecniche</h5>
+              
+              <div class="mb-3">
+                <label class="form-label fw-semibold" for="skillsInput">Competenze Artistiche / Tecniche</label>
+                <input type="text" class="form-control" id="skillsInput" name="competenze" [(ngModel)]="competenzeStr" placeholder="Es. Composizione, Editing Audio, Direzione (separate da virgola)">
+                <div class="form-text">Inserisci le tue competenze principali separate da una virgola.</div>
+              </div>
             </div>
 
-            <div class="d-flex justify-content-end">
-              <a routerLink="/profile" class="btn btn-secondary me-2">Annulla</a>
-              <button type="submit" class="btn btn-primary">Salva Modifiche</button>
+            <!-- Tasto di Conferma (Passo 5 del RAD e FA) -->
+            <div class="d-flex justify-content-end gap-2">
+              <button type="button" (click)="activeSection = null" class="btn btn-outline-secondary">
+                Chiudi pannello
+              </button>
+              <button type="submit" class="btn btn-primary px-4 fw-bold">
+                Conferma
+              </button>
             </div>
+
           </form>
         </div>
       </div>
+
     </div>
   </div>
 </div>

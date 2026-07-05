@@ -334,10 +334,19 @@ public class ProfileControl {
             response.put("nome", p.getNome());
             response.put("cognome", p.getCognome());
             response.put("citta", p.getCitta());
-            response.put("telefono", p.getTelefono());
+            
+            // Verifica la visibilità dei contatti (indirizzo e telefono)
+            String policy = p.getPolicyVisibilita();
+            boolean showContacts = (policy != null && policy.contains("Contatti"));
+            if (showContacts) {
+                response.put("telefono", p.getTelefono());
+                response.put("indirizzo", p.getIndirizzo());
+            }
         }
         response.put("id", p.getId());
         response.put("descrizione", p.getDescrizione());
+        response.put("interessi", p.getInteressi());
+        response.put("competenze", p.getCompetenze());
         
         List<Contenuto> allContenuti = contenutoDBMSBoundary.findByProfilo(p);
         List<Contenuto> publicContenuti = new ArrayList<>();

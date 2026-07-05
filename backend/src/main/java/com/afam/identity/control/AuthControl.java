@@ -18,6 +18,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.sql.DataSource;
+import org.springframework.http.HttpStatus;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Map;
@@ -27,19 +29,19 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthControl {
-    
+
     @Autowired
     private AuthenticationManager authenticationManager;
-    
+
     @Autowired
     private JwtService jwtService;
-    
+
     @Autowired
     private UserDetailsService userDetailsService;
-    
+
     @Autowired
     private UtenteAfamDBMSBoundary utenteAfamDBMSBoundary;
-    
+
     @Autowired
     private TokenDBMSBoundary tokenDBMSBoundary;
 
@@ -49,18 +51,18 @@ public class AuthControl {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
-        );
-        
+                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+
         Optional<UtenteAfam> utenteOpt = utenteAfamDBMSBoundary.findByUsername(request.getUsername());
         if (utenteOpt.isPresent()) {
             UtenteAfam utente = utenteOpt.get();
-            
+
             // Verifica se l'account ha un token di registrazione attivo (non verificato)
             List<Token> regTokens = tokenDBMSBoundary.findByUtenteAfamAndTipo(utente, "registrazione");
             boolean isUnverified = regTokens.stream().anyMatch(t -> t.getScadenza().isAfter(LocalDateTime.now()));
             if (isUnverified) {
-                return ResponseEntity.status(401).body("Account non verificato. Completa la registrazione con l'OTP inviato via email.");
+                return ResponseEntity.status(401)
+                        .body("Account non verificato. Completa la registrazione con l'OTP inviato via email.");
             }
 
             if (Boolean.TRUE.equals(utente.getHas2fa())) {
@@ -83,11 +85,11 @@ public class AuthControl {
         }
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
-        
+
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("role", "AFAM");
         final String jwt = jwtService.generateToken(extraClaims, userDetails);
-        
+
         if (utenteOpt.isPresent()) {
             Token loginToken = new Token();
             loginToken.setValore(jwt);
@@ -97,7 +99,7 @@ public class AuthControl {
             loginToken.setAccessTime(LocalDateTime.now());
             tokenDBMSBoundary.save(loginToken);
         }
-        
+
         return ResponseEntity.ok(new AuthResponse(jwt));
     }
 
@@ -112,8 +114,9 @@ public class AuthControl {
         Optional<UtenteAfam> utenteOpt = utenteAfamDBMSBoundary.findByUsername(request.getUsername());
         if (utenteOpt.isPresent()) {
             UtenteAfam utente = utenteOpt.get();
-            List<Token> tokens = tokenDBMSBoundary.findByUtenteAfamAndTipoAndValore(utente, "OTP_2FA", request.getOtp());
-            
+            List<Token> tokens = tokenDBMSBoundary.findByUtenteAfamAndTipoAndValore(utente, "OTP_2FA",
+                    request.getOtp());
+
             for (Token t : tokens) {
                 if (t.getScadenza().isAfter(LocalDateTime.now())) {
                     // OTP Valido, generiamo il JWT
@@ -145,7 +148,7 @@ public class AuthControl {
         String authHeader = request.getHeader("Authorization");
         String jwt = authHeader.substring(7);
         String username = jwtService.extractUsername(jwt);
-        
+
         Optional<UtenteAfam> utenteOpt = utenteAfamDBMSBoundary.findByUsername(username);
         if (utenteOpt.isPresent()) {
             UtenteAfam utente = utenteOpt.get();
@@ -173,7 +176,8 @@ public class AuthControl {
         Optional<UtenteAfam> utenteOpt = utenteAfamDBMSBoundary.findByUsername(username);
         if (utenteOpt.isPresent()) {
             UtenteAfam utente = utenteOpt.get();
-            List<Token> tokens = tokenDBMSBoundary.findByUtenteAfamAndTipoAndValore(utente, "OTP_2FA", otpRequest.getOtp());
+            List<Token> tokens = tokenDBMSBoundary.findByUtenteAfamAndTipoAndValore(utente, "OTP_2FA",
+                    otpRequest.getOtp());
 
             for (Token t : tokens) {
                 if (t.getScadenza().isAfter(LocalDateTime.now())) {
@@ -187,7 +191,7 @@ public class AuthControl {
         }
         return ResponseEntity.status(400).body("OTP non valido o scaduto");
     }
-    
+
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request) {
         final String authHeader = request.getHeader("Authorization");
@@ -195,18 +199,33 @@ public class AuthControl {
             String jwt = authHeader.substring(7);
             String username = jwtService.extractUsername(jwt);
             Optional<UtenteAfam> utenteOpt = utenteAfamDBMSBoundary.findByUsername(username);
-            
+
             if (utenteOpt.isPresent()) {
                 Token blacklistedToken = new Token();
                 blacklistedToken.setValore(jwt);
                 // La scadenza è in LocalDateTime
-                blacklistedToken.setScadenza(LocalDateTime.now().plusDays(1)); 
+                blacklistedToken.setScadenza(LocalDateTime.now().plusDays(1));
                 blacklistedToken.setTipo("JWT_BLACKLIST");
                 blacklistedToken.setUtenteAfam(utenteOpt.get());
-                
+
                 tokenDBMSBoundary.save(blacklistedToken);
             }
         }
         return ResponseEntity.ok("Logout completato");
+    }
+
+    @Autowired
+    private DataSource dataSource;
+
+    @GetMapping("/ping")
+    public ResponseEntity<String> ping() {
+        try (java.sql.Connection conn = dataSource.getConnection()) {
+            if (conn.isValid(2)) {
+                return ResponseEntity.ok("pong");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("DBMS Offline");
+        }
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("DBMS Offline");
     }
 }

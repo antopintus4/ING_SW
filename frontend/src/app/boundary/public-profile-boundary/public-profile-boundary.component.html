@@ -14,10 +14,29 @@
           <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white mx-auto mb-3" style="width: 100px; height: 100px; font-size: 2.5rem;">
             {{ profilo.nome.charAt(0) }}{{ profilo.cognome.charAt(0) }}
           </div>
-          <h4>{{ profilo.nome }} {{ profilo.cognome }}</h4>
+           <h4>{{ profilo.nome }} {{ profilo.cognome }}</h4>
           <p class="text-muted mb-1"><i class="bi bi-geo-alt-fill me-1"></i>{{ profilo.citta || 'Città non specificata' }}</p>
+          
+          <!-- Contatti (indirizzo e telefono se abilitati e inviati dal server) -->
+          <div class="text-start small mt-2 px-2" *ngIf="profilo.indirizzo || profilo.telefono">
+            <div *ngIf="profilo.indirizzo" class="text-muted mb-1"><i class="bi bi-house-door-fill me-2"></i>{{ profilo.indirizzo }}</div>
+            <div *ngIf="profilo.telefono" class="text-muted"><i class="bi bi-telephone-fill me-2"></i>{{ profilo.telefono }}</div>
+          </div>
+          
           <hr>
           <p class="text-start small">{{ profilo.descrizione || 'Nessuna descrizione disponibile.' }}</p>
+          
+          <!-- Hobby e Skills dell'utente -->
+          <div class="text-start mt-3" *ngIf="(profilo.interessi && profilo.interessi.length > 0) || (profilo.competenze && profilo.competenze.length > 0)">
+            <div *ngIf="profilo.interessi && profilo.interessi.length > 0" class="mb-3">
+              <span class="small fw-bold text-muted d-block mb-1">Hobby:</span>
+              <span *ngFor="let h of profilo.interessi" class="badge bg-primary me-1">{{ h }}</span>
+            </div>
+            <div *ngIf="profilo.competenze && profilo.competenze.length > 0">
+              <span class="small fw-bold text-muted d-block mb-1">Competenze:</span>
+              <span *ngFor="let s of profilo.competenze" class="badge bg-dark me-1">{{ s }}</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

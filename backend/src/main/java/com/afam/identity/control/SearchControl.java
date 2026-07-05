@@ -99,6 +99,16 @@ public class SearchControl {
             gruppi = gruppoDBMSBoundary.findByNomeContainingIgnoreCase(queryTrimmed);
         }
 
+        // Se l'utente è un guest (Visualizzatore), escludi i profili privati
+        boolean isGuest = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication()
+                .getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_GUEST"));
+        if (isGuest) {
+            profili = profili.stream()
+                    .filter(p -> p.getPolicyVisibilita() != null && p.getPolicyVisibilita().startsWith("Pubblico"))
+                    .collect(java.util.stream.Collectors.toList());
+        }
+
         Map<String, Object> results = new HashMap<>();
         results.put("utenti", profili);
         results.put("contenuti", contenuti);
