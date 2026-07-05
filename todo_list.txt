@@ -25,6 +25,9 @@ Document (SDD) e dell'Object Design Document (ODD) del progetto attuale.
             - Creare/gestire la conferma di tale token prima di applicare le modifiche su database.
     [ ] 3.2 [Frontend] Aggiornare `EditCredentialsBoundaryComponent` ed `EditPasswordBoundaryComponent`:
             - Aggiungere il pannello di inserimento del token a 8 cifre che viene mostrato solo se l'utente ha la 2FA attiva.
+    [ ] 3.3 [Frontend] Disabilitare/nascondere la configurazione della 2FA se è già attiva:
+            - Modificare `ProfileBoundaryComponent` (`profile-boundary.component.html`) per verificare lo stato di `profilo.utenteAfam.has2fa`.
+            - Se la 2FA è già abilitata, nascondere il pulsante "Configura 2FA" e mostrare un messaggio informativo (es. "La verifica in due passaggi (2FA) è attiva per questo account").
 
 [ ] 4. GESTIONE AVANZATA DEL PORTFOLIO E CARICAMENTO FILE (RAD 4.1.7)
     [ ] 4.1 [Backend] Modificare l'endpoint `/api/contenuti/upload` in `UploadControl.java`:
@@ -95,8 +98,7 @@ Document (SDD) e dell'Object Design Document (ODD) del progetto attuale.
              - Creare l'intera interfaccia grafica definita nel mockup (hero section, spiegazione passo-passo del funzionamento, cards descrittive e inviti all'azione per AFAM e Visualizzatore).
     [ ] 12.2 [Frontend] Completare `PreviewBoundaryComponent` e `MessageBoundaryComponent`:
              - Fornire le interfacce per la visualizzazione dell'anteprima del contenuto e i popup per i messaggi di conferma/successo.
-    [ ] 12.3 [Backend/Frontend] Gestione Hobby e Skills:
-             - Allineare l'endpoint `/api/profile/other` e il componente `OtherEditsBoundaryComponent` per gestire correttamente il recupero e la memorizzazione persistente della lista di interessi (hobby) e competenze (skills).
+
 
 [ ] 13. GESTIONE CADUTA DI CONNESSIONE CON RETRY QUADRATICO (RAD 4.1.13.6)
     [ ] 13.1 [Frontend] Implementare la logica in `errorInterceptor` e `ErrorMessageBoundaryComponent`:
@@ -105,6 +107,20 @@ Document (SDD) e dell'Object Design Document (ODD) del progetto attuale.
              - In caso di riconnessione riuscita, ripristinare lo stato delle informazioni e reindirizzare automaticamente l'utente alla pagina in cui si trovava.
     [ ] 13.2 [Backend] Gestire l'eccezione di caduta di connessione lato server:
              - Annullare le operazioni pendenti su DB in caso di disconnessione improvvisa del DBMS ed eseguire un riavvio pulito delle connessioni se la connettività fallisce dopo 5 tentativi consecutivi.
+
+[ ] 14. ALTRE MODIFICHE E IMPOSTAZIONI ACCOUNT (RAD 4.1.12.4)
+    [ ] 14.1 [Frontend] Integrare nella schermata del profilo (`ProfileBoundaryComponent` / `profile-boundary.component.html`) il panel "Le tue impostazioni account":
+             - Visualizzare lo stato attuale di Privacy (Policy Visibilità), Descrizione, Hobby (Interessi) e Skills (Competenze).
+             - Aggiungere il pulsante "Altre modifiche" per accedere al relativo componente di modifica, rispettando la precondizione del flusso RAD.
+    [ ] 14.2 [Frontend] Sviluppare `OtherEditsBoundaryComponent` in conformità ai flussi di "ALTRE MODIFICHE" (RAD 4.1.12.4):
+             - Implementare i pulsanti/sezioni per avviare ciascuna modifica: "Modifica privacy", "Modifica descrizione", "Modifica Hobby", "Modifica Skills".
+             - Cliccando su ciascun pulsante, mostrare il relativo panel o form dedicato (ad es. per la Privacy, mostrare le privacy selezionate/selezionabili con checkbox).
+             - Gestire l'invio premendo il pulsante "Conferma", che richiama il backend per salvare la specifica modifica.
+             - Al successo dell'operazione, mostrare un messaggio "Modifica avvenuta con successo" con un pulsante "Ok" (o tramite la conferma "Ok" di un popup/modale) che riporti l'utente a "Il mio profilo".
+    [ ] 14.3 [Backend] Allineare `ProfileControl.java` (endpoint `PUT /api/profile/other`):
+             - Assicurare la corretta ricezione e salvataggio nel DB dei campi `policyVisibilita`, `descrizione`, `interessi` (Hobby) e `competenze` (Skills) modificati.
+    [ ] 14.4 [Backend/Frontend] Gestione dell'errore di connessione (Extension Point):
+             - Gestire la caduta di connessione durante la sottomissione di una delle modifiche mostrando l'apposita schermata/messaggio di errore.
 ================================================================================
 
 
