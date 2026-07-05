@@ -59,17 +59,18 @@ public class ViewControl {
         if (contenutoOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Contenuto non trovato");
         }
-        
-        // Verifica proprietario (opzionale se ci sono policy di condivisione)
+
         Contenuto c = contenutoOpt.get();
         Optional<Profilo> pOpt = getProfiloAttuale();
-        if (pOpt.isEmpty() || !c.getProfilo().getId().equals(pOpt.get().getId())) {
-            // Se non è il proprietario e policy = privato
-            if ("Privato".equalsIgnoreCase(c.getPolicyVisibilita())) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Accesso negato");
-            }
+
+        // Verifica se l'utente autenticato è il proprietario del contenuto
+        boolean isOwner = pOpt.isPresent() && c.getProfilo().getId().equals(pOpt.get().getId());
+
+        // Se NON è il proprietario e il contenuto è privato → accesso negato
+        if (!isOwner && "Privato".equalsIgnoreCase(c.getPolicyVisibilita())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Accesso negato");
         }
-        
+
         return ResponseEntity.ok(c);
     }
 
