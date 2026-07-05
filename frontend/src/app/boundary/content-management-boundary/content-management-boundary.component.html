@@ -9,10 +9,58 @@
     </div>
   </div>
 
+  <!-- Sezione Ricerca e Filtri -->
+  <div class="card mb-4 bg-light shadow-sm">
+    <div class="card-body">
+      <div class="row g-3 align-items-center">
+        <!-- Ricerca Testuale -->
+        <div class="col-md-4">
+          <div class="input-group">
+            <span class="input-group-text bg-white border-end-0">
+              <i class="bi bi-search text-muted"></i>
+            </span>
+            <input type="text" class="form-control border-start-0" placeholder="Filtra per titolo o keyword..."
+              [(ngModel)]="searchQuery" (keyup.enter)="applyFilters()">
+            <button class="btn btn-primary" type="button" (click)="applyFilters()">Filtra</button>
+          </div>
+        </div>
+
+        <!-- Filtro Visibilità -->
+        <div class="col-md-3">
+          <select class="form-select" [(ngModel)]="filterVisibility" (change)="applyFilters()">
+            <option value="">Tutte le visibilità</option>
+            <option value="Pubblico">Pubblico</option>
+            <option value="Privato">Privato</option>
+          </select>
+        </div>
+
+        <!-- Filtro Tipo File -->
+        <div class="col-md-3">
+          <select class="form-select" [(ngModel)]="filterType" (change)="applyFilters()">
+            <option value="">Tutti i tipi</option>
+            <option value="audio">Audio</option>
+            <option value="video">Video</option>
+            <option value="spartito">Spartito</option>
+            <option value="curriculum">Curriculum</option>
+          </select>
+        </div>
+
+        <!-- Reset Filtri -->
+        <div class="col-md-2 text-end">
+          <button class="btn btn-outline-secondary w-100" (click)="resetFilters()" title="Resetta filtri">
+            <i class="bi bi-arrow-counterclockwise me-1"></i> Resetta
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
   <div *ngIf="contents.length === 0" class="alert alert-info">
-    Nessun contenuto trovato. Inizia caricando un nuovo file!
+    <span *ngIf="currentPage > 0">Nessun contenuto in questa pagina.</span>
+    <span *ngIf="currentPage === 0 && (searchQuery || filterVisibility || filterType)">Nessun contenuto corrisponde ai criteri di ricerca impostati.</span>
+    <span *ngIf="currentPage === 0 && !searchQuery && !filterVisibility && !filterType">Nessun contenuto trovato. Inizia caricando un nuovo file!</span>
   </div>
 
   <div class="table-responsive" *ngIf="contents.length > 0">
@@ -25,8 +73,9 @@
           <th>ID</th>
           <th>Titolo</th>
           <th>Tipo File</th>
+          <th>Caricato il</th>
           <th>Visibilità</th>
-          <th class="text-end">Azioni</th>
+          <th class="text-end text-nowrap">Azioni</th>
         </tr>
       </thead>
       <tbody>
@@ -38,6 +87,7 @@
           <td>{{ c.id }}</td>
           <td>{{ c.titolo }}</td>
           <td>{{ c.tipo }}</td>
+          <td>{{ c.dataCaricamento | date:'dd/MM/yyyy HH:mm' }}</td>
           <td>
             <span class="badge bg-secondary">{{ c.policyVisibilita }}</span>
             <span *ngIf="c.allegati && c.allegati.length > 1" class="badge bg-info ms-2"
@@ -45,7 +95,7 @@
               +{{ c.allegati.length - 1 }} File
             </span>
           </td>
-          <td class="text-end">
+          <td class="text-end text-nowrap">
             <a [routerLink]="['/content/view', c.id]" class="btn btn-sm btn-outline-info me-2">Visualizza</a>
 
             <button class="btn btn-sm btn-outline-primary me-2" *ngIf="c.allegati && c.allegati.length > 0"
@@ -69,6 +119,17 @@
         </tr>
       </tbody>
     </table>
+  </div>
+
+  <!-- Paginazione (sempre visibile se siamo oltre la pag. 0 o se ci sono più elementi) -->
+  <div class="d-flex justify-content-between align-items-center mt-3" *ngIf="currentPage > 0 || hasMore">
+    <button class="btn btn-outline-secondary btn-sm" [disabled]="currentPage === 0" (click)="prevPage()">
+      <i class="bi bi-chevron-left me-1"></i> Precedente
+    </button>
+    <span class="text-muted fw-bold">Pagina {{ currentPage + 1 }}</span>
+    <button class="btn btn-outline-secondary btn-sm" [disabled]="!hasMore" (click)="nextPage()">
+      Successivo <i class="bi bi-chevron-right ms-1"></i>
+    </button>
   </div>
 </div>
 

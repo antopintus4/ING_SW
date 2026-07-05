@@ -52,12 +52,13 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // Rotte pubbliche
                 .requestMatchers("/api/auth/**", "/api/registration/**", "/api/recovery/**", "/error").permitAll()
-                .requestMatchers("/api/links/shared/**").permitAll() // Rende i link di condivisione accessibili al pubblico
+                .requestMatchers("/api/links/shared/**").permitAll()
                 
                 // Rotte permesse sia ad AFAM che GUEST (Ricerca e visualizzazione)
                 .requestMatchers("/api/search/**").hasAnyRole("AFAM", "GUEST")
-                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/contenuti/**").hasAnyRole("AFAM", "GUEST")
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/contenuti/public/**").hasAnyRole("AFAM", "GUEST")
                 .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/profile/public/**").hasAnyRole("AFAM", "GUEST")
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/contenuti/**").hasAnyRole("AFAM", "GUEST")
 
                 // Tutto il resto richiede ruolo AFAM
                 .anyRequest().hasRole("AFAM")

@@ -1,0 +1,12 @@
+tipo
+policy
+visibilità
+audio
+video
+spartito
+curriculum
+pdf
+mp3
+mp4
+Pubblico
+Privato

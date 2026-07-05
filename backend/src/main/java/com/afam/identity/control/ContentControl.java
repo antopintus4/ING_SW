@@ -62,13 +62,111 @@ public class ContentControl {
     // ==========================================
 
     @GetMapping("/api/contenuti")
-    public ResponseEntity<?> getMieiContenuti() {
+    public ResponseEntity<List<Contenuto>> getMieiContenuti(
+            @RequestParam(required = false) String q,
+            @RequestParam(required = false) String policyVisibilita,
+            @RequestParam(required = false) String tipo,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "15") int size
+    ) {
         Optional<Profilo> profiloOpt = getProfiloAttuale();
         if (profiloOpt.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Profilo non trovato");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        List<Contenuto> contenuti = contenutoDBMSBoundary.findByProfilo(profiloOpt.get());
-        return ResponseEntity.ok(contenuti);
+        
+        List<Contenuto> contenuti = contenutoDBMSBoundary.findByProfiloOrderByDataCaricamentoDesc(profiloOpt.get());
+        
+        // 1. Carica le keyword speciali dal file keywords.txt
+        java.util.Set<String> keywords = new java.util.HashSet<>();
+        try (java.io.BufferedReader reader = new java.io.BufferedReader(
+                new java.io.InputStreamReader(getClass().getResourceAsStream("/keywords.txt"), java.nio.charset.StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (!line.trim().isEmpty()) {
+                    keywords.add(line.trim().toLowerCase());
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Errore nel caricamento delle keywords speciali: " + e.getMessage());
+        }
+
+        // 2. Applica filtri non testuali
+        if (policyVisibilita != null && !policyVisibilita.trim().isEmpty() && !"Tutte".equalsIgnoreCase(policyVisibilita)) {
+            contenuti = contenuti.stream()
+                    .filter(c -> c.getPolicyVisibilita() != null && c.getPolicyVisibilita().equalsIgnoreCase(policyVisibilita.trim()))
+                    .collect(java.util.stream.Collectors.toList());
+        }
+        if (tipo != null && !tipo.trim().isEmpty() && !"Tutti".equalsIgnoreCase(tipo)) {
+            contenuti = contenuti.stream()
+                    .filter(c -> c.getTipo() != null && c.getTipo().equalsIgnoreCase(tipo.trim()))
+                    .collect(java.util.stream.Collectors.toList());
+        }
+
+        // 3. Applica il filtro testuale q
+        if (q != null && !q.trim().isEmpty()) {
+            final String queryTrimmed = q.trim().toLowerCase();
+            
+            // Caso A: Formato prefisso tipo:valore o policy:valore
+            if (queryTrimmed.contains(":")) {
+                String[] parts = queryTrimmed.split(":", 2);
+                String prefix = parts[0].trim();
+                String value = parts[1].trim();
+                if (keywords.contains(prefix)) {
+                    if ("tipo".equals(prefix)) {
+                        contenuti = contenuti.stream()
+                                .filter(c -> c.getTipo() != null && c.getTipo().toLowerCase().contains(value))
+                                .collect(java.util.stream.Collectors.toList());
+                    } else if ("policy".equals(prefix) || "visibilità".equals(prefix)) {
+                        contenuti = contenuti.stream()
+                                .filter(c -> c.getPolicyVisibilita() != null && c.getPolicyVisibilita().toLowerCase().contains(value))
+                                .collect(java.util.stream.Collectors.toList());
+                    }
+                } else {
+                    // Fallback per titolo se il prefisso non è una keyword valida
+                    contenuti = contenuti.stream()
+                            .filter(c -> c.getTitolo() != null && c.getTitolo().toLowerCase().contains(queryTrimmed))
+                            .collect(java.util.stream.Collectors.toList());
+                }
+            } 
+            // Caso B: L'intera query corrisponde a una keyword memorizzata
+            else if (keywords.contains(queryTrimmed)) {
+                if ("pubblico".equals(queryTrimmed) || "privato".equals(queryTrimmed)) {
+                    contenuti = contenuti.stream()
+                            .filter(c -> c.getPolicyVisibilita() != null && c.getPolicyVisibilita().equalsIgnoreCase(queryTrimmed))
+                            .collect(java.util.stream.Collectors.toList());
+                } else if ("audio".equals(queryTrimmed) || "video".equals(queryTrimmed) || "spartito".equals(queryTrimmed) || "curriculum".equals(queryTrimmed)) {
+                    contenuti = contenuti.stream()
+                            .filter(c -> c.getTipo() != null && c.getTipo().equalsIgnoreCase(queryTrimmed))
+                            .collect(java.util.stream.Collectors.toList());
+                } else if ("pdf".equals(queryTrimmed) || "mp3".equals(queryTrimmed) || "mp4".equals(queryTrimmed)) {
+                    contenuti = contenuti.stream()
+                            .filter(c -> c.getTipo() != null && c.getTipo().toLowerCase().contains(queryTrimmed))
+                            .collect(java.util.stream.Collectors.toList());
+                } else {
+                    // Fallback per titolo
+                    contenuti = contenuti.stream()
+                            .filter(c -> c.getTitolo() != null && c.getTitolo().toLowerCase().contains(queryTrimmed))
+                            .collect(java.util.stream.Collectors.toList());
+                }
+            } 
+            // Caso C: Fallback generico per Titolo (Default del RAD)
+            else {
+                contenuti = contenuti.stream()
+                        .filter(c -> c.getTitolo() != null && c.getTitolo().toLowerCase().contains(queryTrimmed))
+                        .collect(java.util.stream.Collectors.toList());
+            }
+        }
+
+        // 4. Paginazione (slicing)
+        int totalElements = contenuti.size();
+        int fromIndex = page * size;
+        if (fromIndex >= totalElements) {
+            return ResponseEntity.ok(new java.util.ArrayList<>());
+        }
+        int toIndex = Math.min(fromIndex + size, totalElements);
+        List<Contenuto> pageContent = contenuti.subList(fromIndex, toIndex);
+        
+        return ResponseEntity.ok(pageContent);
     }
 
     @PutMapping("/api/contenuti/{id}")

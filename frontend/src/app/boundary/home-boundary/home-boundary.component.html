@@ -1,1 +1,154 @@
-<p>home-boundary works!</p>
+<div class="container-fluid px-0">
+  <div class="container mt-4">
+    <!-- Hero Section -->
+    <div class="text-white p-5 mb-5 shadow rounded-4 position-relative overflow-hidden" 
+         style="background: linear-gradient(135deg, #1e1e2f 0%, #111119 100%); border: 1px solid rgba(255,255,255,0.08);">
+      <div class="row align-items-center">
+        <div class="col-lg-8">
+          <h1 class="display-3 fw-bold mb-3" style="letter-spacing: -1.5px;">Identità Digitale AFAM</h1>
+          <p class="lead fs-3 text-white-50 mb-4 fw-normal">
+            Il portale accademico per esibire, organizzare e condividere in modo sicuro il proprio portfolio artistico e musicale.
+          </p>
+          
+          <!-- Badge di Benvenuto -->
+          <div class="mb-4">
+            <span class="badge bg-primary bg-opacity-25 text-info px-3 py-2 rounded-pill fw-semibold fs-6">
+              <i class="bi bi-info-circle me-2"></i> Benvenuto nel portale!
+            </span>
+          </div>
+
+          <div class="d-flex flex-wrap gap-3">
+            <!-- Azioni per Utente Anonimo -->
+            <ng-container *ngIf="!isAuthenticated">
+              <a routerLink="/login" class="btn btn-primary btn-lg px-4 py-3 fw-bold shadow-sm">
+                <i class="bi bi-box-arrow-in-right me-2"></i> Accedi
+              </a>
+              <a routerLink="/register" class="btn btn-outline-light btn-lg px-4 py-3 fw-bold">
+                <i class="bi bi-person-plus me-2"></i> Registrati
+              </a>
+              <button (click)="guestLogin()" class="btn btn-info btn-lg px-4 py-3 fw-bold text-white shadow-sm">
+                <i class="bi bi-eye me-2"></i> Accedi come Ospite
+              </button>
+            </ng-container>
+
+            <!-- Azioni per Utente Autore Loggato -->
+            <ng-container *ngIf="isAuthenticated && isAuthor">
+              <a routerLink="/content" class="btn btn-primary btn-lg px-4 py-3 fw-bold shadow-sm">
+                <i class="bi bi-folder2-open me-2"></i> Gestisci i Miei Contenuti
+              </a>
+              <a routerLink="/profile" class="btn btn-outline-light btn-lg px-4 py-3 fw-bold">
+                <i class="bi bi-person-badge me-2"></i> Il Mio Profilo
+              </a>
+            </ng-container>
+
+            <!-- Azioni per Ospite Loggato -->
+            <ng-container *ngIf="isAuthenticated && !isAuthor">
+              <span class="fs-5 text-info fw-bold d-block w-100 mb-2">Accesso Ospite Attivo (GUEST)</span>
+              <p class="text-white-50 mb-0">Puoi avviare ricerche di utenti o opere pubbliche usando la barra di ricerca in alto.</p>
+            </ng-container>
+          </div>
+        </div>
+        <div class="col-lg-4 d-none d-lg-block text-center">
+          <i class="bi bi-music-note-beamed text-info" style="font-size: 13rem; opacity: 0.12;"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Come Funziona -->
+  <div class="container my-5 py-4">
+    <h2 class="text-center fw-bold mb-5 position-relative pb-3">
+      Come Funziona il Portale
+      <span class="position-absolute bottom-0 start-50 translate-middle-x bg-primary" style="height: 3px; width: 60px;"></span>
+    </h2>
+    <div class="row g-4 text-center">
+      <div class="col-md-3">
+        <div class="p-4 bg-white rounded shadow-sm border h-100">
+          <div class="btn btn-primary btn-lg rounded-circle p-3 mb-3 pointer-events-none">
+            <i class="bi bi-shield-check fs-3"></i>
+          </div>
+          <h5 class="fw-bold">1. Autenticazione</h5>
+          <p class="text-muted small mb-0">
+            Gli autori AFAM effettuano il login sicuro tramite 2FA. I visitatori accedono come ospite in un click.
+          </p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="p-4 bg-white rounded shadow-sm border h-100">
+          <div class="btn btn-success btn-lg rounded-circle p-3 mb-3 pointer-events-none">
+            <i class="bi bi-folder-plus fs-3"></i>
+          </div>
+          <h5 class="fw-bold">2. Carica Opere</h5>
+          <p class="text-muted small mb-0">
+            Carica spartiti, tracce audio o video. Raggruppali in collezioni tematiche per presentare la tua arte.
+          </p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="p-4 bg-white rounded shadow-sm border h-100">
+          <div class="btn btn-warning btn-lg rounded-circle p-3 mb-3 text-white pointer-events-none">
+            <i class="bi bi-share-fill fs-3"></i>
+          </div>
+          <h5 class="fw-bold">3. Condividi in Sicurezza</h5>
+          <p class="text-muted small mb-0">
+            Genera link temporanei. Imposta un limite di giorni per la scadenza o di visualizzazioni massime consentite.
+          </p>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="p-4 bg-white rounded shadow-sm border h-100">
+          <div class="btn btn-info btn-lg rounded-circle p-3 mb-3 text-white pointer-events-none">
+            <i class="bi bi-search fs-3"></i>
+          </div>
+          <h5 class="fw-bold">4. Ricerca Avanzata</h5>
+          <p class="text-muted small mb-0">
+            Usa i filtri avanzati per cercare per autore, collaboratore o gruppo e visualizza i contenuti pubblici.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cards per Ruoli / Inviti all'Azione -->
+  <div class="bg-light py-5">
+    <div class="container my-4">
+      <div class="row g-5">
+        <!-- Card Autore -->
+        <div class="col-md-6">
+          <div class="card border-0 shadow-sm rounded overflow-hidden h-100">
+            <div class="card-header bg-primary text-white py-3">
+              <h4 class="mb-0 fw-bold"><i class="bi bi-mortarboard me-2"></i> Per gli Utenti AFAM</h4>
+            </div>
+            <div class="card-body p-4 d-flex flex-column">
+              <p class="card-text text-muted mb-4 fs-5">
+                Sei uno studente o un docente di un'istituzione AFAM? Gestisci in modo strutturato il tuo materiale. Puoi caricare file allegati, organizzare brani, spartiti o tesi e condividerli con link protetti con chiunque desideri.
+              </p>
+              <div class="mt-auto">
+                <a routerLink="/login" class="btn btn-primary fw-bold" *ngIf="!isAuthenticated">Inizia ora</a>
+                <a routerLink="/content/upload" class="btn btn-primary fw-bold" *ngIf="isAuthenticated && isAuthor">Carica un contenuto</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card Visitatore -->
+        <div class="col-md-6">
+          <div class="card border-0 shadow-sm rounded overflow-hidden h-100">
+            <div class="card-header bg-dark text-white py-3">
+              <h4 class="mb-0 fw-bold"><i class="bi bi-eye me-2"></i> Per i Visitatori ed Enti</h4>
+            </div>
+            <div class="card-body p-4 d-flex flex-column">
+              <p class="card-text text-muted mb-4 fs-5">
+                Vuoi consultare la produzione artistica o accademica degli studenti AFAM? Accedi in modalità Ospite per ricercare brani o profili pubblici degli autori, collaboratori o collezioni istituzionali.
+              </p>
+              <div class="mt-auto">
+                <button (click)="guestLogin()" class="btn btn-dark fw-bold" *ngIf="!isAuthenticated">Accedi come Ospite</button>
+                <span class="text-success fw-bold" *ngIf="isAuthenticated && !isAuthor">Sei attualmente connesso come Ospite. Usa la ricerca!</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

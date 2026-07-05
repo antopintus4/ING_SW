@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ContentService } from '../../services/content.service';
 import { LinkService } from '../../services/link.service';
@@ -22,6 +22,13 @@ export class ContentManagementBoundaryComponent implements OnInit {
   errorMessage: string = '';
   successMessage: string = '';
 
+  searchQuery: string = '';
+  filterVisibility: string = '';
+  filterType: string = '';
+  currentPage: number = 0;
+  pageSize: number = 15;
+  hasMore: boolean = false;
+
   selectedContentIds: Set<string> = new Set();
   isCreatingNewGroup: boolean = false;
   newGroupName: string = '';
@@ -42,7 +49,8 @@ export class ContentManagementBoundaryComponent implements OnInit {
   constructor(
     private contentService: ContentService, 
     private linkService: LinkService,
-    private groupService: GroupService
+    private groupService: GroupService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -50,14 +58,48 @@ export class ContentManagementBoundaryComponent implements OnInit {
   }
 
   loadContents() {
-    this.contentService.getContents().subscribe({
+    this.contentService.getContents(
+      this.searchQuery,
+      this.filterVisibility,
+      this.filterType,
+      this.currentPage,
+      this.pageSize
+    ).subscribe({
       next: (data) => {
         this.contents = data;
+        this.hasMore = data.length === this.pageSize;
       },
       error: () => {
         this.errorMessage = 'Errore nel caricamento dei contenuti.';
       }
     });
+  }
+
+  applyFilters() {
+    this.currentPage = 0;
+    this.loadContents();
+  }
+
+  resetFilters() {
+    this.searchQuery = '';
+    this.filterVisibility = '';
+    this.filterType = '';
+    this.currentPage = 0;
+    this.loadContents();
+  }
+
+  nextPage() {
+    if (this.hasMore) {
+      this.currentPage++;
+      this.loadContents();
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+      this.loadContents();
+    }
   }
 
   download(allegatoId: string, filename: string = 'file') {
@@ -72,11 +114,7 @@ export class ContentManagementBoundaryComponent implements OnInit {
   }
 
   view(allegatoId: string) {
-    this.contentService.downloadContent(allegatoId).subscribe((blob) => {
-      const file = new Blob([blob], { type: blob.type });
-      const objectUrl = URL.createObjectURL(file);
-      window.open(objectUrl, '_blank');
-    });
+    this.router.navigate(['/content/preview'], { queryParams: { id: allegatoId } });
   }
 
   delete(id: string) {

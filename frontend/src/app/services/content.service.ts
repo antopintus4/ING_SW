@@ -30,8 +30,16 @@ export class ContentService {
     return this.http.post(`${this.apiUrl}/upload`, formData, { responseType: 'text' });
   }
 
-  getContents(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl);
+  getContents(q?: string, policyVisibilita?: string, tipo?: string, page: number = 0, size: number = 15): Observable<any[]> {
+    let params: any = {
+      page: page.toString(),
+      size: size.toString()
+    };
+    if (q) params.q = q;
+    if (policyVisibilita) params.policyVisibilita = policyVisibilita;
+    if (tipo) params.tipo = tipo;
+
+    return this.http.get<any[]>(this.apiUrl, { params });
   }
 
   getContent(id: string): Observable<any> {

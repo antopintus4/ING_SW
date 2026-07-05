@@ -82,6 +82,7 @@ CREATE TABLE contenuto (
     descrizione TEXT,
     policy_visibilita VARCHAR(50),
     numero_visualizzazioni INT DEFAULT 0,
+    data_caricamento TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     profilo_id UUID NOT NULL, -- L'utente che ha creato il contenuto
     FOREIGN KEY (profilo_id) REFERENCES profilo(id) ON DELETE CASCADE
 );

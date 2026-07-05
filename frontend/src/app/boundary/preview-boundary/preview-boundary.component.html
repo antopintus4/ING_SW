@@ -1,1 +1,58 @@
-<p>preview-boundary works!</p>
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Anteprima File</h2>
+    <a routerLink="/content" class="btn btn-outline-secondary">
+      <i class="bi bi-arrow-left me-1"></i> Torna ai Contenuti
+    </a>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+  <div *ngIf="isLoading" class="text-center my-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Caricamento anteprima...</span>
+    </div>
+    <p class="mt-2 text-muted">Caricamento dell'anteprima in corso...</p>
+  </div>
+
+  <div *ngIf="!isLoading && !errorMessage" class="card shadow-sm">
+    <div class="card-body p-4 text-center">
+      
+      <!-- Anteprima Immagine -->
+      <div *ngIf="isImage">
+        <img [src]="fileUrl" class="img-fluid rounded border shadow-sm" alt="Anteprima Immagine" style="max-height: 600px;">
+      </div>
+
+      <!-- Anteprima Audio -->
+      <div *ngIf="isAudio" class="my-5">
+        <i class="bi bi-music-note-beamed text-primary" style="font-size: 5rem;"></i>
+        <h4 class="mt-3">Contenuto Audio</h4>
+        <p class="text-muted small">Mime-type: {{ mimeType }}</p>
+        <div class="mx-auto" style="max-width: 500px;">
+          <audio [src]="fileUrl" controls class="w-100 mt-4"></audio>
+        </div>
+      </div>
+
+      <!-- Anteprima Video -->
+      <div *ngIf="isVideo">
+        <video [src]="fileUrl" controls class="w-100 rounded border shadow-sm" style="max-height: 550px;"></video>
+      </div>
+
+      <!-- Anteprima PDF -->
+      <div *ngIf="isPdf && safeFileUrl">
+        <iframe [src]="safeFileUrl" width="100%" height="700px" class="rounded border shadow-sm"></iframe>
+      </div>
+
+      <!-- File generico non visualizzabile in anteprima -->
+      <div *ngIf="!isImage && !isAudio && !isVideo && !isPdf" class="my-5">
+        <i class="bi bi-file-earmark-binary text-secondary" style="font-size: 5rem;"></i>
+        <h4 class="mt-3">Anteprima non disponibile</h4>
+        <p class="text-muted">L'anteprima nel browser non è supportata per questo tipo di file ({{ mimeType }}).</p>
+        <a [href]="fileUrl" [download]="'file_' + allegatoId" class="btn btn-success mt-3">
+          <i class="bi bi-download me-1"></i> Scarica File
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>

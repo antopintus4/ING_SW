@@ -117,4 +117,79 @@ public class CodiceFiscaleValidator {
         }
         return (char) ('A' + (somma % 26));
     }
+
+    public String generaCodiceFiscale(String nome, String cognome, String sesso, LocalDate dataNascita, String citta) {
+        if (nome == null || cognome == null || sesso == null || dataNascita == null || citta == null) {
+            return null;
+        }
+        try {
+            return calcolaCF(nome.toUpperCase().trim(), cognome.toUpperCase().trim(), sesso.toUpperCase().trim(), dataNascita, citta.trim());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static class EstrazioneCFResult {
+        public LocalDate dataNascita;
+        public String citta;
+        public String sesso;
+    }
+
+    public EstrazioneCFResult estraiDatiDaCF(String cf) {
+        if (cf == null || cf.length() != 16) return null;
+        cf = cf.toUpperCase().trim();
+        
+        try {
+            // Estrai Anno
+            int annoYY = Integer.parseInt(cf.substring(6, 8));
+            int currentYearYY = LocalDate.now().getYear() % 100;
+            int annoYYYY = (annoYY <= currentYearYY) ? (2000 + annoYY) : (1900 + annoYY);
+
+            // Estrai Mese
+            char meseChar = cf.charAt(8);
+            int mese = 0;
+            char[] mesi = {'A', 'B', 'C', 'D', 'E', 'H', 'L', 'M', 'P', 'R', 'S', 'T'};
+            for (int i = 0; i < mesi.length; i++) {
+                if (mesi[i] == meseChar) {
+                    mese = i + 1;
+                    break;
+                }
+            }
+            if (mese == 0) return null; // Mese non valido
+
+            // Estrai Giorno e Sesso
+            int giornoVal = Integer.parseInt(cf.substring(9, 11));
+            String sesso = "M";
+            int giorno = giornoVal;
+            if (giornoVal > 40) {
+                sesso = "F";
+                giorno = giornoVal - 40;
+            }
+            
+            LocalDate dataNascita = LocalDate.of(annoYYYY, mese, giorno);
+
+            // Estrai Città tramite Codice Catastale
+            String codiceCatastale = cf.substring(11, 15);
+            String citta = null;
+            if (comuni != null) {
+                for (Map<String, Object> comune : comuni) {
+                    String cod = (String) comune.get("codiceCatastale");
+                    if (cod != null && cod.equalsIgnoreCase(codiceCatastale)) {
+                        citta = (String) comune.get("nome");
+                        break;
+                    }
+                }
+            }
+
+            EstrazioneCFResult res = new EstrazioneCFResult();
+            res.dataNascita = dataNascita;
+            res.citta = citta;
+            res.sesso = sesso;
+            return res;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

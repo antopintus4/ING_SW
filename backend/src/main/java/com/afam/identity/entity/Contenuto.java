@@ -27,6 +27,16 @@ public class Contenuto {
     @Column(name = "numero_visualizzazioni")
     private Integer numeroVisualizzazioni = 0;
 
+    @Column(name = "data_caricamento", nullable = false)
+    private java.time.LocalDateTime dataCaricamento;
+
+    @PrePersist
+    protected void onCreate() {
+        if (this.dataCaricamento == null) {
+            this.dataCaricamento = java.time.LocalDateTime.now();
+        }
+    }
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "profilo_id", nullable = false)
@@ -184,5 +194,13 @@ public class Contenuto {
 
     public void setGruppi(List<Gruppo> gruppi) {
         this.gruppi = gruppi;
+    }
+
+    public java.time.LocalDateTime getDataCaricamento() {
+        return dataCaricamento;
+    }
+
+    public void setDataCaricamento(java.time.LocalDateTime dataCaricamento) {
+        this.dataCaricamento = dataCaricamento;
     }
 }

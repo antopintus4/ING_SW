@@ -91,24 +91,67 @@ public class ProfileControl {
         Profilo profilo = getProfiloCorrente();
         if (profilo == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
-        boolean isCfValid = cfValidator.validaCodiceFiscale(
-                request.getCodiceFiscale(),
-                request.getNome(),
-                request.getCognome(),
-                request.getSesso(),
-                request.getDataNascita() != null ? request.getDataNascita().toString() : null,
-                request.getCitta()
-        );
+        String currentCF = profilo.getCodiceFiscale();
+        String requestedCF = request.getCodiceFiscale();
 
-        if (!isCfValid) {
-            return ResponseEntity.badRequest().body("Il Codice Fiscale non corrisponde ai dati anagrafici forniti.");
+        // 1. Caso 2.3: Modifica diretta del Codice Fiscale
+        if (requestedCF != null && !requestedCF.trim().isEmpty() && 
+            (currentCF == null || !currentCF.trim().equalsIgnoreCase(requestedCF.trim()))) {
+            
+            String newCf = requestedCF.trim().toUpperCase();
+            CodiceFiscaleValidator.EstrazioneCFResult estrazione = cfValidator.estraiDatiDaCF(newCf);
+            if (estrazione == null || estrazione.dataNascita == null || estrazione.citta == null) {
+                return ResponseEntity.badRequest().body("Il Codice Fiscale fornito non è valido o contiene una città non censita.");
+            }
+
+            profilo.setCodiceFiscale(newCf);
+            profilo.setDataNascita(estrazione.dataNascita);
+            profilo.setCitta(estrazione.citta);
+        }
+        // 2. Caso 2.2: Modifica di data o città di nascita
+        else {
+            java.time.LocalDate requestBirth = request.getDataNascita();
+            String requestCitta = request.getCitta();
+            
+            boolean birthChanged = (requestBirth != null && !requestBirth.equals(profilo.getDataNascita()));
+            boolean cityChanged = (requestCitta != null && !requestCitta.trim().equalsIgnoreCase(profilo.getCitta()));
+
+            if (birthChanged || cityChanged) {
+                String generatedCF = cfValidator.generaCodiceFiscale(
+                        request.getNome(),
+                        request.getCognome(),
+                        request.getSesso() != null ? request.getSesso() : "M", // Fallback a M se sesso è nullo
+                        requestBirth != null ? requestBirth : profilo.getDataNascita(),
+                        requestCitta != null ? requestCitta : profilo.getCitta()
+                );
+
+                if (generatedCF == null) {
+                    return ResponseEntity.badRequest().body("Impossibile ricalcolare il Codice Fiscale: verifica i dati anagrafici e la città di nascita.");
+                }
+
+                profilo.setCodiceFiscale(generatedCF);
+                if (requestBirth != null) profilo.setDataNascita(requestBirth);
+                if (requestCitta != null) profilo.setCitta(Validator.sanitize(requestCitta, false));
+            } else {
+                // Nessuna modifica a CF, data di nascita o città: controlla se gli altri dati sono validi
+                boolean isCfValid = cfValidator.validaCodiceFiscale(
+                        profilo.getCodiceFiscale(),
+                        request.getNome(),
+                        request.getCognome(),
+                        request.getSesso() != null ? request.getSesso() : "M",
+                        profilo.getDataNascita() != null ? profilo.getDataNascita().toString() : null,
+                        profilo.getCitta()
+                );
+
+                if (!isCfValid && request.getCodiceFiscale() != null) {
+                    return ResponseEntity.badRequest().body("Il Codice Fiscale fornito non corrisponde ai dati anagrafici.");
+                }
+            }
         }
 
+        // Aggiorna gli altri campi dell'anagrafica
         profilo.setNome(Validator.sanitize(request.getNome(), false));
         profilo.setCognome(Validator.sanitize(request.getCognome(), false));
-        profilo.setDataNascita(request.getDataNascita());
-        profilo.setCodiceFiscale(request.getCodiceFiscale());
-        profilo.setCitta(Validator.sanitize(request.getCitta(), false));
         profilo.setIndirizzo(Validator.sanitize(request.getIndirizzo(), false));
         profilo.setTelefono(Validator.sanitize(request.getTelefono(), false));
 

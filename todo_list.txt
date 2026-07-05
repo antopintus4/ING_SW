@@ -60,45 +60,45 @@ Document (SDD) e dell'Object Design Document (ODD) del progetto attuale.
     [x] 7.1 [Backend] Aggiornare l'endpoint `/api/links/shared/{identificatore}` in `ShareControl.java`:
             - Quando un link viene visualizzato con successo, oltre ad incrementare `link.numeroVisualizzazioni`, incrementare e salvare anche il contatore `numeroVisualizzazioni` sull'entità `Contenuto` collegata.
 
-[ ] 8. ORDINAMENTO CRONOLOGICO E DATA DI CARICAMENTO (RAD 4.1.8.1)
-    [ ] 8.1 [Database] Modificare la tabella `contenuto` in `schema.sql`:
+[x] 8. ORDINAMENTO CRONOLOGICO E DATA DI CARICAMENTO (RAD 4.1.8.1)
+    [x] 8.1 [Database] Modificare la tabella `contenuto` in `schema.sql`:
             - Aggiungere una colonna `data_caricamento` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP.
-    [ ] 8.2 [Backend] Aggiornare l'entità `Contenuto.java`:
+    [x] 8.2 [Backend] Aggiornare l'entità `Contenuto.java`:
             - Aggiungere l'attributo `dataCaricamento` (LocalDateTime) con mapping JPA appropriato per consentire il corretto allineamento e ordinamento delle tabelle.
             - Aggiornare `ContenutoDBMSBoundary` per recuperare i contenuti ordinati (`orderByDataCaricamentoDesc`).
-    [ ] 8.3 [Frontend] Aggiornare `ContentManagementBoundaryComponent`:
+    [x] 8.3 [Frontend] Aggiornare `ContentManagementBoundaryComponent`:
             - Gestire la visualizzazione e l'ordinamento cronologico decrescente dei contenuti ricevuti.
 
-[ ] 9. PAGINAZIONE E FILTRAGGIO AVANZATO (RAD 4.1.8.1)
-    [ ] 9.1 [Backend] Predisporre la paginazione e il filtraggio in `ContentControl.java`:
+[x] 9. PAGINAZIONE E FILTRAGGIO AVANZATO (RAD 4.1.8.1)
+    [x] 9.1 [Backend] Predisporre la paginazione e il filtraggio in `ContentControl.java`:
             - Aggiungere parametri di paginazione (page, size) all'endpoint `/api/contenuti`.
-            - Implementare il filtraggio per keyword caricando l'elenco delle parole chiave memorizzate in un file sul server come richiesto dai requisiti non funzionali.
-    [ ] 9.2 [Frontend] Aggiornare `ContentManagementBoundaryComponent`:
+            - Implementare il filtraggio per keyword caricando l'elenco delle parole chiave memorizzate in un file sul server como richiesto dai requisiti non funzionali.
+    [x] 9.2 [Frontend] Aggiornare `ContentManagementBoundaryComponent`:
             - Implementare la paginazione della lista in blocchi da 15 elementi (pulsanti Successivo/Precedente).
             - Aggiungere la barra di ricerca testuale per keyword e i pulsanti per i filtri non testuali.
 
-[ ] 10. RICERCA CON PREFISSI E RICERCHE SPECIFICHE (RAD 4.1.10)
-    [ ] 10.1 [Backend] Estendere l'endpoint `/api/search` (corrispondente a `ricercaGlobale(q)` in ODD) in `SearchControl.java`:
+[x] 10. RICERCA CON PREFISSI E RICERCHE SPECIFICHE (RAD 4.1.10)
+    [x] 10.1 [Backend] Estendere l'endpoint `/api/search` (corrispondente a `ricercaGlobale(q)` in ODD) in `SearchControl.java`:
              - Rilevare la presenza di prefissi speciali nella query:
                * `user:` -> ricerca specifica di un utente per nome/cognome/username (RAD 4.1.10.1).
                * `group:` -> ricerca specifica di un gruppo per nome (RAD 4.1.10.2).
                * `author:` -> ricerca specifica di contenuti per nome dell'autore (RAD 4.1.10.4).
                * `collab:` (o `collaborator:`) -> ricerca specifica per collaboratore (RAD 4.1.10.5).
              - Implementare la logica di ricerca specifica per i collaboratori (`Cerca Collaboratori`).
-    [ ] 10.2 [Frontend] Aggiornare la logica di invio query nella barra di ricerca:
+    [x] 10.2 [Frontend] Aggiornare la logica di invio query nella barra di ricerca:
              - Riconoscere ed inviare correttamente i prefissi di ricerca specifici al backend.
-    [ ] 10.3 [Frontend] Invertire la logica di visibilità della barra di ricerca nella navbar (`app.component.html`):
+    [x] 10.3 [Frontend] Invertire la logica di visibilità della barra di ricerca nella navbar (`app.component.html`):
              - Modificare la condizione del form di ricerca in modo che sia visibile solo per l'utente non loggato (`*ngIf="!isAuthenticated"`), coerentemente con il ruolo dell'attore Visualizzatore definito nel RAD.
 
-[ ] 11. ANAGRAFICA: RICALCOLO E ESTRAPOLAZIONE DATI DA CODICE FISCALE (RAD 4.1.12.3)
-    [ ] 11.1 [Backend] Aggiornare `ProfileControl.java` (`updateAnagrafica`):
+[x] 11. ANAGRAFICA: RICALCOLO E ESTRAPOLAZIONE DATI DA CODICE FISCALE (RAD 4.1.12.3)
+    [x] 11.1 [Backend] Aggiornare `ProfileControl.java` (`updateAnagrafica`):
              - Se viene modificata la data di nascita o la città di nascita, ricalcolare automaticamente il Codice Fiscale dell'utente.
              - Se viene modificato direttamente il Codice Fiscale, estrapolare la data di nascita corretta e la città di nascita corretta dal nuovo codice fiscale e aggiornare i relativi campi del profilo.
 
-[ ] 12. COMPLETAMENTO COMPONENTI ESTETICI E DI INTERFACCIA (RAD MOCKUPS)
-    [ ] 12.1 [Frontend] Implementare la Homepage (`HomeBoundaryComponent`):
+[x] 12. COMPLETAMENTO COMPONENTI ESTETICI E DI INTERFACCIA (RAD MOCKUPS)
+    [x] 12.1 [Frontend] Implementare la Homepage (`HomeBoundaryComponent`):
              - Creare l'intera interfaccia grafica definita nel mockup (hero section, spiegazione passo-passo del funzionamento, cards descrittive e inviti all'azione per AFAM e Visualizzatore).
-    [ ] 12.2 [Frontend] Completare `PreviewBoundaryComponent` e `MessageBoundaryComponent`:
+    [x] 12.2 [Frontend] Completare `PreviewBoundaryComponent` e `MessageBoundaryComponent`:
              - Fornire le interfacce per la visualizzazione dell'anteprima del contenuto e i popup per i messaggi di conferma/successo.
 
 

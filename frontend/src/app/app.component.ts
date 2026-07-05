@@ -26,6 +26,10 @@ export class AppComponent implements OnInit {
     );
   }
 
+  get isAuthor(): boolean {
+    return this.isAuthenticated && this.authService.getRole() === 'AFAM';
+  }
+
   logout() {
     this.messageBoundary.showConfirmMessage(
       "Sei sicuro di voler confermare l'uscita dall'account?",
@@ -46,9 +50,20 @@ export class AppComponent implements OnInit {
   onSearch(event: any) {
     event.preventDefault();
     const query = event.target.elements.q.value;
-    if (query && query.trim().length >= 2) {
-      this.router.navigate(['/search'], { queryParams: { q: query.trim() } });
-      event.target.elements.q.value = ''; // svuota il campo
+    if (query) {
+      const trimmedQuery = query.trim();
+      const prefixMatch = trimmedQuery.match(/^(user|group|author|collab|collaborator):(.*)$/i);
+      
+      if (prefixMatch) {
+        const val = prefixMatch[2].trim();
+        if (val.length >= 2) {
+          this.router.navigate(['/search'], { queryParams: { q: trimmedQuery } });
+          event.target.elements.q.value = '';
+        }
+      } else if (trimmedQuery.length >= 2) {
+        this.router.navigate(['/search'], { queryParams: { q: trimmedQuery } });
+        event.target.elements.q.value = '';
+      }
     }
   }
 }
